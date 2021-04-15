@@ -11,6 +11,7 @@ import (
 	"stock/models/stocks_db"
 	"stock/share/logging"
 	"stock/share/util"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -89,8 +90,11 @@ func (this *StockDayk) GetStockDayK() {
 		if len(v.F12.(string)) != 6 {
 			continue
 		}
-
 		d := this.GetZJlxDFCF(v.F12.(string)).Datas.Diff[0]
+
+		//日K对应 5日 10日 20日 30日均价
+		df := this.GetDayK(v.F12.(string))
+
 		t := stocks_db.NewStock_Day_K()
 		params := map[string]interface{}{
 			"f1":  v.F1,
@@ -126,6 +130,10 @@ func (this *StockDayk) GetStockDayK() {
 			"f184":        d.F184,
 			"f136":        v.F136,
 			"f128":        v.F128,
+			"dayK5":       df[0],
+			"dayK10":      df[1],
+			"dayK20":      df[2],
+			"dayK30":      df[3],
 			"create_time": time.Now().Format("2006-01-02"),
 			"update_time": time.Now().Format("2006-01-02"),
 		}
@@ -311,4 +319,84 @@ func (this *StockDayk) GetZJlxDFCF(stockC string) *util.StockDayK {
 		logging.Error("解析日K  | Error:=", err)
 	}
 	return data
+}
+
+type Data struct {
+	Zdata *Kl `json:"data"`
+}
+type Kl struct {
+	Klines []string `json:"klines"`
+}
+
+// 返回日K对应的 5、10、20、30 均价
+func (this *StockDayk) GetDayK(stockC string) [4]float64 {
+	var dk [4]float64
+
+	stockCodes := ""
+	switch stockC[:3] {
+	case "600", "601", "603", "605", "688", "689", "608":
+		stockCodes = fmt.Sprintf("1.%v", stockC)
+	case "300", "002", "000", "001", "003":
+		stockCodes = fmt.Sprintf("0.%v", stockC)
+	}
+
+	if stockCodes[:2] != "1." && stockCodes[:2] != "0." {
+		return dk
+	}
+	url := "http://push2his.eastmoney.com/api/qt/stock/kline/get?fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989&klt=101&fqt=1&secid=" + stockCodes + "&beg=0&end=20500000"
+
+	resp, err := http.Get(url)
+	if err != nil {
+		logging.Error("", err)
+	}
+	defer resp.Body.Close()
+
+	body, err1 := ioutil.ReadAll(resp.Body)
+	if err1 != nil {
+		logging.Error("ioutil.ReadAll", err1)
+	}
+
+	var data *Data
+	if err = json.Unmarshal(body, &data); err != nil {
+		logging.Error("单个个股解析日K  | Error:=", err)
+	}
+	//logging.Error("==================", data.Zdata.Klines[0])
+	if len(data.Zdata.Klines) < 30 {
+		return dk
+	}
+	fl := len(data.Zdata.Klines) - 1
+
+	for i := fl; i >= fl-30; i-- {
+		s := strings.Split(data.Zdata.Klines[i], ",")
+
+		if i >= fl-4 {
+			f, _ := strconv.ParseFloat(s[2], 64)
+			dk[0] += f
+		}
+		if i >= fl-9 {
+			f, _ := strconv.ParseFloat(s[2], 64)
+			dk[1] += f
+		}
+		if i >= fl-19 {
+			f, _ := strconv.ParseFloat(s[2], 64)
+			dk[2] += f
+		}
+		if i >= fl-29 {
+			f, _ := strconv.ParseFloat(s[2], 64)
+			dk[3] += f
+		}
+
+	}
+	//logging.Error("==================", dk[2]/20, "==============", dk[3]/30)
+
+	f0, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", dk[0]/5), 64)
+	dk[0] = f0
+	f1, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", dk[1]/10), 64)
+	dk[1] = f1
+	f2, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", dk[2]/20), 64)
+	dk[2] = f2
+	f3, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", dk[3]/30), 64)
+	dk[3] = f3
+	//logging.Error("==========", dk)
+	return dk
 }

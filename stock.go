@@ -34,7 +34,7 @@ func main() {
 
 	//stocks.NewStockDayk(cfg).GetStockDayK()
 	//f10.NewFinancialReports().SaveFinaRepo()
-
+	//stocks.NewStockDayk(nil).GetDayK("002555")
 	//go func() {
 	//	for { // 1
 	//		//判断当天是否是交易日
