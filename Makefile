@@ -10,15 +10,8 @@ test:
 	go test ./go/... -race
 
 out:
-	rm stock
-
-/conf.d
-	cp -a conf.d/stock
-_dev.xml stock
-/conf.d/
-	cp -a bin/stock
- stock
-/
-	tar -zcf stock
-.tar.gz stock
-/
+	rm stock -rf
+	mkdir -p stock/conf.d
+	cp -a conf.d/stock_dev.xml stock/conf.d/
+	cp -a bin/stock stock/
+	tar -zcf stock.tar.gz stock/
