@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration version="1.0">
+    <appSettings>
+        <encryFactor>#s!1*:-)</encryFactor>
+        <!--
+        *
+        * You can load different configurations depending on your
+        * current environment. Setting the environment also influences
+        * things like logging and error reporting.
+        *
+        * This can be set to anything, but default usage is:
+        *
+        *     development
+        *     testing
+        *     pre-release
+        *     production
+        *
+        -->
+        <environment>development</environment>
+
+         <projects>
+            <appId>stock</appId>
+            <configFile>stock.xml</configFile>
+        </projects>
+
+    </appSettings>
+    <!--<emailSetting>-->
+        <!--<addr>notification@mail.facework.im</addr>-->
+        <!--<password>18fde39228634fb9</password>-->
+        <!--<server>smtpdm.aliyun.com</server>-->
+        <!--<port>25</port>-->
+    <!--</emailSetting>-->
+    <!--<cors>-->
+        <!--<allowOrigin>chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop</allowOrigin> &lt;!&ndash; 跨域 &ndash;&gt;-->
+    <!--</cors>-->
+    <logServer>
+        <on>0</on>
+        <addr>127.0.0.1</addr>
+        <port>8088</port>
+    </logServer>
+<!--  接口调用-->
+    <url>
+        <!-- 深交所 交易日历 -->
+        <sjsMonthList>http://www.szse.cn/api/report/exchange/onepersistenthour/monthList</sjsMonthList>
+        <!-- 东方财富日K接口 -->
+        <dfcfStockDayK>http://30.push2.eastmoney.com/api/qt/clist/get</dfcfStockDayK>
+    </url>
+
+    <webhook>https://oapi.dingtalk.com/robot/send?access_token=a7f08aa737c9606cb12a2f3ad37daad6453278d8a0e1722ce9a0f8ddab95e07a</webhook>  <!-- 钉钉 webhook地址 -->
+  <!-- CGO_ENABLED=0;GOOS=linux;GOSRCH=amd64-->
+</configuration>

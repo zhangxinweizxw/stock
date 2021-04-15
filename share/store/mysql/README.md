@@ -1,0 +1,1 @@
+注: rows.scan时, 不支持null->*string,解决方案为 sql.NullString
