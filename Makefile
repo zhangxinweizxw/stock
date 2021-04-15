@@ -11,8 +11,7 @@ test:
 
 out:
 	rm stock
- -rf
-	mkdir -p stock
+
 /conf.d
 	cp -a conf.d/stock
 _dev.xml stock

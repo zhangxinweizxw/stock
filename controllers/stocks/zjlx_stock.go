@@ -3,6 +3,7 @@ package stocks
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/shopspring/decimal"
 	"io/ioutil"
 	"net/http"
 	. "stock/models"
@@ -232,27 +233,50 @@ type AllStock struct {
 	Value       string `json:"i"`  // t=8193 手   t=8201  百分比  t=8220 百分比
 }
 
-//// 盘口异动
-//func (this *ZjlxStock) PkydStockFx() {
-//
-//	url := "http://push2ex.eastmoney.com/getAllStockChanges?type=8201,8202,8193&pageindex=0&pagesize=5&ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wzchanges"
-//	resp, err := http.Get(url)
-//	if err != nil {
-//		logging.Error("pkydStock:", err)
-//	}
-//	defer resp.Body.Close()
-//
-//	body, err1 := ioutil.ReadAll(resp.Body)
-//	if err1 != nil {
-//		logging.Error("ioutil.ReadAll", err1)
-//	}
-//	var data *PkydData
-//	if err = json.Unmarshal(body, &data); err != nil {
-//		logging.Error("盘口异动  | Error:=", err)
-//		return
-//	}
-//	//logging.Error("======", len(data.Data.AData))
-//	for _, v := range data.Data.AData {
-//		//
-//	}
-//}
+// 盘口异动
+func (this *ZjlxStock) PkydStockFx() {
+
+	url := "http://push2ex.eastmoney.com/getAllStockChanges?type=8201,8202,8193&pageindex=0&pagesize=3&ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wzchanges"
+	resp, err := http.Get(url)
+	if err != nil {
+		logging.Error("pkydStock:", err)
+	}
+	defer resp.Body.Close()
+
+	body, err1 := ioutil.ReadAll(resp.Body)
+	if err1 != nil {
+		logging.Error("ioutil.ReadAll", err1)
+	}
+	var data *PkydData
+	if err = json.Unmarshal(body, &data); err != nil {
+		logging.Error("盘口异动  | Error:=", err)
+		return
+	}
+	//logging.Error("======", len(data.Data.AData))
+	if len(data.Data.AData) <= 0 {
+		return
+	}
+	for _, v := range data.Data.AData {
+		// 判断是否以入库
+		if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+			continue
+		}
+
+		d := NewStockDayk(nil).GetZJlxDFCF(v.StockCode).Datas.Diff[0]
+
+		df62 := decimal.NewFromFloat(d.F62.(float64)).String()
+		df66 := decimal.NewFromFloat(d.F66.(float64)).String()
+		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
+
+		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
+		if (df62 < "10000000" && d.F184.(float64) < 8) || (df66 < "5000000" && d.F69.(float64) < 5) || (df72 < "1000000" && d.F75.(float64) < 3) || d.F2.(float64) > 58 || (d.F8.(float64) < 3 || d.F8.(float64) > 18) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 0.58 {
+			continue
+		}
+		// 筛选通过
+
+		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+		go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, d.F2.(float64), 6)
+
+		go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", v.StockCode, v.StockName, d.F2))
+	}
+}
