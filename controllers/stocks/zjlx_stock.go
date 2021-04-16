@@ -97,7 +97,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 			continue
 		}
-		if (s1.F62.(float64) < -5000000 && s1.F184.(float64) > 3) && (s1.F66.(float64) < -1000000 && s1.F69.(float64) > 1) {
+		if (s1.F62.(float64) < 0 && s1.F184.(float64) > 3) && (s1.F66.(float64) < 0 && s1.F69.(float64) > 1) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}
@@ -269,7 +269,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "10000000" && d.F184.(float64) < 8) || (df66 < "5000000" && d.F69.(float64) < 5) || (df72 < "1000000" && d.F75.(float64) < 3) || d.F2.(float64) > 58 || (d.F8.(float64) < 3 || d.F8.(float64) > 18) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 0.58 {
+		if (df62 < "30000000" && d.F184.(float64) < 8) || (df66 < "8000000" && d.F69.(float64) < 5) || (df72 < "1000000" && d.F75.(float64) < 3) || d.F2.(float64) > 58 || (d.F8.(float64) < 3 || d.F8.(float64) > 18) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 0.58 || d.F3.(float64) > 5.8 {
 			continue
 		}
 		// 筛选通过

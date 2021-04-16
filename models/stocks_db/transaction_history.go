@@ -33,17 +33,17 @@ func NewTransactionHistory() *TransactionHistory {
 // 是否已入库
 func (this *TransactionHistory) GetTranHist(sname string) int {
 
-	sn := ""
-	bulid := this.Db.Select(" stock_name sn ").From(this.TableName).
-		Where(fmt.Sprintf(" stock_code='%v' ", sname)).
-		Where("sell_time is NULL")
-	_, err := this.SelectWhere(bulid, nil).LoadStructs(&sn)
+	stock_code := ""
+	bulid := this.Db.Select(" stock_code ").From(this.TableName).
+		Where(fmt.Sprintf(" stock_name='%v' ", sname)).
+		Where("ISNULL(sell_price) ")
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&stock_code)
 	if err != nil {
 		fmt.Println("Select Table TABLE_TRANSACTION_HISTORY  |  Error   %v", err)
 		return 0
 	}
 	//	logging.Error("=========:", len(sn))
-	return len(sn)
+	return len(stock_code)
 }
 
 // 未卖出数据
