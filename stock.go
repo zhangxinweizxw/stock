@@ -105,7 +105,7 @@ func main() {
 					go stocks.NewAvsHStock(nil).AvsHStockFx()
 					//go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
-					//go stocks.NewDxStock().DxStockFx()
+					go stocks.NewDxStock().DxStockFx()
 					go stocks.NewZjlxStock().PkydStockFx()
 
 					go stocks.NewZjlxStock().ZjlxStockSellFx()
