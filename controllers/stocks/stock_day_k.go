@@ -6,6 +6,7 @@ import (
 	"github.com/shopspring/decimal"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"stock/config"
 	. "stock/models"
 	"stock/models/stocks_db"
@@ -36,23 +37,23 @@ type Date struct {
 
 type StockDayk struct {
 	C     *config.AppConfig
-	Zxjg  float64 `json:"f43"`
-	Zgjg  float64 `json:"f44"`
-	Zdjg  float64 `json:"f45"`
-	Cjj   float64 `json:"f47"`
-	Cje   float64 `json:"f48"`
-	Lb    float64 `json:"f50"`
-	Ztj   float64 `json:"f51"`
-	Dtj   float64 `json:"f52"`
-	Gpdm  string  `json:"f57"`
-	Gpmc  string  `json:"f58"`
-	Hsl   float64 `json:"f168"`
-	Zde   float64 `json:"f169"`
-	Zdf   float64 `json:"f170"`
-	Zljlr float64 `json:"f137"`
-	Jcd   float64 `json:"f140"`
-	Jdd   float64 `json:"f143"`
-	Jzd   float64 `json:"f146"`
+	Zxjg  float64     `json:"f43"`
+	Zgjg  float64     `json:"f44"`
+	Zdjg  float64     `json:"f45"`
+	Cjj   float64     `json:"f47"`
+	Cje   float64     `json:"f48"`
+	Lb    float64     `json:"f50"`
+	Ztj   float64     `json:"f51"`
+	Dtj   float64     `json:"f52"`
+	Gpdm  string      `json:"f57"`
+	Gpmc  string      `json:"f58"`
+	Hsl   float64     `json:"f168"`
+	Zde   float64     `json:"f169"`
+	Zdf   float64     `json:"f170"`
+	Zljlr interface{} `json:"f137"`
+	Jcd   float64     `json:"f140"`
+	Jdd   float64     `json:"f143"`
+	Jzd   float64     `json:"f146"`
 }
 
 func NewStockDayk(cfg *config.AppConfig) *StockDayk {
@@ -220,7 +221,12 @@ func (this *StockDayk) XQStockFx() {
 	for k, v := range XQStock {
 		i := this.StockInfoSS(v.StockCode).StockDate
 		name = i.Gpmc
-		d1 := decimal.NewFromFloat(i.Zljlr)
+		zljlrv := 0.0
+		if reflect.TypeOf(i.Zljlr).String() != "string" {
+			zljlrv = i.Zljlr.(float64)
+		}
+		d1 := decimal.NewFromFloat(zljlrv)
+
 		d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
 

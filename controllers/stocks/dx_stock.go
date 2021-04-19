@@ -3,6 +3,7 @@ package stocks
 import (
 	"fmt"
 	"github.com/shopspring/decimal"
+	"reflect"
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
@@ -384,7 +385,11 @@ func (this *DxStock) DxStockFx() {
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
 
 		name = i.Gpmc
-		d1 := decimal.NewFromFloat(i.Zljlr)
+		zljlrv := 0.0
+		if reflect.TypeOf(i.Zljlr).String() != "string" {
+			zljlrv = i.Zljlr.(float64)
+		}
+		d1 := decimal.NewFromFloat(zljlrv)
 		d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
 

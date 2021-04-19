@@ -6,6 +6,7 @@ import (
 	"github.com/shopspring/decimal"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"stock/config"
 	. "stock/models"
 	"stock/models/stocks_db"
@@ -95,7 +96,11 @@ func (this *AvsHStock) AvsHStockFx() {
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
 
 		name = i.Gpmc
-		d1 := decimal.NewFromFloat(i.Zljlr)
+		zljlrv := 0.0
+		if reflect.TypeOf(i.Zljlr).String() != "string" {
+			zljlrv = i.Zljlr.(float64)
+		}
+		d1 := decimal.NewFromFloat(zljlrv)
 		d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
 		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 3 && d1.String() > "10000000" && d2.String() > "1000000" && d3.String() > "500000" {

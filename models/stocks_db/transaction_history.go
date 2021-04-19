@@ -31,11 +31,11 @@ func NewTransactionHistory() *TransactionHistory {
 }
 
 // 是否已入库
-func (this *TransactionHistory) GetTranHist(sname string) int {
+func (this *TransactionHistory) GetTranHist(scode string) int {
 
 	stock_code := ""
 	bulid := this.Db.Select(" stock_code ").From(this.TableName).
-		Where(fmt.Sprintf(" stock_name='%v' ", sname)).
+		Where(fmt.Sprintf(" stock_code='%v' ", scode)).
 		Where("ISNULL(sell_price) ")
 	_, err := this.SelectWhere(bulid, nil).LoadStructs(&stock_code)
 	if err != nil {
