@@ -372,7 +372,7 @@ func (this *StockDayk) GetDayK(stockC string) [4]float64 {
 	}
 	fl := len(data.Zdata.Klines) - 1
 
-	for i := fl; i >= fl-30; i-- {
+	for i := fl; i >= 0; i-- {
 		s := strings.Split(data.Zdata.Klines[i], ",")
 
 		if i >= fl-4 {
