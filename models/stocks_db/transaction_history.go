@@ -34,7 +34,7 @@ func NewTransactionHistory() *TransactionHistory {
 func (this *TransactionHistory) GetTranHist(scode string) int {
 
 	stock_code := ""
-	bulid := this.Db.Select(" stock_code ").From(this.TableName).
+	bulid := this.Db.Select("stock_code").From(this.TableName).
 		Where(fmt.Sprintf(" stock_code='%v' ", scode)).
 		Where("ISNULL(sell_price) ")
 	_, err := this.SelectWhere(bulid, nil).LoadStructs(&stock_code)
@@ -52,7 +52,7 @@ func (this *TransactionHistory) GetTranHistWmcList() []*TransactionHistory {
 	var sc []*TransactionHistory
 	bulid := this.Db.Select("*").From(this.TableName).
 		Where("sell_time IS NULL AND sell_price IS NULL").
-		Where(fmt.Sprintf("buy_time !='%v'", time.Now().Format("2006-01-02")))
+		Where(fmt.Sprintf("date_format(buy_time,'%Y-%m-%d') !='%v'", time.Now().Format("2006-01-02")))
 	_, err := this.SelectWhere(bulid, nil).LoadStructs(&sc)
 	if err != nil {
 		fmt.Println("Select Table TABLE_TRANSACTION_HISTORY  |  Error   %v", err)

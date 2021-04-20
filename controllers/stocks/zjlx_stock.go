@@ -259,7 +259,7 @@ func (this *ZjlxStock) PkydStockFx() {
 	for _, v := range data.Data.AData {
 		// 判断是否以入库
 		if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
-			continue
+			break
 		}
 
 		d := NewStockDayk(nil).GetZJlxDFCF(v.StockCode).Datas.Diff[0]
