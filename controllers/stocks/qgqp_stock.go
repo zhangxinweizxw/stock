@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"stock/controllers"
 	"stock/share/util"
 
 	. "stock/models"
@@ -57,7 +58,7 @@ func (this *QgqpStock) QgqpStockSave() {
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" {
 			continue
 		}
-		if v.New.(float64) > 66 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.8 || v.PERation > 58 || v.TurnoverRate.(float64) < 2.5 || v.TurnoverRate.(float64) > 8 {
+		if v.New.(float64) > 66 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.8 || v.PERation > 58 || v.TurnoverRate.(float64) < 1.25 || v.TurnoverRate.(float64) > 8 {
 			continue
 		}
 
@@ -112,8 +113,10 @@ func (this *QgqpStock) QgqpStockFx() {
 		d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
 		//  判断最近 涨跌幅 和财务数据
-
-		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 1.25 && d1.String() > "30000000" && d2.String() > "5000000" && d3.String() > "1000000" {
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) < 0 {
+			continue
+		}
+		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1.28 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2.String() > "5000000" && d3.String() > "1000000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

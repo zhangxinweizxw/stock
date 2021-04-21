@@ -6,6 +6,8 @@ import (
 	"github.com/shopspring/decimal"
 	"io/ioutil"
 	"net/http"
+	"reflect"
+	"stock/controllers"
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
@@ -176,40 +178,41 @@ func (this *ZjlxStock) ZjlxtockFx() {
 
 	for k, v := range ZjlxStockDb {
 
-		url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=88&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124"
-		resp, err := http.Get(url)
-		if err != nil {
-			logging.Error("ZjlxStock:", err)
-		}
-		defer resp.Body.Close()
-
-		body, err1 := ioutil.ReadAll(resp.Body)
-		if err1 != nil {
-			logging.Error("ioutil.ReadAll", err1)
-		}
-		var data *util.StockDayK
-		if err = json.Unmarshal(body, &data); err != nil {
-			logging.Error("个股资金流向  | Error:=", err)
-			return
-		}
-		if data.Datas.Total <= 0 {
-			return
+		sc := ""
+		switch v.StockCode[:3] {
+		case "600", "601", "603", "605", "688", "689", "608":
+			sc = fmt.Sprintf("SH%v", v.StockCode)
+		case "300", "002", "000", "001", "003":
+			sc = fmt.Sprintf("SZ%v", v.StockCode)
 		}
 
-		for _, l := range data.Datas.Diff {
+		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
 
-			if (v.StockCode == l.F12.(string)) && (l.F3.(float64) > 3 && l.F3.(float64) < 5.8) && l.F62.(float64) > 100000000 && l.F66.(float64) > 10000000 && l.F72.(float64) > 1000000 {
-				//插入数据库中
-				// 判断是否以入库
-				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
-					break
-				}
-				// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-				go NewStockDayk(nil).SaveStock(l.F12.(string), l.F14.(string), l.F2.(float64), 3)
-				ZjlxStockDb = append(ZjlxStockDb[:k], ZjlxStockDb[k+1:]...)
-				go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", l.F12, l.F14, l.F2))
-
+		name = i.Gpmc
+		zljlrv := 0.0
+		if reflect.TypeOf(i.Zljlr).String() != "string" {
+			zljlrv = i.Zljlr.(float64)
+		}
+		d1 := decimal.NewFromFloat(zljlrv)
+		d2 := decimal.NewFromFloat(i.Jcd)
+		d3 := decimal.NewFromFloat(i.Jdd)
+		//  判断最近 涨跌幅 和财务数据
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) < 0 {
+			continue
+		}
+		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1.28 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2.String() > "5000000" && d3.String() > "1000000" {
+			// 判断是否以入库
+			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				continue
 			}
+			// 判断是否以入库
+			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				break
+			}
+			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+			go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, i.Zxjg, 3)
+			ZjlxStockDb = append(ZjlxStockDb[:k], ZjlxStockDb[k+1:]...)
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", v.StockName, v.StockCode, i.Zxjg))
 
 		}
 
@@ -268,11 +271,13 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "10000000") || (df66 < "8000000") || (df72 < "1000000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.28 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 0.58 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0 {
+		if (df62 < "10000000") || (df66 < "8000000") || (df72 < "1000000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.28 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 1.28 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
-
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) < 0 {
+			continue
+		}
 		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 		go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, d.F2.(float64), 6)
 

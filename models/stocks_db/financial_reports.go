@@ -21,7 +21,7 @@ type FinancialReports struct {
 }
 
 const (
-	TABLE_FINANNCIAL_REPORTS = "financial_reports" // 简单个股信息
+	TABLE_FINANNCIAL_REPORTS = "financial_reports" //
 )
 
 func NewFinancialReports() *FinancialReports {

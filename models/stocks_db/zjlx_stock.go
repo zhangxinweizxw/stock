@@ -28,8 +28,23 @@ func NewZjlxStockDb() *ZjlxStockDb {
 
 func (this *ZjlxStockDb) GetZjlxStockList() []*ZjlxStockDb {
 
+	// 查询最新日期
+	var ctime []string
+	bulid := this.Db.Select("create_time").From(this.TableName).
+		GroupBy("create_time").
+		OrderBy("create_time DESC").Limit(3)
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&ctime)
+	if err != nil {
+		fmt.Println("Select Table dx_stock  |  Error   %v", err)
+		return nil
+	}
+
 	var zjlxStock []*ZjlxStockDb
-	bulid1 := this.Db.Select("*").From(this.TableName)
+	bulid1 := this.Db.Select("COUNT(stock_code) ct,stock_name,stock_code ").From(this.TableName).
+		Where(fmt.Sprintf("(create_time ='%v' OR create_time ='%v' OR create_time ='%v' )", ctime[0], ctime[1], ctime[2])).
+		GroupBy("stock_code").
+		OrderBy("ct DESC").
+		Limit(5)
 
 	_, err1 := this.SelectWhere(bulid1, nil).LoadStructs(&zjlxStock)
 	if err1 != nil {
