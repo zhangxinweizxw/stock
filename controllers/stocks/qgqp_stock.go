@@ -111,6 +111,7 @@ func (this *QgqpStock) QgqpStockFx() {
 		d1 := decimal.NewFromFloat(zljlrv)
 		d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
+		//  判断最近 涨跌幅 和财务数据
 
 		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 1.25 && d1.String() > "30000000" && d2.String() > "5000000" && d3.String() > "1000000" {
 			// 判断是否以入库

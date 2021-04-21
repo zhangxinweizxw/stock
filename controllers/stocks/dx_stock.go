@@ -27,27 +27,27 @@ func (this *DxStock) SaveDxstock() {
 	}()
 	// 获取 stock_day_k 表最近23个交易日日期
 	d := stocks_db.NewStock_Day_K().GetStockDayKDate()
-	//if len(d) < 23 {  // 数据原因只有4天K线
-	if len(d) < 4 {
+	//if len(d) < 23 {  // 数据原因只有5天K线
+	if len(d) < 5 {
 		logging.Error("日K查询时间 Error：%v", len(d))
 		return
 	}
 	ntime := time.Now().Format("2006-01-02")
 	{ // 3
 		sql := `SELECT f12,f14 FROM stock_day_k
-				WHERE create_time='` + d[3]
-		sql += `' AND f3<5.8 AND f3>1.8 AND f10>1.25 AND f3 >dayK10 
-				  AND f12 IN(
-				SELECT f12 FROM stock_day_k
-				WHERE create_time='` + d[2]
-		sql += `' AND ( f3<2 OR f3>-2) AND f3 > dayK5 
+				WHERE create_time='` + d[0]
+		sql += `' AND f3<5.8 AND f3>1.8 AND f10>1.28 AND f3 >dayK10 AND f3 >dayK5  
 				  AND f12 IN(
 				SELECT f12 FROM stock_day_k
 				WHERE create_time='` + d[1]
-		sql += `' AND ( f3<2 OR f3>-2) AND f3 < dayK30 
+		sql += `' AND ( f3<2 OR f3>-2) 
 				  AND f12 IN(
 				SELECT f12 FROM stock_day_k
-				WHERE create_time='` + d[0]
+				WHERE create_time='` + d[2]
+		sql += `' AND ( f3<2 OR f3>-2) 
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[3]
 		sql += `' AND f3>-5.8 AND f3 <2 AND f10 > 1.28  
 			)))`
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
@@ -60,36 +60,36 @@ func (this *DxStock) SaveDxstock() {
 
 	}
 
-	//{ // 4
-	//	sql := `SELECT f12,f14 FROM stock_day_k
-	//			WHERE create_time='` + d[4]
-	//	sql += `' AND f3<-5 AND f10>1
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[3]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[2]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[1]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[0]
-	//	sql += `' AND f3>3 AND f3 <5 AND f10 > 1
-	//		))))`
-	//	sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
-	//	if len(sdkl) > 0 {
-	//		for _, v := range sdkl {
-	//			//logging.Error("=========", v.F12, v.F14)
-	//			this.Save(v.F12, v.F14, ntime, 4)
-	//		}
-	//	}
-	//
-	//}
+	{ // 4
+		sql := `SELECT f12,f14 FROM stock_day_k
+				WHERE create_time='` + d[0]
+		sql += `' AND f3>1.8 AND f3 <5.8 AND f10>1.28 AND dayK5 < f3 AND dayK10 < f3 AND dayK20  < f3
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[1]
+		sql += `' AND ( f3<2 OR f3>-2)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[2]
+		sql += `' AND ( f3<2 OR f3>-2)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[3]
+		sql += `' AND ( f3<3 OR f3>-3)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[4]
+		sql += `' AND f3>-8.8 AND f3 <1.8 AND f10 > 1.28 
+			))))`
+		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
+		if len(sdkl) > 0 {
+			for _, v := range sdkl {
+				//logging.Error("=========", v.F12, v.F14)
+				this.Save(v.F12, v.F14, ntime, 4)
+			}
+		}
+
+	}
 
 	//{ // 5
 	//	sql := `SELECT f12,f14 FROM stock_day_k

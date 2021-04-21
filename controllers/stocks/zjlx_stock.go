@@ -74,7 +74,6 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 	// 查询表中数据
 	scl := stocks_db.NewTransactionHistory().GetTranHistWmcList()
 	if len(scl) <= 0 {
-		time.Sleep(5 * time.Hour)
 		return
 	}
 	for _, v := range scl {
@@ -97,7 +96,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 			continue
 		}
-		if (s1.F62.(float64) < 0 && s1.F184.(float64) > 3) && (s1.F66.(float64) < 0 && s1.F69.(float64) > 1) {
+		if (s1.F62.(float64) < 0) && (s1.F66.(float64) < 0) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}
@@ -269,10 +268,10 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "30000000" && d.F184.(float64) < 8) || (df66 < "8000000" && d.F69.(float64) < 5) || (df72 < "1000000" && d.F75.(float64) < 3) || d.F2.(float64) > 58 || (d.F8.(float64) < 3 || d.F8.(float64) > 18) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 0.58 || d.F3.(float64) > 5.8 {
+		if (df62 < "10000000") || (df66 < "8000000") || (df72 < "1000000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.28 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 0.58 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0 {
 			continue
 		}
-		// 筛选通过
+		// 筛选通过   需要判断下最近涨跌和财务数据
 
 		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 		go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, d.F2.(float64), 6)
