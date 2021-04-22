@@ -52,7 +52,7 @@ func (this *TransactionHistory) GetTranHistWmcList() []*TransactionHistory {
 	var sc []*TransactionHistory
 	bulid := this.Db.Select("*").From(this.TableName).
 		Where("sell_time IS NULL AND sell_price IS NULL").
-		Where(fmt.Sprintf("date_format(buy_time,'%Y-%m-%d') !='%v'", time.Now().Format("2006-01-02")))
+		Where("date_format(buy_time,'%Y-%m-%d') !='" + time.Now().Format("2006-01-02") + "'")
 	_, err := this.SelectWhere(bulid, nil).LoadStructs(&sc)
 	if err != nil {
 		fmt.Println("Select Table TABLE_TRANSACTION_HISTORY  |  Error   %v", err)
