@@ -166,7 +166,7 @@ func (this *StockDayk) GetXueqiu() {
 
 	// 为了简单手动改报告期
 	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=5_58&pct=3_5.8&volume_ratio=1.28_8&pct5=-5_10&tr=3_20&oiy.20191231=5_26375.48&npay.20191231=5_13152.74&pettm=5_58`
-	url += `&oiy.20200630=5_26375.48&npay.20200630=5_13152.74`
+	url += `&oiy.20200630=5_26375.48&npay.20201231=5_13152.74`
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -230,7 +230,7 @@ func (this *StockDayk) XQStockFx() {
 		d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
 
-		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 8 && i.Hsl > 1.25 && i.Hsl < 10 && d1.String() > "10000000" && d2.String() > "1000000" && d3.String() > "500000" {
+		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1.28 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > "10000000" && d2.String() > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
