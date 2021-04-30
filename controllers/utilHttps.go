@@ -31,8 +31,8 @@ func (this *UtilHttps) GetXqPd(scode string) int {
 		sc = fmt.Sprintf("SZ%v", scode)
 	}
 	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=`
-	url += `&npay.20191231=5_100&oiy.20191231=5_100`
-	url += `&npay.20200630=5_100&oiy.20200630=5_100&mc=5000000000_80000000000&pct5=0_10&pct20=-20_30&pct250=-50_50`
+	url += `&npay.20201231=5_100&oiy.20201231=5_100`
+	url += `&npay.20210331=5_100&oiy.20210331=5_100&mc=5000000000_80000000000&pct5=0_10&pct20=-20_30&pct250=-50_50`
 	url += fmt.Sprintf(`&symbol=%v`, sc)
 
 	resp, err := http.Get(url)

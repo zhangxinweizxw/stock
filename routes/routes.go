@@ -6,7 +6,6 @@ import (
 
 func Register(engine *gin.Engine) {
 
-	// 微信
 	rg := engine.Group("/api")
 
 	// publish

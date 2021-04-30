@@ -215,65 +215,65 @@ func (this *DxStock) SaveDxstock() {
 		}
 	}
 
-	//{ // 11
-	//	sql := `SELECT f12,f14 FROM stock_day_k
-	//			WHERE create_time='` + d[11]
-	//	sql += `' AND f3<-5 AND f10>1
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[10]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[9]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[8]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[7]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[6]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[5]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[4]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[3]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[2]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[1]
-	//	sql += `' AND ( f3<2 OR f3>-2)
-	//			  AND f12 IN(
-	//			SELECT f12 FROM stock_day_k
-	//			WHERE create_time='` + d[0]
-	//	sql += `' AND f3>3 AND f3 <5 AND f10 > 1
-	//		)))))))))))`
-	//	sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
-	//	if len(sdkl) > 0 {
-	//		for _, v := range sdkl {
-	//			//logging.Error("=========", v.F12, v.F14)
-	//			this.Save(v.F12, v.F14, ntime, 11)
-	//		}
-	//	}
-	//
-	//}
-	//
+	{ // 11
+		sql := `SELECT f12,f14 FROM stock_day_k
+				WHERE create_time='` + d[0]
+		sql += `'  AND f3<-5.8 AND f3 >1.8 AND f10>1.28 AND f2 > dayK20
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[1]
+		sql += `'  AND ( f3<2.8 OR f3>0) AND f2 > dayK10
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[2]
+		sql += `'  AND ( f3<2.8 OR f3>-1.8)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[3]
+		sql += `' AND ( f3<2 OR f3>-2)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[4]
+		sql += `' AND ( f3<2 OR f3>-2)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[5]
+		sql += `' AND ( f3<2 OR f3>-2)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[6]
+		sql += `' AND ( f3<2 OR f3>-2)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[7]
+		sql += `' AND ( f3<3 OR f3>-3)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[8]
+		sql += `' AND ( f3<3 OR f3>-3)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[9]
+		sql += `' AND ( f3<3 OR f3>-3)
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[10]
+		sql += `'  AND ( f3<3 OR f3>-3) AND dayK10 >f2
+				  AND f12 IN(
+				SELECT f12 FROM stock_day_k
+				WHERE create_time='` + d[11]
+		sql += `'  AND f3>-8.8 AND f3 <0 AND f10 > 1.28
+			)))))))))))`
+		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
+		if len(sdkl) > 0 {
+			for _, v := range sdkl {
+				//logging.Error("=========", v.F12, v.F14)
+				this.Save(v.F12, v.F14, ntime, 11)
+			}
+		}
+
+	}
+
 	//{ // 13
 	//	sql := `SELECT f12,f14 FROM stock_day_k
 	//			WHERE create_time='` + d[13]

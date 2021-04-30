@@ -165,8 +165,10 @@ func (this *StockDayk) GetXueqiu() {
 	stocks_db.NewXQ_Stock().DelXqStock()
 
 	// 为了简单手动改报告期
-	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=5_58&pct=3_5.8&volume_ratio=1.28_8&pct5=-5_10&tr=3_20&oiy.20191231=5_26375.48&npay.20191231=5_13152.74&pettm=5_58`
-	url += `&oiy.20200630=5_26375.48&npay.20201231=5_13152.74`
+	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.28_58&pct=1.28_5.8&pettm=5_68`
+	url += `&npay.20201231=5_100&mc=5000000000_100000000000`
+	url += `&oiy.20201231=5_100&pct5=-5_5&pct20=-5_5&volume_ratio=0.8_36.75&tr=1.28_20`
+	url += `&npay.20210331=5_100&oiy.20210331=5_100`
 
 	resp, err := http.Get(url)
 	if err != nil {

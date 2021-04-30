@@ -3,6 +3,7 @@ package f10
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"stock/models/stocks_db"
@@ -30,7 +31,8 @@ func NewFinancialReports() *FinancialReports {
 }
 
 // 保存F10 财务分析数据
-func (this *FinancialReports) SaveFinaRepo() {
+func (this *FinancialReports) SaveFinaRepo(c *gin.Context) {
+
 	// 先清空表数据
 	stocks_db.NewFinancialReports().DelFinancialReports()
 	// 查询最新个股
