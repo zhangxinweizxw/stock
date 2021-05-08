@@ -271,7 +271,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "10000000") || (df66 < "8000000") || (df72 < "1000000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.28 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 1.28 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0 {
+		if (df62 < "10000000") || (df66 < "8000000") || (df72 < "1000000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 1.28 || d.F3.(float64) > 5.8 || d.F3.(float64) < 1.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据

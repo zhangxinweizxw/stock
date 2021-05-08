@@ -58,7 +58,7 @@ func (this *QgqpStock) QgqpStockSave() {
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" {
 			continue
 		}
-		if v.New.(float64) > 66 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.8 || v.PERation > 58 || v.TurnoverRate.(float64) < 1.25 || v.TurnoverRate.(float64) > 8 {
+		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.8 || v.PERation > 58 || v.TurnoverRate.(float64) < 1.8 || v.TurnoverRate.(float64) > 8 {
 			continue
 		}
 

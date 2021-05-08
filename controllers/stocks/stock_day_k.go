@@ -165,10 +165,9 @@ func (this *StockDayk) GetXueqiu() {
 	stocks_db.NewXQ_Stock().DelXqStock()
 
 	// 为了简单手动改报告期
-	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.28_58&pct=1.28_5.8&pettm=5_68`
-	url += `&npay.20201231=5_100&mc=5000000000_100000000000`
-	url += `&oiy.20201231=5_100&pct5=-5_5&pct20=-5_5&volume_ratio=0.8_36.75&tr=1.28_20`
-	url += `&npay.20210331=5_100&oiy.20210331=5_100`
+	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=5.8_58&pct=1.8_5.8&pettm=8_58`
+	url += `&oiy.20210331=5_1000&npay.20210331=5_1000&mc=10000000000_2393069370978&volume_ratio=1.28_8&tr=3_8&pct5=0_10&pct250=-30_30`
+	url += `&oiy.20201231=5_1000&npay.20201231=5_1000`
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -242,7 +241,7 @@ func (this *StockDayk) XQStockFx() {
 
 			go this.SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 1)
 			XQStock = append(XQStock[:k], XQStock[k+1:]...)
-			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+			//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 	}
 
