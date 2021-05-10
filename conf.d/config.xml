@@ -46,6 +46,6 @@
         <dfcfStockDayK>http://30.push2.eastmoney.com/api/qt/clist/get</dfcfStockDayK>
     </url>
 
-    <webhook>https://oapi.dingtalk.com/robot/send?access_token=a7f08aa737c9606cb12a2f3ad37daad6453278d8a0e1722ce9a0f8ddab95e07a</webhook>  <!-- 钉钉 webhook地址 -->
+    <webhook>https://oapi.dingtalk.com/robot/send?access_token=b3286b5a01ab43f2fef9f0479089e543aaa40333d32d7d52e931c9a204143295</webhook>  <!-- 钉钉 webhook地址 -->
   <!-- CGO_ENABLED=0;GOOS=linux;GOSRCH=amd64-->
 </configuration>

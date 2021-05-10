@@ -35,7 +35,7 @@ func main() {
 
 	// 路由注册
 	routes.Register(r)
-	//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("推荐买入：%v   |   股票代码：%v    买入价：%v", "三七互娱", "300068", 15.56))
+	//go util.NewDdRobot().DdRobotPush("test 数据 更新异常预警信息")
 
 	//stocks.NewStockDayk(cfg).GetStockDayK()
 	//f10.NewFinancialReports().SaveFinaRepo()

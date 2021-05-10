@@ -37,7 +37,7 @@ func (*DdRobot) DdRobotPush(stockInfo string) {
 		jsonValue := []byte(body)
 		//发送消息到钉钉群使用webhook
 
-		webHook := "https://oapi.dingtalk.com/robot/send?access_token=ab80dbae81ff47b5b3d60e5c585051ed1266fa01f6207a8d22e1d6c6950ea053"
+		webHook := "https://oapi.dingtalk.com/robot/send?access_token=b3286b5a01ab43f2fef9f0479089e543aaa40333d32d7d52e931c9a204143295"
 		_, err := http.Post(webHook, "application/json;charset=utf-8", bytes.NewBuffer(jsonValue))
 		if err != nil {
 			fmt.Println(err.Error())
