@@ -233,7 +233,8 @@ func (this *StockDayk) XQStockFx() {
 
 		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1.28 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > "10000000" && d2.String() > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
-			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+			sc := v.StockCode[2:]
+			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {
 				continue
 			}
 
@@ -241,7 +242,7 @@ func (this *StockDayk) XQStockFx() {
 
 			go this.SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 1)
 			XQStock = append(XQStock[:k], XQStock[k+1:]...)
-			//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 	}
 

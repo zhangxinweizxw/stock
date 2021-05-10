@@ -183,3 +183,20 @@ func (this *Stock_Day_K) GetStockDayKDate() []string {
 	}
 	return cm
 }
+
+// 获取30日K均线价位
+func (this *Stock_Day_K) GetStockDayK30Date(sc string) float64 {
+	// 查询最新日期
+	var dk30 float64
+	bulid := this.Db.Select("dayK30 as dk30").
+		From(this.TableName).
+		Where(fmt.Sprintf("f12='%v'", sc)).
+		OrderBy("create_time DESC").
+		Limit(1)
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&dk30)
+	if err != nil {
+		fmt.Println("Select Table stock_day_k create_time  |  Error   %v", err)
+		return 0
+	}
+	return dk30
+}

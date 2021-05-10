@@ -1,27 +1,21 @@
 package message
 
 import (
-    "fmt"
+	"fmt"
 
-/share/models"
+	. "stock/share/models"
 
 	"encoding/json"
 	"strconv"
 
 	"sync"
 
-	"stock
-/share/gocraft/dbr"
-	"stock
-/share/middleware"
-	"stock
-/share/models/channel"
-	"stock
-/share/models/common"
-	"stock
-/share/models/upload"
-	"stock
-/share/store/redis"
+	"stock/share/gocraft/dbr"
+	"stock/share/middleware"
+	"stock/share/models/channel"
+	"stock/share/models/common"
+	"stock/share/models/upload"
+	"stock/share/store/redis"
 )
 
 type Message struct {

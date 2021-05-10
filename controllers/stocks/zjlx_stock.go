@@ -271,7 +271,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "10000000") || (df66 < "8000000") || (df72 < "1000000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 1.28 || d.F3.(float64) > 5.8 || d.F3.(float64) < 1.28 {
+		if (df62 < "15800000") || (df66 < "8880000") || (df72 < "1580000") || d.F2.(float64) > 58 || (d.F8.(float64) < 2.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 1.28 || d.F3.(float64) > 5.8 || d.F3.(float64) < 1.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
@@ -283,4 +283,51 @@ func (this *ZjlxStock) PkydStockFx() {
 
 		go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", v.StockCode, v.StockName, d.F2))
 	}
+}
+
+// 测试
+
+func (this *ZjlxStock) S1430Fx() {
+	url := "http://37.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=2000&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
+	resp, err := http.Get(url)
+	if err != nil {
+		logging.Error("3-5 涨幅数据Stock:", err)
+	}
+	defer resp.Body.Close()
+
+	body, err1 := ioutil.ReadAll(resp.Body)
+	if err1 != nil {
+		logging.Error("ioutil.ReadAll", err1)
+	}
+	var data *util.StockDayK
+	if err = json.Unmarshal(body, &data); err != nil {
+		logging.Error("涨幅3-5 分析  | Error:=", err)
+		return
+	}
+	// 筛选过滤
+	for _, v := range data.Datas.Diff {
+		if reflect.TypeOf(v.F3).String() == "string" {
+			continue
+		}
+
+		if v.F3.(float64) < 3 || v.F3.(float64) > 5 {
+			continue
+		}
+		if v.F10.(float64) < 1 {
+			continue
+		}
+		if v.F8.(float64) < 5 || v.F8.(float64) > 10 {
+			continue
+		}
+		if v.F21.(float64) < 5000000000 || v.F21.(float64) > 10000000000 {
+			continue
+		}
+		// F2 > dayK30
+		dk30 := stocks_db.NewStock_Day_K().GetStockDayK30Date(v.F12.(string))
+		if v.F2.(float64) < dk30 {
+			continue
+		}
+		//logging.Error("=================%v=============%v===========%v", v.F12, v.F14, v.F2)
+	}
+
 }
