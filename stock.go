@@ -61,17 +61,17 @@ func main() {
 				if time.Now().Hour() >= 17 {
 
 					//每天下午跑日K数据
-					go stocks.NewStockDayk(cfg).GetStockDayK()
+					stocks.NewStockDayk(cfg).GetStockDayK()
 
-					go stocks.NewStockDayk(cfg).GetXueqiu()
+					stocks.NewStockDayk(cfg).GetXueqiu()
 
-					go stocks.NewAvsHStock(cfg).SaveAvsHStock()
+					stocks.NewAvsHStock(cfg).SaveAvsHStock()
 
-					go stocks.NewZjlxStock().ZjlxStockSave()
+					stocks.NewZjlxStock().ZjlxStockSave()
 
-					go stocks.NewQgqpStock().QgqpStockSave()
+					stocks.NewQgqpStock().QgqpStockSave()
 
-					go stocks.NewDxStock().SaveDxstock()
+					stocks.NewDxStock().SaveDxstock()
 				}
 				time.Sleep(1 * time.Hour)
 			}
