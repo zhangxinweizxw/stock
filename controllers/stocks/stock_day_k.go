@@ -51,7 +51,7 @@ type StockDayk struct {
 	Zde   float64     `json:"f169"`
 	Zdf   float64     `json:"f170"`
 	Zljlr interface{} `json:"f137"`
-	Jcd   float64     `json:"f140"`
+	Jcd   interface{} `json:"f140"`
 	Jdd   float64     `json:"f143"`
 	Jzd   float64     `json:"f146"`
 }
@@ -228,10 +228,14 @@ func (this *StockDayk) XQStockFx() {
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
 
-		d2 := decimal.NewFromFloat(i.Jcd)
+		d2 := "0"
+		if reflect.TypeOf(i.Jcd).String() != "string" {
+			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+		}
+
 		d3 := decimal.NewFromFloat(i.Jdd)
 
-		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1.28 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > "10000000" && d2.String() > "1000000" && d3.String() > "500000" {
+		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 8 && i.Hsl > 2.28 && i.Hsl < 10 && d1.String() > "10000000" && d2 > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {

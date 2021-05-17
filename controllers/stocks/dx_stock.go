@@ -368,7 +368,7 @@ func (this *DxStock) DxStockFx() {
 		d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
 
-		if i.Zdf > 1.28 && i.Zdf < 5 && i.Lb > 1.25 && i.Hsl > 3 && d1.String() > "10000000" && d2.String() > "0" && d3.String() > "0" {
+		if i.Zdf > 1.28 && i.Zdf < 5 && i.Lb > 1 && i.Hsl > 3 && d1.String() > "10000000" && d2.String() > "0" && d3.String() > "0" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

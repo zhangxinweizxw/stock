@@ -116,7 +116,7 @@ func (this *QgqpStock) QgqpStockFx() {
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) < 0 {
 			continue
 		}
-		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1.28 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2.String() > "5000000" && d3.String() > "1000000" {
+		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 2.28 && d1.String() > "10000000" && d2.String() > "5000000" && d3.String() > "1000000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
