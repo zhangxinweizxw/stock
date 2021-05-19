@@ -50,27 +50,24 @@ func main() {
 
 			if b {
 				c1 := stocks_db.NewStock_Day_K().GetIsZx()
-
-				if c1 == time.Now().Format("2006-01-02") {
+				if c1 != 0 {
 					time.Sleep(8 * time.Hour)
 					continue
 				}
-
 				//雪球筛选
 				if time.Now().Hour() >= 17 {
-
 					//每天下午跑日K数据
 					stocks.NewStockDayk(cfg).GetStockDayK()
 
 					stocks.NewStockDayk(cfg).GetXueqiu()
 
-					stocks.NewAvsHStock(cfg).SaveAvsHStock()
+					//stocks.NewAvsHStock(cfg).SaveAvsHStock() 废弃
 
 					stocks.NewZjlxStock().ZjlxStockSave()
 
 					stocks.NewQgqpStock().QgqpStockSave()
 
-					stocks.NewDxStock().SaveDxstock()
+					//stocks.NewDxStock().SaveDxstock()
 				}
 				time.Sleep(1 * time.Hour)
 			}
@@ -103,10 +100,10 @@ func main() {
 				if err == nil && t1.After(t2) && t1.Before(t3) {
 					// 雪球筛选处理逻辑
 					go stocks.NewStockDayk(nil).XQStockFx()
-					go stocks.NewAvsHStock(nil).AvsHStockFx()
-					//go stocks.NewZjlxStock().ZjlxtockFx()
+					//go stocks.NewAvsHStock(nil).AvsHStockFx() 废弃
+					go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
-					go stocks.NewDxStock().DxStockFx()
+					//go stocks.NewDxStock().DxStockFx()
 					go stocks.NewZjlxStock().PkydStockFx()
 
 					go stocks.NewZjlxStock().ZjlxStockSellFx()

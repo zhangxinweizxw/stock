@@ -89,7 +89,7 @@ func (this *AvsHStock) AvsHStockFx() {
 		switch v.StockCode[:3] {
 		case "600", "601", "603", "605", "688", "689", "608":
 			sc = fmt.Sprintf("SH%v", v.StockCode)
-		case "300", "002", "000", "001", "003":
+		case "300", "002", "000", "001", "003", "301":
 			sc = fmt.Sprintf("SZ%v", v.StockCode)
 		}
 
@@ -101,9 +101,13 @@ func (this *AvsHStock) AvsHStockFx() {
 			zljlrv = i.Zljlr.(float64)
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
-		d2 := decimal.NewFromFloat(i.Jcd)
+		//d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
-		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2.String() > "1000000" && d3.String() > "500000" {
+		d2 := "0"
+		if reflect.TypeOf(i.Jcd).String() != "string" {
+			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+		}
+		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2 > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

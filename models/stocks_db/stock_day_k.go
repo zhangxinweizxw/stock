@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"stock/share/logging"
 	. "stock/share/models"
+	"stock/share/util"
+	"time"
 )
 
 const (
@@ -124,18 +126,24 @@ func (this *Stock_Day_K) GetXQStockList() []*XQ_Stock {
 }
 
 // 查询日K 雪球筛选是否执行
-func (this *Stock_Day_K) GetIsZx() string {
+func (this *Stock_Day_K) GetIsZx() int {
 
-	ctime := ""
-	bulid := this.Db.Select("create_time").From(TABLE_STOCK_DAY_K).
-		OrderBy("create_time DESC").Limit(1)
-	_, err := this.SelectWhere(bulid, nil).LoadStructs(&ctime)
+	t := time.Now().Format("2006-01-02")
+
+	ct := 0
+	bulid := this.Db.Select("count(1) ct").From(TABLE_STOCK_DAY_K).
+		Where(fmt.Sprintf("create_time='%v'", t))
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&ct)
 	if err != nil {
 		fmt.Println("Select Table TABLE_STOCK_DAY_K  |  Error   %v", err)
-		return ""
+		return ct
+	}
+	if ct < 4000 && ct != 0 {
+		// 大概率日K异常报警
+		go util.NewDdRobot().DdRobotPush("日K更新异常！")
 	}
 
-	return ctime
+	return ct
 }
 
 // 短线 3、4、5、7、8 、11、13、18、21 选股法

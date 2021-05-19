@@ -24,12 +24,12 @@ func (*DdRobot) DdRobotPush(stockInfo string) {
 		{
 			"msgtype": "text",
 			"text": {
-	   	"content": "stock|
-	                   %v"
+	  	"content": "stock|
+	                  %v"
 			},
 			"at": {
-	   		"atMobiles": [],
-	   	"isAtAll": false
+	  		"atMobiles": [],
+	  	"isAtAll": false
 			}
 		 }`
 

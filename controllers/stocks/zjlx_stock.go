@@ -25,9 +25,9 @@ func NewZjlxStock() *ZjlxStock {
 // 资金流向保存个股
 func (this *ZjlxStock) ZjlxStockSave() {
 
-	//stocks_db.NewZjlxStockDb().DelZjlxStock()
+	stocks_db.NewZjlxStockDb().DelZjlxStock()
 
-	url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=568&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124"
+	url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=568&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124%2Cf10"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("ZjlxStock:", err)
@@ -49,7 +49,11 @@ func (this *ZjlxStock) ZjlxStockSave() {
 	ntime := time.Now().Format("2006-01-02")
 	for _, v := range data.Datas.Diff {
 
-		if v.F3.(float64) > 5.8 || v.F3.(float64) < 1.8 || v.F2.(float64) > 58 || v.F2.(float64) < 5 || v.F184.(float64) < 5 || v.F69.(float64) < 5 || v.F62.(float64) < 1000000 || v.F66.(float64) < 500000 {
+		if v.F3.(float64) > 5.8 || v.F3.(float64) < 1.8 || v.F2.(float64) > 58 || v.F2.(float64) < 5 || v.F184.(float64) < 5 || v.F69.(float64) < 5 || v.F62.(float64) < 10000000 || v.F66.(float64) < 5000000 || v.F10.(float64) < 1 {
+			continue
+		}
+		// 筛选通过   需要判断下最近涨跌和财务数据
+		if controllers.NewUtilHttps(nil).GetXqPd(v.F12.(string)) <= 0 {
 			continue
 		}
 
@@ -78,13 +82,14 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 	if len(scl) <= 0 {
 		return
 	}
+
 	for _, v := range scl {
 		//logging.Error("=====", v)
 		stockCodes := ""
 		switch v.StockCode[:3] {
 		case "600", "601", "603", "605", "688", "689", "608":
 			stockCodes = fmt.Sprintf("1.%v", v.StockCode)
-		case "300", "002", "000", "001", "003":
+		case "300", "002", "000", "001", "003", "301":
 			stockCodes = fmt.Sprintf("0.%v", v.StockCode)
 		}
 		s1 := this.ZjlxStockInfo(stockCodes)
@@ -98,7 +103,9 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 			continue
 		}
-		if (s1.F62.(float64) < 0) && (s1.F66.(float64) < 0) {
+		df := decimal.NewFromFloat(s1.F62.(float64))
+
+		if (df.String() < "-5000000") && (s1.F66.(float64) < 0) && s1.F10.(float64) > 0.5 {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}
@@ -109,7 +116,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 // 个股资金实时流向 获取
 func (this *ZjlxStock) ZjlxStockInfo(stockCode string) *util.StockInfo {
 
-	url := "http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=" + stockCode + "&fields=f62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81&ut=b2884a393a59ad64002292a3e90d46a5&_=1616331445606"
+	url := "http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=" + stockCode + "&fields=f62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf10&ut=b2884a393a59ad64002292a3e90d46a5"
 	//logging.Error("=======%v", url)
 	resp, err := http.Get(url)
 	if err != nil {
@@ -182,7 +189,7 @@ func (this *ZjlxStock) ZjlxtockFx() {
 		switch v.StockCode[:3] {
 		case "600", "601", "603", "605", "688", "689", "608":
 			sc = fmt.Sprintf("SH%v", v.StockCode)
-		case "300", "002", "000", "001", "003":
+		case "300", "002", "000", "001", "003", "301":
 			sc = fmt.Sprintf("SZ%v", v.StockCode)
 		}
 
@@ -194,13 +201,17 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			zljlrv = i.Zljlr.(float64)
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
-		d2 := decimal.NewFromFloat(i.Jcd)
+		//d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
+		d2 := "0"
+		if reflect.TypeOf(i.Jcd).String() != "string" {
+			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+		}
 		//  判断最近 涨跌幅 和财务数据
-		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) < 0 {
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
-		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1.28 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2.String() > "5000000" && d3.String() > "1000000" {
+		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 1.28 && d1.String() > "10000000" && d2 > "5000000" && d3.String() > "1000000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -271,11 +282,11 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "15800000") || (df66 < "8880000") || (df72 < "1580000") || d.F2.(float64) > 58 || (d.F8.(float64) < 2.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 58) || d.F10.(float64) < 1.28 || d.F3.(float64) > 5.8 || d.F3.(float64) < 1.28 {
+		if (df62 < "10800000") || (df66 < "5880000") || (df72 < "1580000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.8 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
-		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) < 0 {
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
 		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息

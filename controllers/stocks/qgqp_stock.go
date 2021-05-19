@@ -62,6 +62,11 @@ func (this *QgqpStock) QgqpStockSave() {
 			continue
 		}
 
+		// 筛选通过   需要判断下最近涨跌和财务数据
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
+			continue
+		}
+
 		// 股票信息写入qgqp_stock表方便使用
 		i := stocks_db.NewQgqpStockDb()
 		p := map[string]interface{}{
@@ -98,7 +103,7 @@ func (this *QgqpStock) QgqpStockFx() {
 		switch v.StockCode[:3] {
 		case "600", "601", "603", "605", "688", "689", "608":
 			sc = fmt.Sprintf("SH%v", v.StockCode)
-		case "300", "002", "000", "001", "003":
+		case "300", "002", "000", "001", "003", "301":
 			sc = fmt.Sprintf("SZ%v", v.StockCode)
 		}
 
@@ -110,13 +115,17 @@ func (this *QgqpStock) QgqpStockFx() {
 			zljlrv = i.Zljlr.(float64)
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
-		d2 := decimal.NewFromFloat(i.Jcd)
+		//d2 := decimal.NewFromFloat(i.Jcd)
 		d3 := decimal.NewFromFloat(i.Jdd)
+		d2 := "0"
+		if reflect.TypeOf(i.Jcd).String() != "string" {
+			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+		}
 		//  判断最近 涨跌幅 和财务数据
-		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) < 0 {
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
-		if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 2.28 && d1.String() > "10000000" && d2.String() > "5000000" && d3.String() > "1000000" {
+		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2 > "5000000" && d3.String() > "1000000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
