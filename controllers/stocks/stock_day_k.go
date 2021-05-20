@@ -308,6 +308,8 @@ func (this *StockDayk) GetZJlxDFCF(stockC string) *util.StockDayK {
 		stockCodes = fmt.Sprintf("1.%v", stockC)
 	case "300", "002", "000", "001", "003", "301":
 		stockCodes = fmt.Sprintf("0.%v", stockC)
+	default:
+		return nil
 	}
 
 	if stockCodes[:2] != "1." && stockCodes[:2] != "0." {
@@ -350,6 +352,8 @@ func (this *StockDayk) GetDayK(stockC string) [4]float64 {
 		stockCodes = fmt.Sprintf("1.%v", stockC)
 	case "300", "002", "000", "001", "003", "301":
 		stockCodes = fmt.Sprintf("0.%v", stockC)
+	default:
+		return dk
 	}
 
 	if stockCodes[:2] != "1." && stockCodes[:2] != "0." {

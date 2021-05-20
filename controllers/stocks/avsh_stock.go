@@ -91,6 +91,8 @@ func (this *AvsHStock) AvsHStockFx() {
 			sc = fmt.Sprintf("SH%v", v.StockCode)
 		case "300", "002", "000", "001", "003", "301":
 			sc = fmt.Sprintf("SZ%v", v.StockCode)
+		default:
+			continue
 		}
 
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate

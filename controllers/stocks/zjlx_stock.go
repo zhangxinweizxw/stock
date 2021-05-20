@@ -91,6 +91,8 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 			stockCodes = fmt.Sprintf("1.%v", v.StockCode)
 		case "300", "002", "000", "001", "003", "301":
 			stockCodes = fmt.Sprintf("0.%v", v.StockCode)
+		default:
+			continue
 		}
 		s1 := this.ZjlxStockInfo(stockCodes)
 
@@ -191,6 +193,8 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			sc = fmt.Sprintf("SH%v", v.StockCode)
 		case "300", "002", "000", "001", "003", "301":
 			sc = fmt.Sprintf("SZ%v", v.StockCode)
+		default:
+			continue
 		}
 
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
