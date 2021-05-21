@@ -209,13 +209,14 @@ func (this *ZjlxStock) ZjlxtockFx() {
 		d3 := decimal.NewFromFloat(i.Jdd)
 		d2 := "0"
 		if reflect.TypeOf(i.Jcd).String() != "string" {
-			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+			d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
 		}
 		//  判断最近 涨跌幅 和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
-		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 1.28 && d1.String() > "10000000" && d2 > "5000000" && d3.String() > "1000000" {
+
+		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 1.28 && d1.String() > "5000000" && d2 > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -286,7 +287,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "10800000") || (df66 < "5880000") || (df72 < "1580000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.8 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0.28 {
+		if (df62 < "5800000") || (df66 < "1880000") || (df72 < "580000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.28 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.8 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
