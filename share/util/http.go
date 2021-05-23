@@ -115,6 +115,5 @@ func (*HttpUtil) GetJson(url string) (error, *http.Response) {
 		panic(err)
 	} //处理返回结果
 	resp, _ := client.Do(reqest)
-
 	return err, resp
 }

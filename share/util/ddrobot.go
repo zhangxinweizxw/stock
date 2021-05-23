@@ -18,18 +18,19 @@ func NewDdRobot() *DdRobot {
 func (*DdRobot) DdRobotPush(stockInfo string) {
 	//logging.Debug("====%v", stockInfo)
 	//如果有未发送新闻 请求钉钉webhook
+
 	if stockInfo != "" {
 
 		formt := `
 		{
 			"msgtype": "text",
 			"text": {
-	  	"content": "stock|
-	                  %v"
+		"content": "stock|
+	                %v"
 			},
 			"at": {
-	  		"atMobiles": [],
-	  	"isAtAll": false
+			"atMobiles": [],
+		"isAtAll": false
 			}
 		 }`
 

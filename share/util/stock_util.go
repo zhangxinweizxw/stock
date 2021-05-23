@@ -3,7 +3,6 @@ package util
 import (
 	"encoding/json"
 	"io/ioutil"
-	"stock/config"
 	"stock/share/logging"
 	"time"
 )
@@ -13,13 +12,10 @@ stock 公用方法
 */
 
 type StockUtil struct {
-	C *config.AppConfig
 }
 
-func NewStockUtil(cfg *config.AppConfig) *StockUtil {
-	return &StockUtil{
-		C: cfg,
-	}
+func NewStockUtil() *StockUtil {
+	return &StockUtil{}
 }
 
 type Data struct {
@@ -33,12 +29,14 @@ type Date struct {
 
 // 调用深交所 交易日历判断当天是否是交易日  返回true 是交易人
 func (this *StockUtil) GetSjsMonthList() bool {
-	url := this.C.Url.SjsMonthList
+	//url := this.C.Url.SjsMonthList
+	url := "http://www.szse.cn/api/report/exchange/onepersistenthour/monthList"
+
 	err, resp := NewHttpUtil().GetJson(url)
 	if err != nil {
-		logging.Error("", err)
+		logging.Error("sjs", err)
 	}
-
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		logging.Error("ioutil.ReadAll  Error | %v", err)
@@ -58,6 +56,7 @@ func (this *StockUtil) GetSjsMonthList() bool {
 			}
 		}
 	}
+	//logging.Error("=====", retBool)
 	return retBool
 
 }

@@ -46,7 +46,7 @@ func main() {
 	go func() {
 		for { // 1
 			//判断当天是否是交易日
-			b := util.NewStockUtil(cfg).GetSjsMonthList()
+			b := util.NewStockUtil().GetSjsMonthList()
 
 			if b {
 				c1 := stocks_db.NewStock_Day_K().GetIsZx()
@@ -67,9 +67,11 @@ func main() {
 
 					stocks.NewQgqpStock().QgqpStockSave()
 
-					//stocks.NewDxStock().SaveDxstock()
+					stocks.NewDxStock().SaveDxstock()
 				}
 				time.Sleep(1 * time.Hour)
+			} else {
+				time.Sleep(8 * time.Hour)
 			}
 		}
 	}()
@@ -77,7 +79,7 @@ func main() {
 	go func() {
 		for { // 1
 			//判断当天是否是交易日
-			b := util.NewStockUtil(cfg).GetSjsMonthList()
+			b := util.NewStockUtil().GetSjsMonthList()
 			if b {
 
 				time1 := fmt.Sprintf("%v 09:29", time.Now().Format("2006-01-02"))
@@ -103,7 +105,7 @@ func main() {
 					//go stocks.NewAvsHStock(nil).AvsHStockFx() 废弃
 					go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
-					//go stocks.NewDxStock().DxStockFx()
+					go stocks.NewDxStock().DxStockFx()
 					go stocks.NewZjlxStock().PkydStockFx()
 
 					go stocks.NewZjlxStock().ZjlxStockSellFx()
@@ -111,6 +113,8 @@ func main() {
 				}
 
 				time.Sleep(30 * time.Second)
+			} else {
+				time.Sleep(8 * time.Hour)
 			}
 		}
 	}()

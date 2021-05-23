@@ -10,7 +10,11 @@ type DxStockDb struct {
 	StockCode  string `db:"stock_code"`
 	StockName  string `db:"stock_name"`
 	CreateTime string `db:"create_time"`
-	Status     int    `db:"status"`
+	//Status     int     `db:"status"`
+	DayK5  float64 `db:"dayk5"`
+	DayK10 float64 `db:"dayk10"`
+	DayK20 float64 `db:"dayk20"`
+	DayK30 float64 `db:"dayk30"`
 }
 
 const (

@@ -78,19 +78,23 @@ type Stock_Day_K struct {
 	F17   string // 今开
 	F18   string // 昨收
 	//F19 float32 `json:"f19"`
-	F20  string // 总市值
-	F21  string // 流通市值
-	F22  string // 涨速
-	F23  string // 市净率
-	F24  string // 60日涨跌幅
-	F25  string // 年初至今涨跌幅
-	F62  string // 主力净流入
-	F115 string
-	F128 string // 领涨股
-	F140 string
-	F141 string
-	F136 string // 涨跌幅
-	F152 string
+	F20    string // 总市值
+	F21    string // 流通市值
+	F22    string // 涨速
+	F23    string // 市净率
+	F24    string // 60日涨跌幅
+	F25    string // 年初至今涨跌幅
+	F62    string // 主力净流入
+	F115   string
+	F128   string // 领涨股
+	F140   string
+	F141   string
+	F136   string // 涨跌幅
+	F152   string
+	DayK5  float64 `db:"dayK5"`
+	DayK10 float64 `db:"dayK10"`
+	DayK20 float64 `db:"dayK20"`
+	DayK30 float64 `db:"dayK30"`
 }
 
 func NewStock_Day_K() *Stock_Day_K {
@@ -207,4 +211,21 @@ func (this *Stock_Day_K) GetStockDayK30Date(sc string) float64 {
 		return 0
 	}
 	return dk30
+}
+
+// 获取10日K均线价位
+func (this *Stock_Day_K) GetStockDayK10Date(sc string) float64 {
+	// 查询最新日期
+	var dk10 float64
+	bulid := this.Db.Select("dayK30 as dk30").
+		From(this.TableName).
+		Where(fmt.Sprintf("f12='%v'", sc)).
+		OrderBy("create_time DESC").
+		Limit(1)
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&dk10)
+	if err != nil {
+		fmt.Println("Select Table stock_day_k create_time  |  Error   %v", err)
+		return 0
+	}
+	return dk10
 }
