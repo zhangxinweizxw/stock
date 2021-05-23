@@ -29,6 +29,8 @@ func (this *UtilHttps) GetXqPd(scode string) int {
 		sc = fmt.Sprintf("SH%v", scode)
 	case "300", "002", "000", "001", "003", "301":
 		sc = fmt.Sprintf("SZ%v", scode)
+	default:
+		return 0
 	}
 	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=`
 	url += `&npay.20201231=5_1000&oiy.20201231=5_1000`

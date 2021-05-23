@@ -235,7 +235,7 @@ func (this *StockDayk) XQStockFx() {
 
 		d3 := decimal.NewFromFloat(i.Jdd)
 
-		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > "8000000" && d2 > "1000000" && d3.String() > "500000" {
+		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > "5000000" && d2 > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {
@@ -308,6 +308,8 @@ func (this *StockDayk) GetZJlxDFCF(stockC string) *util.StockDayK {
 		stockCodes = fmt.Sprintf("1.%v", stockC)
 	case "300", "002", "000", "001", "003", "301":
 		stockCodes = fmt.Sprintf("0.%v", stockC)
+	default:
+		return nil
 	}
 
 	if stockCodes[:2] != "1." && stockCodes[:2] != "0." {
@@ -350,6 +352,8 @@ func (this *StockDayk) GetDayK(stockC string) [4]float64 {
 		stockCodes = fmt.Sprintf("1.%v", stockC)
 	case "300", "002", "000", "001", "003", "301":
 		stockCodes = fmt.Sprintf("0.%v", stockC)
+	default:
+		return dk
 	}
 
 	if stockCodes[:2] != "1." && stockCodes[:2] != "0." {

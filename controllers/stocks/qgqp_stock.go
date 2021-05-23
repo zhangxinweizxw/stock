@@ -105,6 +105,8 @@ func (this *QgqpStock) QgqpStockFx() {
 			sc = fmt.Sprintf("SH%v", v.StockCode)
 		case "300", "002", "000", "001", "003", "301":
 			sc = fmt.Sprintf("SZ%v", v.StockCode)
+		default:
+			continue
 		}
 
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
@@ -119,20 +121,21 @@ func (this *QgqpStock) QgqpStockFx() {
 		d3 := decimal.NewFromFloat(i.Jdd)
 		d2 := "0"
 		if reflect.TypeOf(i.Jcd).String() != "string" {
-			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+			d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
 		}
 		//  判断最近 涨跌幅 和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
-		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2 > "5000000" && d3.String() > "1000000" {
+
+		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "5000000" && d2 > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 4)
+			//go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 4)
 			QgqpStockDb = append(QgqpStockDb[:k], QgqpStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}

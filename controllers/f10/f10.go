@@ -49,6 +49,8 @@ func (this *FinancialReports) SaveFinaRepo(c *gin.Context) {
 			sc = fmt.Sprintf("SH%v", v.StockCode)
 		case "300", "002", "000", "001", "003", "301":
 			sc = fmt.Sprintf("SZ%v", v.StockCode)
+		default:
+			continue
 		}
 		fd := this.GetDFCFF10(sc) // 获取到的数据插入mysql
 		for _, s := range fd {
