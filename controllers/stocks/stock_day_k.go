@@ -85,6 +85,7 @@ func (this *StockDayk) GetStockDayK() {
 	// 日K行情写入mysql
 	ntime := time.Now().Format("2006-01-02")
 	stocks_db.NewStockInfo().DelStockInfo() // 清空stock_info 表
+	stocks_db.NewStock_Day_K().DelStockDayK()
 	for _, v := range data.Datas.Diff {
 
 		//获取资金流入数据
@@ -345,7 +346,10 @@ type Kl struct {
 // 返回日K对应的 5、10、20、30 均价
 func (this *StockDayk) GetDayK(stockC string) [4]float64 {
 	var dk [4]float64
-
+	dk[0] = 0.0
+	dk[1] = 0.0
+	dk[2] = 0.0
+	dk[3] = 0.0
 	stockCodes := ""
 	switch stockC[:3] {
 	case "600", "601", "603", "605", "688", "689", "608":
@@ -384,7 +388,6 @@ func (this *StockDayk) GetDayK(stockC string) [4]float64 {
 
 	for i := fl; i >= 0; i-- {
 		s := strings.Split(data.Zdata.Klines[i], ",")
-
 		if i >= fl-4 {
 			f, _ := strconv.ParseFloat(s[2], 64)
 			dk[0] += f
@@ -400,6 +403,9 @@ func (this *StockDayk) GetDayK(stockC string) [4]float64 {
 		if i >= fl-29 {
 			f, _ := strconv.ParseFloat(s[2], 64)
 			dk[3] += f
+		}
+		if i < fl-30 {
+			break
 		}
 
 	}

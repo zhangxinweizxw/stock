@@ -106,6 +106,18 @@ func NewStock_Day_K() *Stock_Day_K {
 	}
 }
 
+func (this *Stock_Day_K) DelStockDayK() {
+
+	b := this.Db.DeleteFrom(this.TableName).
+		Where(fmt.Sprintf("create_time='%v'", time.Now().Format("2006-01-02")))
+	_, err := this.DeleteWhere(b, nil).Exec()
+
+	if err != nil {
+		fmt.Println("Delete Table TABLE_STOCK_Day_K  |  Error   %v", err)
+	}
+
+}
+
 func (this *Stock_Day_K) GetXQStockList() []*XQ_Stock {
 
 	// 查询最新日期
