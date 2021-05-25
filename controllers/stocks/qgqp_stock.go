@@ -135,7 +135,7 @@ func (this *QgqpStock) QgqpStockFx() {
 			}
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			//go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 4)
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 4)
 			QgqpStockDb = append(QgqpStockDb[:k], QgqpStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}

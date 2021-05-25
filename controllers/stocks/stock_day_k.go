@@ -82,82 +82,165 @@ func (this *StockDayk) GetStockDayK() {
 	if err = json.Unmarshal(body, &data); err != nil {
 		logging.Error("解析日K  | Error:=", err)
 	}
-	// 日K行情写入mysql
-	ntime := time.Now().Format("2006-01-02")
+
 	stocks_db.NewStockInfo().DelStockInfo() // 清空stock_info 表
 	stocks_db.NewStock_Day_K().DelStockDayK()
-	for _, v := range data.Datas.Diff {
+	//data.Datas.Diff
+	//for _, v := range data.Datas.Diff {
+	//
+	//	//获取资金流入数据
+	//	if len(v.F12.(string)) != 6 {
+	//		continue
+	//	}
+	//	d := this.GetZJlxDFCF(v.F12.(string)).Datas.Diff[0]
+	//
+	//	//日K对应 5日 10日 20日 30日均价
+	//	df := this.GetDayK(v.F12.(string))
+	//
+	//	t := stocks_db.NewStock_Day_K()
+	//	params := map[string]interface{}{
+	//		"f1":  v.F1,
+	//		"f2":  v.F2,
+	//		"f3":  v.F3,
+	//		"f4":  v.F4,
+	//		"f5":  v.F5,
+	//		"f6":  v.F6,
+	//		"f7":  v.F7,
+	//		"f8":  v.F8,
+	//		"f9":  v.F9,
+	//		"f10": v.F10,
+	//		"f11": v.F11,
+	//		"f12": v.F12,
+	//		"f13": v.F13,
+	//		"f14": v.F14,
+	//		"f15": v.F15,
+	//		"f16": v.F16,
+	//		"f17": v.F17,
+	//		"f18": v.F18,
+	//
+	//		"f20":         v.F20,
+	//		"f21":         v.F21,
+	//		"f22":         v.F22,
+	//		"f23":         v.F23,
+	//		"f24":         v.F24,
+	//		"f25":         v.F25,
+	//		"f62":         d.F62,
+	//		"f66":         d.F66,
+	//		"f69":         d.F69,
+	//		"f72":         d.F72,
+	//		"f75":         d.F75,
+	//		"f184":        d.F184,
+	//		"f136":        v.F136,
+	//		"f128":        v.F128,
+	//		"dayK5":       df[0],
+	//		"dayK10":      df[1],
+	//		"dayK20":      df[2],
+	//		"dayK30":      df[3],
+	//		"create_time": time.Now().Format("2006-01-02"),
+	//		"update_time": time.Now().Format("2006-01-02"),
+	//	}
+	//	_, err := t.Insert(params)
+	//	if err != nil {
+	//		logging.Error("Insert Stock_day_k | %v", err)
+	//		continue
+	//	}
+	//
+	//	// 股票信息写入stock_info表方便使用
+	//	i := stocks_db.NewStockInfo()
+	//	p := map[string]interface{}{
+	//		"date":       ntime,
+	//		"stock_code": v.F12,
+	//		"stock_name": v.F14,
+	//	}
+	//	_, err1 := i.Insert(p)
+	//	if err1 != nil {
+	//		logging.Error("Insert Stock_info | %v", err)
+	//		continue
+	//	}
+	//
+	//}
+	//logging.Error("=================", len(data.Datas.Diff)/2)
+	i := int(len(data.Datas.Diff) / 2)
+	go this.GoFuncFor(data, 0, i)
+	go this.GoFuncFor(data, i, len(data.Datas.Diff)-1)
+}
 
-		//获取资金流入数据
-		if len(v.F12.(string)) != 6 {
-			continue
+func (this *StockDayk) GoFuncFor(data *util.StockDayK, s, e int) {
+	// 日K行情写入mysql
+	ntime := time.Now().Format("2006-01-02")
+	for i, v := range data.Datas.Diff {
+		if i >= s && i < e {
+
+			//获取资金流入数据
+			if len(v.F12.(string)) != 6 {
+				continue
+			}
+			d := this.GetZJlxDFCF(v.F12.(string)).Datas.Diff[0]
+
+			//日K对应 5日 10日 20日 30日均价
+			df := this.GetDayK(v.F12.(string))
+
+			t := stocks_db.NewStock_Day_K()
+			params := map[string]interface{}{
+				"f1":  v.F1,
+				"f2":  v.F2,
+				"f3":  v.F3,
+				"f4":  v.F4,
+				"f5":  v.F5,
+				"f6":  v.F6,
+				"f7":  v.F7,
+				"f8":  v.F8,
+				"f9":  v.F9,
+				"f10": v.F10,
+				"f11": v.F11,
+				"f12": v.F12,
+				"f13": v.F13,
+				"f14": v.F14,
+				"f15": v.F15,
+				"f16": v.F16,
+				"f17": v.F17,
+				"f18": v.F18,
+
+				"f20":         v.F20,
+				"f21":         v.F21,
+				"f22":         v.F22,
+				"f23":         v.F23,
+				"f24":         v.F24,
+				"f25":         v.F25,
+				"f62":         d.F62,
+				"f66":         d.F66,
+				"f69":         d.F69,
+				"f72":         d.F72,
+				"f75":         d.F75,
+				"f184":        d.F184,
+				"f136":        v.F136,
+				"f128":        v.F128,
+				"dayK5":       df[0],
+				"dayK10":      df[1],
+				"dayK20":      df[2],
+				"dayK30":      df[3],
+				"create_time": time.Now().Format("2006-01-02"),
+				"update_time": time.Now().Format("2006-01-02"),
+			}
+			_, err := t.Insert(params)
+			if err != nil {
+				logging.Error("Insert Stock_day_k | %v", err)
+				continue
+			}
+
+			// 股票信息写入stock_info表方便使用
+			i := stocks_db.NewStockInfo()
+			p := map[string]interface{}{
+				"date":       ntime,
+				"stock_code": v.F12,
+				"stock_name": v.F14,
+			}
+			_, err1 := i.Insert(p)
+			if err1 != nil {
+				logging.Error("Insert Stock_info | %v", err)
+				continue
+			}
 		}
-		d := this.GetZJlxDFCF(v.F12.(string)).Datas.Diff[0]
-
-		//日K对应 5日 10日 20日 30日均价
-		df := this.GetDayK(v.F12.(string))
-
-		t := stocks_db.NewStock_Day_K()
-		params := map[string]interface{}{
-			"f1":  v.F1,
-			"f2":  v.F2,
-			"f3":  v.F3,
-			"f4":  v.F4,
-			"f5":  v.F5,
-			"f6":  v.F6,
-			"f7":  v.F7,
-			"f8":  v.F8,
-			"f9":  v.F9,
-			"f10": v.F10,
-			"f11": v.F11,
-			"f12": v.F12,
-			"f13": v.F13,
-			"f14": v.F14,
-			"f15": v.F15,
-			"f16": v.F16,
-			"f17": v.F17,
-			"f18": v.F18,
-
-			"f20":         v.F20,
-			"f21":         v.F21,
-			"f22":         v.F22,
-			"f23":         v.F23,
-			"f24":         v.F24,
-			"f25":         v.F25,
-			"f62":         d.F62,
-			"f66":         d.F66,
-			"f69":         d.F69,
-			"f72":         d.F72,
-			"f75":         d.F75,
-			"f184":        d.F184,
-			"f136":        v.F136,
-			"f128":        v.F128,
-			"dayK5":       df[0],
-			"dayK10":      df[1],
-			"dayK20":      df[2],
-			"dayK30":      df[3],
-			"create_time": time.Now().Format("2006-01-02"),
-			"update_time": time.Now().Format("2006-01-02"),
-		}
-		_, err := t.Insert(params)
-		if err != nil {
-			logging.Error("Insert Stock_day_k | %v", err)
-			continue
-		}
-
-		// 股票信息写入stock_info表方便使用
-		i := stocks_db.NewStockInfo()
-		p := map[string]interface{}{
-			"date":       ntime,
-			"stock_code": v.F12,
-			"stock_name": v.F14,
-		}
-		_, err1 := i.Insert(p)
-		if err1 != nil {
-			logging.Error("Insert Stock_info | %v", err)
-			continue
-		}
-
 	}
 }
 
