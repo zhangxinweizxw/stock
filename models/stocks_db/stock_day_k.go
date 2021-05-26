@@ -241,3 +241,23 @@ func (this *Stock_Day_K) GetStockDayK10Date(sc string) float64 {
 	}
 	return dk10
 }
+
+//抓涨停测试使用
+func (this *Stock_Day_K) ZtSelStockDayk() []*Stock_Day_K {
+	var sdkl []*Stock_Day_K
+
+	sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM stock_day_k
+			WHERE  f14 NOT LIKE 'N%' AND f14 NOT LIKE '*%' 
+			AND f14 NOT LIKE 'ST%' AND f12 NOT LIKE '688%'
+			AND f2 <30 AND f2 >3 AND f23 <6 AND f23 >1
+			AND f21 >2500000000 AND f21 < 15000000000
+			AND create_time=(SELECT create_time FROM stock_day_k ORDER BY create_time DESC LIMIT 1)`
+	_, err := this.Db.SelectBySql(sql).
+		LoadStructs(&sdkl)
+	if err != nil {
+		logging.Error("Select Stock_day_k -> zt_stock Error：%v", err)
+		return nil
+	}
+
+	return sdkl
+}

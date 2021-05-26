@@ -11,7 +11,8 @@ const (
 )
 
 var XQStock []*stocks_db.XQ_Stock
-var AvsHStockl []*stocks_db.AvsHStock
+
+var ZtStockDb []*stocks_db.ZtStockDB
 var ZjlxStockDb []*stocks_db.ZjlxStockDb
 var QgqpStockDb []*stocks_db.QgqpStockDb
 var DxStockDb []*stocks_db.DxStockDb

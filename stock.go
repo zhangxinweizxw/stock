@@ -62,7 +62,7 @@ func main() {
 					time.Sleep(18 * time.Minute)
 					stocks.NewStockDayk(cfg).GetXueqiu()
 
-					//stocks.NewAvsHStock(cfg).SaveAvsHStock() 废弃
+					stocks.NewZtStock().GetZTStock()
 
 					stocks.NewZjlxStock().ZjlxStockSave()
 
@@ -103,7 +103,15 @@ func main() {
 				if err == nil && t1.After(t2) && t1.Before(t3) {
 					// 雪球筛选处理逻辑
 					go stocks.NewStockDayk(nil).XQStockFx()
-					//go stocks.NewAvsHStock(nil).AvsHStockFx() 废弃
+
+					ztt1 := fmt.Sprintf("%v 09:32", time.Now().Format("2006-01-02"))
+					ztt2 := fmt.Sprintf("%v 10:58", time.Now().Format("2006-01-02"))
+					zt1, _ := time.Parse("2006-01-02 15:04", ztt1)
+					zt2, _ := time.Parse("2006-01-02 15:04", ztt2)
+					if t1.After(zt1) && t1.Before(zt2) {
+						go stocks.NewZtStock().ZtStockFx() // 9:32 - 10:58
+					}
+
 					go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
 					go stocks.NewDxStock().DxStockFx()
