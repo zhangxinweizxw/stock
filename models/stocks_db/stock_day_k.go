@@ -247,10 +247,11 @@ func (this *Stock_Day_K) ZtSelStockDayk() []*Stock_Day_K {
 	var sdkl []*Stock_Day_K
 
 	sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM stock_day_k
-			WHERE  f14 NOT LIKE 'N%' AND f14 NOT LIKE '*%' 
+			where f14 NOT LIKE 'N%' AND f14 NOT LIKE '*%' 
 			AND f14 NOT LIKE 'ST%' AND f12 NOT LIKE '688%'
-			AND f2 <30 AND f2 >3 AND f23 <6 AND f23 >1
+			AND f2 <58 AND f2 >3.98 AND f23 <6 AND f23 >1
 			AND f21 >2500000000 AND f21 < 15000000000
+			AND f3 < 1.8 AND f3 > -1.28 AND f10 < 1.28
 			AND create_time=(SELECT create_time FROM stock_day_k ORDER BY create_time DESC LIMIT 1)`
 	_, err := this.Db.SelectBySql(sql).
 		LoadStructs(&sdkl)

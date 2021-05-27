@@ -114,7 +114,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 
 		// 放量下跌  跌破10均线 主力资金流出5000000 大资金流出 <0
 		dk10 := stocks_db.NewStock_Day_K().GetStockDayK10Date(v.StockCode)
-		if (df.String() < "-5000000" && np < dk10) || (s1.F3.(float64) < -3.0 && s1.F10.(float64) > 1) {
+		if (df.String() < "-5000000" && np < dk10) || (s1.F3.(float64) < -2.8 && s1.F10.(float64) > 0.57) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}

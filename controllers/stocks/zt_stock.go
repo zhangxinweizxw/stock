@@ -72,7 +72,8 @@ func (this *ZtStock) ZtStockFx() {
 
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
 
-		if i.Zdf < -2 || i.Zdf > 5.8 {
+		fs := int((i.Zgjg - i.Zxjg) / i.Zxjg * 100)
+		if i.Zdf < -1.28 || i.Zdf > 3.8 || fs > 4 {
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			go stocks_db.NewZtStockDB().DelZtStockTj(v.StockCode)
 			continue
@@ -90,7 +91,7 @@ func (this *ZtStock) ZtStockFx() {
 			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
 		}
 		//if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2 > "1000000" && d3.String() > "500000" {
-		if i.Zxjg > v.Dayk5 && i.Zdf > 0 && i.Zdf < 5.8 && i.Lb < 10 && d1.String() > "10000000" && d2 > "5000000" {
+		if i.Zdjg > v.Dayk20 && i.Zxjg > v.Dayk10 && i.Zdf > 0 && i.Zdf < 5.7 && i.Lb > 0.28 && i.Lb < 10 && d1.String() > "10000000" && d2 > "5000000" {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
