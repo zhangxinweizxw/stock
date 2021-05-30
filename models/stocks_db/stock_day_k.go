@@ -78,23 +78,26 @@ type Stock_Day_K struct {
 	F17   string // 今开
 	F18   string // 昨收
 	//F19 float32 `json:"f19"`
-	F20    string // 总市值
-	F21    string // 流通市值
-	F22    string // 涨速
-	F23    string // 市净率
-	F24    string // 60日涨跌幅
-	F25    string // 年初至今涨跌幅
-	F62    string // 主力净流入
-	F115   string
-	F128   string // 领涨股
-	F140   string
-	F141   string
-	F136   string // 涨跌幅
-	F152   string
-	DayK5  float64 `db:"dayK5"`
-	DayK10 float64 `db:"dayK10"`
-	DayK20 float64 `db:"dayK20"`
-	DayK30 float64 `db:"dayK30"`
+	F20      string // 总市值
+	F21      string // 流通市值
+	F22      string // 涨速
+	F23      string // 市净率
+	F24      string // 60日涨跌幅
+	F25      string // 年初至今涨跌幅
+	F62      string // 主力净流入
+	F115     string
+	F128     string // 领涨股
+	F140     string
+	F141     string
+	F136     string // 涨跌幅
+	F152     string
+	DayK5    float64 `db:"dayK5"`
+	DayK10   float64 `db:"dayK10"`
+	DayK20   float64 `db:"dayK20"`
+	DayK30   float64 `db:"dayK30"`
+	Day5Zdf  float64 `db:"day5zdf"`
+	Day10Zdf float64 `db:"day10zdf"`
+	Day20Zdf float64 `db:"day20zdf"`
 }
 
 func NewStock_Day_K() *Stock_Day_K {
@@ -261,4 +264,21 @@ func (this *Stock_Day_K) ZtSelStockDayk() []*Stock_Day_K {
 	}
 
 	return sdkl
+}
+
+// 获取5、10、20、30日K均线价位
+func (this *Stock_Day_K) GetStockDayKJJ(sc string) *Stock_Day_K {
+	// 查询最新日期
+	var d *Stock_Day_K
+	bulid := this.Db.Select("dayK5,dayK10,dayK20,dayK30,day5zdf,day10zdf,day20zdf").
+		From(this.TableName).
+		Where(fmt.Sprintf("f12='%v'", sc)).
+		OrderBy("create_time DESC").
+		Limit(1)
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&d)
+	if err != nil {
+		fmt.Println("Select Table stock_day_k create_time  |  Error   %v", err)
+		return d
+	}
+	return d
 }

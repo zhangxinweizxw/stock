@@ -12,6 +12,8 @@ import (
 	"stock/models/stocks_db"
 	"stock/share/logging"
 	"stock/share/util"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -223,7 +225,7 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			continue
 		}
 
-		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 1.28 && d1.String() > "5000000" && d2 > "1000000" && d3.String() > "500000" {
+		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && d1.String() > "3000000" && d2 > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -282,6 +284,38 @@ func (this *ZjlxStock) PkydStockFx() {
 		return
 	}
 	for _, v := range data.Data.AData {
+
+		sci := ""
+		switch v.StockCode[:3] {
+		case "600", "601", "603", "605", "688", "689", "608":
+			//sc = fmt.Sprintf("SH%v", v.StockCode)
+			sci = fmt.Sprintf("1.%v", v.StockCode)
+		case "300", "002", "000", "001", "003", "301":
+			//sc = fmt.Sprintf("SZ%v", v.StockCode)
+			sci = fmt.Sprintf("0.%v", v.StockCode)
+		default:
+			continue
+		}
+
+		fsd := NewZtStock().GetFsZjlr(sci).Data.KLines
+		if len(fsd) < 2 {
+			continue
+		}
+
+		kl1 := fsd[len(fsd)-1]
+		s1 := strings.Split(kl1, ",")
+		f1, _ := strconv.ParseFloat(s1[1], 64)
+		kl2 := fsd[len(fsd)-2]
+		s2 := strings.Split(kl2, ",")
+		f2, _ := strconv.ParseFloat(s2[1], 64)
+
+		kl3 := fsd[0]
+		s3 := strings.Split(kl3, ",")
+		f3, _ := strconv.ParseFloat(s3[1], 64)
+
+		if f3 < -3000000 || f1 < f2 {
+			continue
+		}
 		// 判断是否以入库
 		if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 			break
@@ -294,7 +328,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "5800000") || (df66 < "1880000") || (df72 < "580000") || d.F2.(float64) > 58 || (d.F8.(float64) < 1.28 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.8 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
+		if (df62 < "5000000") || (df66 < "1280000") || (df72 < "280000") || d.F2.(float64) > 88 || (d.F8.(float64) < 0.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据

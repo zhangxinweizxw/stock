@@ -54,6 +54,7 @@ type StockDayk struct {
 	Jcd   interface{} `json:"f140"`
 	Jdd   float64     `json:"f143"`
 	Jzd   float64     `json:"f146"`
+	Kpj   float64     `json:"f46"`
 }
 
 func NewStockDayk(cfg *config.AppConfig) *StockDayk {
@@ -219,6 +220,9 @@ func (this *StockDayk) GoFuncFor(data *util.StockDayK, s, e int) {
 				"dayK10":      df[1],
 				"dayK20":      df[2],
 				"dayK30":      df[3],
+				"day5zdf":     df[4],
+				"day10zdf":    df[5],
+				"day20zdf":    df[6],
 				"create_time": time.Now().Format("2006-01-02"),
 				"update_time": time.Now().Format("2006-01-02"),
 			}
@@ -249,9 +253,7 @@ func (this *StockDayk) GetXueqiu() {
 	stocks_db.NewXQ_Stock().DelXqStock()
 
 	// 为了简单手动改报告期
-	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=5.8_58&pct=1.8_5.8&pettm=8_58`
-	url += `&oiy.20210331=5_1000&npay.20210331=5_1000&mc=10000000000_2393069370978&volume_ratio=1.28_8&tr=3_8&pct5=0_10&pct250=-30_30`
-	url += `&oiy.20201231=5_1000&npay.20201231=5_1000`
+	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=3_88&pct=0.28_3.8&pettm=3_88&pb=3_10&mc=2500000000_30000000000&npay.20210331=1_5000&oiy.20210331=1_5000&volume_ratio=1_8&tr=1_8&pct5=0_5&pct10=-5_8&pct20=0_15&pct60=0_20`
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -319,7 +321,7 @@ func (this *StockDayk) XQStockFx() {
 
 		d3 := decimal.NewFromFloat(i.Jdd)
 
-		if i.Zdf > 0.8 && i.Zdf < 5.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > "5000000" && d2 > "1000000" && d3.String() > "500000" {
+		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && i.Hsl < 10 && d1.String() > "3000000" && d2 > "1000000" && d3.String() > "500000" {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {
@@ -346,7 +348,7 @@ func (this *StockDayk) StockInfoSS(sc string) *Date {
 		code = strings.Replace(sc, "SZ", "0.", 1)
 	}
 
-	url := fmt.Sprintf("http://push2.eastmoney.com/api/qt/stock/get?ut=fa5fd1943c7b386f172d6893dbfba10b&invt=2&fltt=2&fields=f43,f44,f45,f47,f48,f50,f51,f52,f57,f58,f168,f169,f170,f137,f140,f143,f146&secid=%v", code)
+	url := fmt.Sprintf("http://push2.eastmoney.com/api/qt/stock/get?ut=fa5fd1943c7b386f172d6893dbfba10b&invt=2&fltt=2&fields=f43,f44,f45,f47,f48,f50,f51,f52,f57,f58,f168,f169,f170,f137,f140,f143,f146,f46&secid=%v", code)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -427,12 +429,15 @@ type Kl struct {
 }
 
 // 返回日K对应的 5、10、20、30 均价
-func (this *StockDayk) GetDayK(stockC string) [4]float64 {
-	var dk [4]float64
+func (this *StockDayk) GetDayK(stockC string) [7]float64 {
+	var dk [7]float64
 	dk[0] = 0.0
 	dk[1] = 0.0
 	dk[2] = 0.0
 	dk[3] = 0.0
+	dk[4] = 0.0
+	dk[5] = 0.0
+	dk[6] = 0.0
 	stockCodes := ""
 	switch stockC[:3] {
 	case "600", "601", "603", "605", "688", "689", "608":
@@ -474,14 +479,20 @@ func (this *StockDayk) GetDayK(stockC string) [4]float64 {
 		if i >= fl-4 {
 			f, _ := strconv.ParseFloat(s[2], 64)
 			dk[0] += f
+			r, _ := strconv.ParseFloat(s[8], 64)
+			dk[4] += r
 		}
 		if i >= fl-9 {
 			f, _ := strconv.ParseFloat(s[2], 64)
 			dk[1] += f
+			r, _ := strconv.ParseFloat(s[8], 64)
+			dk[5] += r
 		}
 		if i >= fl-19 {
 			f, _ := strconv.ParseFloat(s[2], 64)
 			dk[2] += f
+			r, _ := strconv.ParseFloat(s[8], 64)
+			dk[6] += r
 		}
 		if i >= fl-29 {
 			f, _ := strconv.ParseFloat(s[2], 64)

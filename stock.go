@@ -62,8 +62,6 @@ func main() {
 					time.Sleep(18 * time.Minute)
 					stocks.NewStockDayk(cfg).GetXueqiu()
 
-					stocks.NewZtStock().GetZTStock()
-
 					stocks.NewZjlxStock().ZjlxStockSave()
 
 					stocks.NewQgqpStock().QgqpStockSave()
@@ -72,6 +70,7 @@ func main() {
 				}
 				time.Sleep(1 * time.Hour)
 			} else {
+				logging.Info("非交易时间")
 				time.Sleep(8 * time.Hour)
 			}
 		}
@@ -101,22 +100,18 @@ func main() {
 				}
 
 				if err == nil && t1.After(t2) && t1.Before(t3) {
-					// 雪球筛选处理逻辑
-					go stocks.NewStockDayk(nil).XQStockFx()
 
-					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:38", time.Now().Format("2006-01-02")))
-					zt2, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:57", time.Now().Format("2006-01-02")))
-					zt3, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 10:28", time.Now().Format("2006-01-02")))
-					zt4, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 10:57", time.Now().Format("2006-01-02")))
-					zt5, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 13:57", time.Now().Format("2006-01-02")))
-					zt6, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:08", time.Now().Format("2006-01-02")))
-					zt7, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:28", time.Now().Format("2006-01-02")))
-					zt8, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:36", time.Now().Format("2006-01-02")))
+					if time.Now().Hour() == 9 && time.Now().Minute() == 32 {
+						stocks.NewZtStock().GetZTStock()
+					}
 
-					if (t1.After(zt1) && t1.Before(zt2)) || (t1.After(zt3) && t1.Before(zt4)) || (t1.After(zt5) && t1.Before(zt6)) || (t1.After(zt7) && t1.Before(zt8)) {
+					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:33", time.Now().Format("2006-01-02")))
+					zt2, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:36", time.Now().Format("2006-01-02")))
+					if t1.After(zt1) && t1.Before(zt2) {
 						go stocks.NewZtStock().ZtStockFx()
 					}
 
+					go stocks.NewStockDayk(nil).XQStockFx()
 					go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
 					go stocks.NewDxStock().DxStockFx()
@@ -128,6 +123,7 @@ func main() {
 
 				time.Sleep(30 * time.Second)
 			} else {
+				logging.Info("非交易时间")
 				time.Sleep(8 * time.Hour)
 			}
 		}
