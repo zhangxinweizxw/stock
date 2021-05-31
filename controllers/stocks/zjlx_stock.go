@@ -51,7 +51,7 @@ func (this *ZjlxStock) ZjlxStockSave() {
 	ntime := time.Now().Format("2006-01-02")
 	for _, v := range data.Datas.Diff {
 
-		if v.F3.(float64) > 5.8 || v.F3.(float64) < 1.8 || v.F2.(float64) > 58 || v.F2.(float64) < 5 || v.F184.(float64) < 5 || v.F69.(float64) < 5 || v.F62.(float64) < 10000000 || v.F66.(float64) < 5000000 || v.F10.(float64) < 1 {
+		if v.F3.(float64) > 3.8 || v.F3.(float64) < 0.8 || v.F2.(float64) > 58 || v.F2.(float64) < 3 || v.F184.(float64) < 5 || v.F69.(float64) < 5 || v.F62.(float64) < 10000000 || v.F66.(float64) < 5000000 || v.F10.(float64) < 1 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
@@ -116,7 +116,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 
 		// 放量下跌  跌破10均线 主力资金流出5000000 大资金流出 <0
 		dk10 := stocks_db.NewStock_Day_K().GetStockDayK10Date(v.StockCode)
-		if (df.String() < "-5000000" && np < dk10) || (s1.F3.(float64) < -2.8 && s1.F10.(float64) > 0.57) {
+		if (df.String() < "-3000000" && np < dk10) || (s1.F3.(float64) < -1.8 && s1.F10.(float64) > 0.3) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}
@@ -229,7 +229,7 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			continue
 		}
 
-		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && d1.String() > "3000000" && d2 > "1000000" && d3 > "500000" {
+		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 0.8 && d1.String() > "1880000" && d2 > "1000000" && d3 > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -332,7 +332,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "5000000") || (df66 < "1280000") || (df72 < "280000") || d.F2.(float64) > 88 || (d.F8.(float64) < 0.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
+		if (df62 < "3800000") || (df66 < "1280000") || (df72 < "280000") || d.F2.(float64) > 88 || (d.F8.(float64) < 0.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据

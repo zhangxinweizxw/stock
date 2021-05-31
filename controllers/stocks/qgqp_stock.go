@@ -23,6 +23,7 @@ type QgqpStock struct {
 	ChangePercent interface{} `json:"ChangePercent"` // 涨跌幅
 	PERation      float64     `json:"PERation"`      // 市盈率
 	TurnoverRate  interface{} `json:"TurnoverRate"`  // 换手率
+	TotalScore    interface{} `json:"TotalScore"`    // 评分
 }
 
 func NewQgqpStock() *QgqpStock {
@@ -34,7 +35,7 @@ func (this *QgqpStock) QgqpStockSave() {
 
 	stocks_db.NewQgqpStockDb().DelQgqpStock()
 
-	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=TotalScore&sr=-1&p=1&ps=200&filter=&pageNo=1&pageNum=1"
+	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=ChangePercent&sr=-1&p=2&ps=588"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("qgqpStock:", err)
@@ -58,7 +59,7 @@ func (this *QgqpStock) QgqpStockSave() {
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" {
 			continue
 		}
-		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.8 || v.PERation > 58 || v.TurnoverRate.(float64) < 1.8 || v.TurnoverRate.(float64) > 8 {
+		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 0.8 || v.PERation > 68 || v.TurnoverRate.(float64) < 3 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 68 {
 			continue
 		}
 
@@ -132,7 +133,7 @@ func (this *QgqpStock) QgqpStockFx() {
 			continue
 		}
 
-		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 10 && i.Hsl > 1 && d1.String() > "3000000" && d2 > "1000000" && d3 > "500000" {
+		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 10 && i.Hsl > 0.8 && d1.String() > "1880000" && d2 > "1000000" && d3 > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

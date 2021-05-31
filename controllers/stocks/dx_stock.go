@@ -42,7 +42,7 @@ func (this *DxStock) SaveDxstock() {
 				AND f12 IN (
 				SELECT f12 FROM  stock_day_k
 				WHERE create_time='` + d[1]
-		sql += `' AND dayK5 >= dayK10  AND f3 > -1.8 AND f3 < 3.8 AND f7 < 5
+		sql += `' AND dayK5 >= dayK10  AND f3 > 0 AND f3 < 3.8 AND f7 < 5
 				AND f2 > dayK30 AND f16 > dayK20 AND f16 < dayK5
 				AND f12 IN (
 				SELECT f12 FROM  stock_day_k
@@ -68,15 +68,11 @@ func (this *DxStock) SaveDxstock() {
 		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
 				AND f12 IN (
 				SELECT f12 FROM  stock_day_k
-				WHERE create_time='` + d[7] + "' ) ) ) ) ) ) )"
-		//sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-		//		AND f12 IN (
-		//		SELECT f12 FROM  stock_day_k
-		//		WHERE create_time='` + d[8]
-		//sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-		//		AND f12 IN (
-		//		SELECT f12 FROM  stock_day_k
-		//		WHERE create_time='` + d[9]
+				WHERE create_time='` + d[7]
+		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
+				AND f12 IN (
+				SELECT f12 FROM  stock_day_k
+				WHERE create_time='` + d[8] + "' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5 ) ) ) ) ) ) ) )"
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 		if len(sdkl) > 0 {
 			for _, v := range sdkl {
@@ -162,7 +158,7 @@ func (this *DxStock) DxStockFx() {
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 		// 开盘 最低价格 >= 五日K线 涨跌幅 不大于 3.8 量比 > 0.5  主力净流入 >0
-		if i.Zdjg >= v.DayK5 && i.Zdf < 3.8 && i.Zdf > 0.18 && d1.String() > "5000000" && d2 > "0" && i.Lb > 0.5 {
+		if i.Zdjg >= v.DayK5 && i.Zdf < 3.8 && i.Zdf > 0.18 && d1.String() > "3000000" && d2 > "0" && i.Lb > 0.5 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)
