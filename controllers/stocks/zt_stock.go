@@ -168,6 +168,9 @@ func (this *ZtStock) GetZTStock() {
 	go func() {
 		for i, v := range d {
 			if i >= 0 && i < i2 {
+				if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
+					continue
+				}
 				//f62 := decimal.NewFromFloat(v.F62.(float64))
 				if v.F3.(float64) < 2 || v.F3.(float64) > 8 || v.F2.(float64) > 88 || v.F62.(float64) < -2800000 || v.F23.(float64) < 1 || v.F23.(float64) > 10 {
 					continue

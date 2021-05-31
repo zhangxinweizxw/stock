@@ -215,17 +215,21 @@ func (this *ZjlxStock) ZjlxtockFx() {
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
 		//d2 := decimal.NewFromFloat(i.Jcd)
-		d3 := decimal.NewFromFloat(i.Jdd.(float64))
+		//d3 := decimal.NewFromFloat(i.Jdd.(float64))
 		d2 := "0"
 		if reflect.TypeOf(i.Jcd).String() != "string" {
 			d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
+		}
+		d3 := "0"
+		if reflect.TypeOf(i.Jdd).String() != "string" {
+			d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
 		}
 		//  判断最近 涨跌幅 和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
 
-		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && d1.String() > "3000000" && d2 > "1000000" && d3.String() > "500000" {
+		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && d1.String() > "3000000" && d2 > "1000000" && d3 > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

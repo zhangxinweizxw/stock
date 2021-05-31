@@ -319,9 +319,13 @@ func (this *StockDayk) XQStockFx() {
 			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
 		}
 
-		d3 := decimal.NewFromFloat(i.Jdd.(float64))
+		//d3 := decimal.NewFromFloat(i.Jdd.(float64))
+		d3 := "0"
+		if reflect.TypeOf(i.Jdd).String() != "string" {
+			d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
+		}
 
-		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && i.Hsl < 10 && d1.String() > "3000000" && d2 > "1000000" && d3.String() > "500000" {
+		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && i.Hsl < 10 && d1.String() > "3000000" && d2 > "1000000" && d3 > "500000" {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {
