@@ -118,7 +118,7 @@ func (this *QgqpStock) QgqpStockFx() {
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
 		//d2 := decimal.NewFromFloat(i.Jcd)
-		d3 := decimal.NewFromFloat(i.Jdd)
+		d3 := decimal.NewFromFloat(i.Jdd.(float64))
 		d2 := "0"
 		if reflect.TypeOf(i.Jcd).String() != "string" {
 			d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
