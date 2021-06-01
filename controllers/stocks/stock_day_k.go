@@ -43,7 +43,7 @@ type StockDayk struct {
 	Cjj   float64     `json:"f47"`
 	Cje   float64     `json:"f48"`
 	Lb    float64     `json:"f50"`
-	Ztj   float64     `json:"f51"`
+	Ztj   interface{} `json:"f51"`
 	Dtj   float64     `json:"f52"`
 	Gpdm  string      `json:"f57"`
 	Gpmc  string      `json:"f58"`

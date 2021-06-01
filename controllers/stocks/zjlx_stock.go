@@ -99,7 +99,9 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 		s1 := this.ZjlxStockInfo(stockCodes)
 
 		np := this.StockInfo(stockCodes)
-
+		if np <= 0 {
+			continue
+		}
 		bfb := (np - v.BuyPrice) / v.BuyPrice
 
 		if bfb < -0.03 { // 跌 3% 卖出
@@ -156,7 +158,7 @@ type StockData struct {
 	DataI *D `json:"data"`
 }
 type D struct {
-	F43 float64 `json:"f43"`
+	F43 interface{} `json:"f43"`
 }
 
 // 个股最近价格
@@ -178,7 +180,10 @@ func (this *ZjlxStock) StockInfo(stockCode string) float64 {
 		return 0
 	}
 
-	return data.DataI.F43
+	if reflect.TypeOf(data.DataI.F43).Name() == "string" {
+		return 0
+	}
+	return data.DataI.F43.(float64)
 }
 
 // 需求个股分析监控 9：15 - 11：30   13：00-15：00  资金流向
