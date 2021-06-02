@@ -15,6 +15,7 @@ type TransactionHistory struct {
 	SellTime   interface{} `db:"sell_time"`
 	SellPrice  interface{} `db:"sell_price"`
 	Percentage interface{} `db:"percentage"`
+	Status     int         `db:"status"`
 }
 
 const (

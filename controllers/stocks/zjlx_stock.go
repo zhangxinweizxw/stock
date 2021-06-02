@@ -106,6 +106,9 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 
 		if bfb < -0.03 { // 跌 3% 卖出
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
+			if v.Status == 2 {
+				continue
+			}
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 			continue
 		}
@@ -120,6 +123,9 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 		dk10 := stocks_db.NewStock_Day_K().GetStockDayK10Date(v.StockCode)
 		if (df.String() < "-3000000" && np < dk10) || (s1.F3.(float64) < -1.8 && s1.F10.(float64) > 0.3) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
+			if v.Status == 2 {
+				continue
+			}
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}
 
@@ -234,7 +240,7 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			continue
 		}
 
-		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 0.8 && d1.String() > "1880000" && d2 > "1000000" && d3 > "500000" {
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.3 && i.Lb < 8 && i.Hsl > 0.5 && d1.String() > "3880000" && d2 > "1000000" && d3 > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -337,7 +343,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "3800000") || (df66 < "1280000") || (df72 < "280000") || d.F2.(float64) > 88 || (d.F8.(float64) < 0.8 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
+		if (df62 < "3800000") || (df66 < "1280000") || (df72 < "280000") || d.F2.(float64) > 88 || (d.F8.(float64) < 0.5 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 68) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据

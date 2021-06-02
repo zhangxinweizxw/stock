@@ -325,7 +325,7 @@ func (this *StockDayk) XQStockFx() {
 			d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
 		}
 
-		if i.Zdf > 0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 0.8 && i.Hsl < 10 && d1.String() > "1800000" && d2 > "8800000" && d3 > "500000" {
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.3 && i.Lb < 8 && i.Hsl > 0.5 && i.Hsl < 10 && d1.String() > "3800000" && d2 > "1880000" && d3 > "500000" {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {

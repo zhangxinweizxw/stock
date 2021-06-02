@@ -232,7 +232,7 @@ func (this *Stock_Day_K) GetStockDayK30Date(sc string) float64 {
 func (this *Stock_Day_K) GetStockDayK10Date(sc string) float64 {
 	// 查询最新日期
 	var dk10 float64
-	bulid := this.Db.Select("dayK30 as dk30").
+	bulid := this.Db.Select("dayK10 as dk10").
 		From(this.TableName).
 		Where(fmt.Sprintf("f12='%v'", sc)).
 		OrderBy("create_time DESC").
