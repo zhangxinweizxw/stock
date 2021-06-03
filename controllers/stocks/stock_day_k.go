@@ -307,6 +307,9 @@ func (this *StockDayk) XQStockFx() {
 
 	for k, v := range XQStock {
 		i := this.StockInfoSS(v.StockCode).StockDate
+		if i == nil {
+			continue
+		}
 		name = i.Gpmc
 		zljlrv := 0.0
 		if reflect.TypeOf(i.Zljlr).String() != "string" {
@@ -344,16 +347,25 @@ func (this *StockDayk) XQStockFx() {
 
 // 实时拉去个股信息
 func (this *StockDayk) StockInfoSS(sc string) *Date {
+	defer func() {
+		if err := recover(); err != nil {
+			logging.Error("拉取 个股信息 Panic Error=============:%v", err)
+		}
+	}()
+	if len(sc) < 2 {
+		return nil
+	}
 	code := ""
 	if sc[:2] == "SH" {
 		code = strings.Replace(sc, "SH", "1.", 1)
-	}
-	if sc[:2] == "SZ" {
+	} else if sc[:2] == "SZ" {
 		code = strings.Replace(sc, "SZ", "0.", 1)
+	} else {
+		return nil
 	}
 
 	url := fmt.Sprintf("http://push2.eastmoney.com/api/qt/stock/get?ut=fa5fd1943c7b386f172d6893dbfba10b&invt=2&fltt=2&fields=f43,f44,f45,f47,f48,f50,f51,f52,f57,f58,f168,f169,f170,f137,f140,f143,f146,f46&secid=%v", code)
-
+	logging.Info("===============:", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("", err)

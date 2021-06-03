@@ -26,6 +26,9 @@ func (this *ZtStock) ZtStockFx() {
 
 	if len(ZtStockDb) <= 0 {
 		ZtStockDb = stocks_db.NewZtStockDB().GetZtStockList()
+		if ZtStockDb == nil {
+			return
+		}
 	}
 	name := ""
 	defer func() {
@@ -49,6 +52,9 @@ func (this *ZtStock) ZtStockFx() {
 		}
 
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
+		if i == nil {
+			continue
+		}
 
 		if i.Zdf < -2 {
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)

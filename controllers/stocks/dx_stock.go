@@ -132,7 +132,9 @@ func (this *DxStock) DxStockFx() {
 		}
 
 		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
-
+		if i == nil {
+			continue
+		}
 		name = i.Gpmc
 		zljlrv := 0.0
 		if reflect.TypeOf(i.Zljlr).String() != "string" {
