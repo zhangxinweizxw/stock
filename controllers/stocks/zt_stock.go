@@ -91,7 +91,7 @@ func (this *ZtStock) ZtStockFx() {
 		zgzdf := int((i.Zgjg - i.Kpj) / i.Kpj * 100)
 		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf), 64)
 		// 条件1 高开回调 上涨选
-		if i.Zdjg > 0 && zgzdfv > 3 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 12800000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
+		if zgzdfv > 3 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 38000000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -100,7 +100,7 @@ func (this *ZtStock) ZtStockFx() {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-			//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
 
@@ -129,7 +129,7 @@ func (this *ZtStock) ZtStockFx() {
 		//}
 
 		// 条件2 平开或者低开 然后资金流入 加速
-		if i.Zdf > -0.8 && f1 > 5800000 && f2 > 3800000 && i.Zljlr.(float64) >= f2 && f3 > 1800000 && i.Zdf < 3.8 {
+		if i.Zdf > -0.8 && f1 > 38000000 && f2 > 5800000 && i.Zljlr.(float64) >= f2 && f3 > 3800000 && i.Zdf < 3.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -138,7 +138,7 @@ func (this *ZtStock) ZtStockFx() {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-			//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
 	}
