@@ -35,7 +35,7 @@ func (this *QgqpStock) QgqpStockSave() {
 
 	stocks_db.NewQgqpStockDb().DelQgqpStock()
 
-	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=ChangePercent&sr=-1&p=2&ps=588"
+	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=ChangePercent&sr=-1&p=1&ps=588"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("qgqpStock:", err)
@@ -55,11 +55,14 @@ func (this *QgqpStock) QgqpStockSave() {
 		return
 	}
 	ntime := time.Now().Format("2006-01-02")
-	for _, v := range data {
+	for k, v := range data {
+		if k < 158 {
+			continue
+		}
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" || reflect.TypeOf(v.TotalScore).String() == "string" {
 			continue
 		}
-		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 0.5 || v.PERation > 68 || v.TurnoverRate.(float64) < 1 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 68 {
+		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 0.5 || v.PERation > 68 || v.TurnoverRate.(float64) < 3 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 68 {
 			continue
 		}
 
