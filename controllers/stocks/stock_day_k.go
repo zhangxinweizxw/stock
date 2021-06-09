@@ -53,8 +53,8 @@ type StockDayk struct {
 	Zljlr interface{} `json:"f137"`
 	Jcd   interface{} `json:"f140"`
 	Jdd   interface{} `json:"f143"`
-	Jzd   float64     `json:"f146"`
-	Kpj   float64     `json:"f46"`
+	//Jzd   float64     `json:"f146"`
+	Kpj float64 `json:"f46"`
 }
 
 func NewStockDayk(cfg *config.AppConfig) *StockDayk {
