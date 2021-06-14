@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"stock/controllers"
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
@@ -38,16 +39,24 @@ func (this *ZtStock) ZtStockFx() {
 	}()
 
 	for k, v := range ZtStockDb {
-		sc := ""
-		sci := ""
-		switch v.StockCode[:3] {
-		case "600", "601", "603", "605", "688", "689", "608":
-			sc = fmt.Sprintf("SH%v", v.StockCode)
-			sci = fmt.Sprintf("1.%v", v.StockCode)
-		case "300", "002", "000", "001", "003", "301":
-			sc = fmt.Sprintf("SZ%v", v.StockCode)
-			sci = fmt.Sprintf("0.%v", v.StockCode)
-		default:
+		//sc := ""
+		//sci := ""
+		//switch v.StockCode[:3] {
+		//case "600", "601", "603", "605", "688", "689", "608":
+		//	sc = fmt.Sprintf("SH%v", v.StockCode)
+		//	sci = fmt.Sprintf("1.%v", v.StockCode)
+		//case "300", "002", "000", "001", "003", "301":
+		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
+		//	sci = fmt.Sprintf("0.%v", v.StockCode)
+		//default:
+		//	continue
+		//}
+		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		if len(sc) <= 0 {
+			continue
+		}
+		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
+		if len(sci) <= 0 {
 			continue
 		}
 

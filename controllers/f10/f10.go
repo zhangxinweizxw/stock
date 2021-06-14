@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"stock/controllers"
 	"stock/models/stocks_db"
 	"stock/share/logging"
 )
@@ -43,13 +44,17 @@ func (this *FinancialReports) SaveFinaRepo(c *gin.Context) {
 	}
 
 	for _, v := range sl {
-		sc := ""
-		switch v.StockCode[:3] {
-		case "600", "601", "603", "605", "688", "689", "608":
-			sc = fmt.Sprintf("SH%v", v.StockCode)
-		case "300", "002", "000", "001", "003", "301":
-			sc = fmt.Sprintf("SZ%v", v.StockCode)
-		default:
+		//sc := ""
+		//switch v.StockCode[:3] {
+		//case "600", "601", "603", "605", "688", "689", "608":
+		//	sc = fmt.Sprintf("SH%v", v.StockCode)
+		//case "300", "002", "000", "001", "003", "301":
+		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
+		//default:
+		//	continue
+		//}
+		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		if len(sc) <= 0 {
 			continue
 		}
 		fd := this.GetDFCFF10(sc) // 获取到的数据插入mysql

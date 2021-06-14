@@ -29,7 +29,8 @@ func (this *ZjlxStock) ZjlxStockSave() {
 
 	stocks_db.NewZjlxStockDb().DelZjlxStock()
 
-	url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=568&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124%2Cf10"
+	//url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=568&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124%2Cf10"
+	url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=50&pn=3&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124%2Cf1%2Cf10"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("ZjlxStock:", err)
@@ -51,7 +52,10 @@ func (this *ZjlxStock) ZjlxStockSave() {
 	ntime := time.Now().Format("2006-01-02")
 	for _, v := range data.Datas.Diff {
 
-		if v.F3.(float64) > 5.8 || v.F3.(float64) < 1.28 || v.F2.(float64) > 58 || v.F2.(float64) < 3 || v.F184.(float64) < 8 || v.F69.(float64) < 8 || v.F62.(float64) < 10000000 || v.F66.(float64) < 8000000 || v.F10.(float64) < 1 {
+		//if v.F3.(float64) > 3.8 || v.F3.(float64) < 2.8 || v.F2.(float64) > 58 || v.F2.(float64) < 2 || v.F184.(float64) < 8 || v.F69.(float64) < 8 || v.F62.(float64) < 10000000 || v.F66.(float64) < 8000000 || v.F10.(float64) < 0.5 {
+		//	continue
+		//}
+		if v.F3.(float64) > 5.8 || v.F3.(float64) < 0.28 || v.F2.(float64) > 58 || v.F2.(float64) < 2 || v.F10.(float64) < 0.5 || v.F62.(float64) < 10000000 || v.F66.(float64) < 8000000 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
@@ -87,13 +91,17 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 
 	for _, v := range scl {
 		//logging.Error("=====", v)
-		stockCodes := ""
-		switch v.StockCode[:3] {
-		case "600", "601", "603", "605", "688", "689", "608":
-			stockCodes = fmt.Sprintf("1.%v", v.StockCode)
-		case "300", "002", "000", "001", "003", "301":
-			stockCodes = fmt.Sprintf("0.%v", v.StockCode)
-		default:
+		//stockCodes := ""
+		//switch v.StockCode[:3] {
+		//case "600", "601", "603", "605", "688", "689", "608":
+		//	stockCodes = fmt.Sprintf("1.%v", v.StockCode)
+		//case "300", "002", "000", "001", "003", "301":
+		//	stockCodes = fmt.Sprintf("0.%v", v.StockCode)
+		//default:
+		//	continue
+		//}
+		stockCodes := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
+		if len(stockCodes) <= 0 {
 			continue
 		}
 		s1 := this.ZjlxStockInfo(stockCodes)
@@ -121,7 +129,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 
 		// 放量下跌  跌破10均线 主力资金流出5000000 大资金流出 <0
 		dk10 := stocks_db.NewStock_Day_K().GetStockDayK10Date(v.StockCode)
-		if (df.String() < "-3000000" && np < dk10) || (s1.F3.(float64) < -1.8 && s1.F10.(float64) > 0.3) {
+		if (df.String() > "-5000000" && np < dk10) || (s1.F3.(float64) < -1.8 && s1.F10.(float64) > 0.3) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			if v.Status == 2 {
 				continue
@@ -207,13 +215,17 @@ func (this *ZjlxStock) ZjlxtockFx() {
 
 	for k, v := range ZjlxStockDb {
 
-		sc := ""
-		switch v.StockCode[:3] {
-		case "600", "601", "603", "605", "688", "689", "608":
-			sc = fmt.Sprintf("SH%v", v.StockCode)
-		case "300", "002", "000", "001", "003", "301":
-			sc = fmt.Sprintf("SZ%v", v.StockCode)
-		default:
+		//sc := ""
+		//switch v.StockCode[:3] {
+		//case "600", "601", "603", "605", "688", "689", "608":
+		//	sc = fmt.Sprintf("SH%v", v.StockCode)
+		//case "300", "002", "000", "001", "003", "301":
+		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
+		//default:
+		//	continue
+		//}
+		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		if len(sc) <= 0 {
 			continue
 		}
 
@@ -302,15 +314,19 @@ func (this *ZjlxStock) PkydStockFx() {
 	}
 	for _, v := range data.Data.AData {
 
-		sci := ""
-		switch v.StockCode[:3] {
-		case "600", "601", "603", "605", "688", "689", "608":
-			//sc = fmt.Sprintf("SH%v", v.StockCode)
-			sci = fmt.Sprintf("1.%v", v.StockCode)
-		case "300", "002", "000", "001", "003", "301":
-			//sc = fmt.Sprintf("SZ%v", v.StockCode)
-			sci = fmt.Sprintf("0.%v", v.StockCode)
-		default:
+		//sci := ""
+		//switch v.StockCode[:3] {
+		//case "600", "601", "603", "605", "688", "689", "608":
+		//	//sc = fmt.Sprintf("SH%v", v.StockCode)
+		//	sci = fmt.Sprintf("1.%v", v.StockCode)
+		//case "300", "002", "000", "001", "003", "301":
+		//	//sc = fmt.Sprintf("SZ%v", v.StockCode)
+		//	sci = fmt.Sprintf("0.%v", v.StockCode)
+		//default:
+		//	continue
+		//}
+		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
+		if len(sci) <= 0 {
 			continue
 		}
 
