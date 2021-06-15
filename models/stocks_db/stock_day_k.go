@@ -187,7 +187,7 @@ func (this *Stock_Day_K) GetDxStockDayKList(sql string) []*Stock_Day_K {
 	_, err := this.Db.SelectBySql(sql).
 		LoadStructs(&sdkl)
 	if err != nil {
-		logging.Error("Select Stock_day_k 3、4、5 Error：%v", err)
+		logging.Error("Select Stock_day_k Error：%v", err)
 		return nil
 	}
 
