@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"reflect"
 	"stock/config"
+	"stock/controllers"
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
@@ -253,8 +254,8 @@ func (this *StockDayk) GetXueqiu() {
 	stocks_db.NewXQ_Stock().DelXqStock()
 
 	// 为了简单手动改报告期
-	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=3_88&pct=0.28_3.8&pettm=3_88&pb=3_10&mc=2500000000_30000000000&npay.20210331=1_5000&oiy.20210331=1_5000&volume_ratio=1_8&tr=1_8&pct5=0_5&pct10=-5_8&pct20=0_15&pct60=0_20`
-
+	//url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1_68&pct=1.28_5.8&pettm=5_68&npay.20210331=1_5000&oiy.20210331=1_5000&pb=1.28_2.8&mc=2500000000_150000000000&pct5=1.28_8&volume_ratio=1_10&tr=3_10&pct60=-10_10&pct120=-30_20&_=1623251526595`
+	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1_68&pct=0.5_3.8&pettm=5_68&npay.20210331=1_5000&oiy.20210331=1_5000&pb=1_2.8&mc=2500000000_150000000000&pct5=1.8_6&volume_ratio=1.8_6&tr=1.8_6&pct20=-15_15&pct10=-3_8"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("", err)
@@ -404,16 +405,19 @@ func (this *StockDayk) SaveStock(c, n string, p float64, s int) {
 
 // 保存日K时查询 资金流入数据
 func (this *StockDayk) GetZJlxDFCF(stockC string) *util.StockDayK {
-	stockCodes := ""
-	switch stockC[:3] {
-	case "600", "601", "603", "605", "688", "689", "608":
-		stockCodes = fmt.Sprintf("1.%v", stockC)
-	case "300", "002", "000", "001", "003", "301":
-		stockCodes = fmt.Sprintf("0.%v", stockC)
-	default:
+	//stockCodes := ""
+	//switch stockC[:3] {
+	//case "600", "601", "603", "605", "688", "689", "608":
+	//	stockCodes = fmt.Sprintf("1.%v", stockC)
+	//case "300", "002", "000", "001", "003", "301":
+	//	stockCodes = fmt.Sprintf("0.%v", stockC)
+	//default:
+	//	return nil
+	//}
+	stockCodes := controllers.NewUtilHttps(nil).GetUtilCode1(stockC)
+	if len(stockCodes) <= 0 {
 		return nil
 	}
-
 	if stockCodes[:2] != "1." && stockCodes[:2] != "0." {
 		return nil
 	}
@@ -454,13 +458,17 @@ func (this *StockDayk) GetDayK(stockC string) [7]float64 {
 	dk[4] = 0.0
 	dk[5] = 0.0
 	dk[6] = 0.0
-	stockCodes := ""
-	switch stockC[:3] {
-	case "600", "601", "603", "605", "688", "689", "608":
-		stockCodes = fmt.Sprintf("1.%v", stockC)
-	case "300", "002", "000", "001", "003", "301":
-		stockCodes = fmt.Sprintf("0.%v", stockC)
-	default:
+	//stockCodes := ""
+	//switch stockC[:3] {
+	//case "600", "601", "603", "605", "688", "689", "608":
+	//	stockCodes = fmt.Sprintf("1.%v", stockC)
+	//case "300", "002", "000", "001", "003", "301":
+	//	stockCodes = fmt.Sprintf("0.%v", stockC)
+	//default:
+	//	return dk
+	//}
+	stockCodes := controllers.NewUtilHttps(nil).GetUtilCode1(stockC)
+	if len(stockCodes) <= 0 {
 		return dk
 	}
 

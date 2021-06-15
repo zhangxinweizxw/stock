@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"stock/controllers"
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
@@ -38,16 +39,24 @@ func (this *ZtStock) ZtStockFx() {
 	}()
 
 	for k, v := range ZtStockDb {
-		sc := ""
-		sci := ""
-		switch v.StockCode[:3] {
-		case "600", "601", "603", "605", "688", "689", "608":
-			sc = fmt.Sprintf("SH%v", v.StockCode)
-			sci = fmt.Sprintf("1.%v", v.StockCode)
-		case "300", "002", "000", "001", "003", "301":
-			sc = fmt.Sprintf("SZ%v", v.StockCode)
-			sci = fmt.Sprintf("0.%v", v.StockCode)
-		default:
+		//sc := ""
+		//sci := ""
+		//switch v.StockCode[:3] {
+		//case "600", "601", "603", "605", "688", "689", "608":
+		//	sc = fmt.Sprintf("SH%v", v.StockCode)
+		//	sci = fmt.Sprintf("1.%v", v.StockCode)
+		//case "300", "002", "000", "001", "003", "301":
+		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
+		//	sci = fmt.Sprintf("0.%v", v.StockCode)
+		//default:
+		//	continue
+		//}
+		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		if len(sc) <= 0 {
+			continue
+		}
+		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
+		if len(sci) <= 0 {
 			continue
 		}
 
@@ -56,7 +65,7 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 
-		if i.Zdf < -2 {
+		if i.Zdf < 0 {
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			continue
 		}
@@ -91,7 +100,7 @@ func (this *ZtStock) ZtStockFx() {
 		zgzdf := int((i.Zgjg - i.Kpj) / i.Kpj * 100)
 		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf), 64)
 		// 条件1 高开回调 上涨选
-		if zgzdfv > 3 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 38000000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
+		if zgzdfv > 0.5 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 10000000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -129,7 +138,7 @@ func (this *ZtStock) ZtStockFx() {
 		//}
 
 		// 条件2 平开或者低开 然后资金流入 加速
-		if i.Zdf > -0.8 && f1 > 38000000 && f2 > 5800000 && i.Zljlr.(float64) >= f2 && f3 > 3800000 && i.Zdf < 3.8 {
+		if i.Zdf > 0.5 && f1 > 12800000 && f2 > 5800000 && i.Zljlr.(float64) >= f2 && f3 > 3800000 && i.Zdf < 5.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -150,7 +159,7 @@ func (this *ZtStock) GetZTStock() {
 
 	stocks_db.NewZtStockDB().DelZtStock()
 
-	url := "http://73.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1800&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
+	url := "http://73.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=880&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -178,11 +187,11 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				//f62 := decimal.NewFromFloat(v.F62.(float64))
-				if v.F3.(float64) < -1 || v.F3.(float64) > 8 || v.F2.(float64) > 88 || v.F62.(float64) < 0 || v.F23.(float64) < 3 || v.F23.(float64) > 10 {
+				if v.F3.(float64) < -0.5 || v.F3.(float64) > 8 || v.F2.(float64) > 58 || v.F62.(float64) < 0 || v.F23.(float64) < 1.28 || v.F23.(float64) > 10 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10 && d.DayK10 > d.DayK5) || d.Day5Zdf > 8 || d.Day20Zdf < -15 {
+				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK5 || d.DayK10 > d.DayK5) || d.Day5Zdf > 6 || d.Day5Zdf < -3 || d.Day20Zdf < -10 || d.Day20Zdf > 15 {
 					continue
 				}
 
@@ -214,11 +223,11 @@ func (this *ZtStock) GetZTStock() {
 				if reflect.TypeOf(v.F3).Name() == "string" {
 					continue
 				}
-				if v.F3.(float64) < -1 || v.F3.(float64) > 8 || v.F2.(float64) > 88 || v.F62.(float64) < 0 || v.F23.(float64) < 3 || v.F23.(float64) > 10 {
+				if v.F3.(float64) < -0.5 || v.F3.(float64) > 8 || v.F2.(float64) > 58 || v.F62.(float64) < 0 || v.F23.(float64) < 1.28 || v.F23.(float64) > 10 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10 && d.DayK10 > d.DayK5) || d.Day5Zdf > 8 || d.Day20Zdf < -15 {
+				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK5 || d.DayK10 > d.DayK5) || d.Day5Zdf > 6 || d.Day5Zdf < -3 || d.Day20Zdf < -10 || d.Day20Zdf > 15 {
 					continue
 				}
 

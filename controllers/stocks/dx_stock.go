@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/shopspring/decimal"
 	"reflect"
+	"stock/controllers"
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
@@ -36,44 +37,22 @@ func (this *DxStock) SaveDxstock() {
 	{
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
 				WHERE create_time='` + d[0]
-		sql += `' AND dayK5 >= dayK10  AND f3 > 0 AND f3 < 3.8  AND f7 < 5
-				AND f2 > dayK20 AND f16 > dayK20 AND f16 < dayK5 AND day20zdf < 10 AND day20zdf > -5
+		sql += `' AND f3 >0 AND f3 <3.8
+				AND dayk20 > dayK30 AND dayK5 >dayK10  AND dayK10 > dayK20
+				AND day20zdf < 10 AND day20zdf > -5
 				AND f12 NOT LIKE '688%' AND f14 NOT LIKE '*%'  AND f14 NOT LIKE 'ST%' 
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
+				AND f12 IN(
+				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[1]
-		sql += `' AND dayK5 >= dayK10  AND f3 > 0 AND f3 < 3.8 AND f7 < 5
-				AND f2 > dayK30 AND f16 > dayK20 AND f16 < dayK5
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
+		sql += `' AND f3 > -1.8 AND f3 <3.8
+				AND dayk20 > dayK30
+				AND f12 IN(
+				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[2]
-		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-				AND f2 > dayK30 AND f16 > dayK30 AND f16 < dayK5
-				AND (dayK20 <= dayK30 OR dayK5 <= dayK10 OR dayK10 <= dayK20)
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
-				WHERE create_time='` + d[3]
-		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
-				WHERE create_time='` + d[4]
-		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
-				WHERE create_time='` + d[5]
-		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
-				WHERE create_time='` + d[6]
-		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
-				WHERE create_time='` + d[7]
-		sql += `' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5
-				AND f12 IN (
-				SELECT f12 FROM  stock_day_k
-				WHERE create_time='` + d[8] + "' AND f3 > -1.8 AND f3 < 3.8  AND f7 < 5 ) ) ) ) ) ) ) )"
+		sql += `' AND f3 > -1.8 AND f3 <3.8
+				AND dayk30 >= dayK20  AND dayK10 >= dayK5 )) `
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
+
 		if len(sdkl) > 0 {
 			for _, v := range sdkl {
 				//logging.Error("=========", v.F12, v.F14)
@@ -121,13 +100,17 @@ func (this *DxStock) DxStockFx() {
 
 	for k, v := range DxStockDb {
 
-		sc := ""
-		switch v.StockCode[:3] {
-		case "600", "601", "603", "605", "688", "689", "608":
-			sc = fmt.Sprintf("SH%v", v.StockCode)
-		case "300", "002", "000", "001", "003", "301":
-			sc = fmt.Sprintf("SZ%v", v.StockCode)
-		default:
+		//sc := ""
+		//switch v.StockCode[:3] {
+		//case "600", "601", "603", "605", "688", "689", "608":
+		//	sc = fmt.Sprintf("SH%v", v.StockCode)
+		//case "300", "002", "000", "001", "003", "301":
+		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
+		//default:
+		//	continue
+		//}
+		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		if len(sc) <= 0 {
 			continue
 		}
 

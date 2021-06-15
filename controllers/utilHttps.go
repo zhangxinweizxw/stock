@@ -23,15 +23,11 @@ func NewUtilHttps(cfg *config.AppConfig) *UtilHttps {
 // 雪球判断财务跟最近涨跌
 func (this *UtilHttps) GetXqPd(scode string) int {
 
-	sc := ""
-	switch scode[:3] {
-	case "600", "601", "603", "605", "688", "689", "608":
-		sc = fmt.Sprintf("SH%v", scode)
-	case "300", "002", "000", "001", "003", "301":
-		sc = fmt.Sprintf("SZ%v", scode)
-	default:
+	sc := this.GetUtilCode(scode)
+	if len(sc) <= 0 {
 		return 0
 	}
+
 	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=`
 	url += `&npay.20201231=1_5000&oiy.20201231=1_5000`
 	url += `&npay.20210331=1_5000&oiy.20210331=1_5000&mc=2500000000_150000000000&pct5=0_8&pct20=-10_15`
@@ -54,4 +50,26 @@ func (this *UtilHttps) GetXqPd(scode string) int {
 	}
 	//logging.Error("========:", data.XQResuData.Count)
 	return data.XQResuData.Count
+}
+
+func (this *UtilHttps) GetUtilCode(scode string) string {
+	sc := ""
+	switch scode[:3] {
+	case "600", "601", "603", "605", "688", "689", "608":
+		sc = fmt.Sprintf("SH%v", scode)
+	case "300", "002", "000", "001", "003", "301":
+		sc = fmt.Sprintf("SZ%v", scode)
+	}
+	return sc
+}
+
+func (this *UtilHttps) GetUtilCode1(scode string) string {
+	stockCodes := ""
+	switch scode[:3] {
+	case "600", "601", "603", "605", "688", "689", "608":
+		stockCodes = fmt.Sprintf("1.%v", scode)
+	case "300", "002", "000", "001", "003", "301":
+		stockCodes = fmt.Sprintf("0.%v", scode)
+	}
+	return stockCodes
 }
