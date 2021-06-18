@@ -114,9 +114,6 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 
 		if bfb < -0.03 { // 跌 3% 卖出
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
-			if v.Status == 2 {
-				continue
-			}
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 			continue
 		}
@@ -131,9 +128,6 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 		dk10 := stocks_db.NewStock_Day_K().GetStockDayK10Date(v.StockCode)
 		if (df.String() > "-5000000" && np < dk10) || (s1.F3.(float64) < -1.8 && s1.F10.(float64) > 0.3) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
-			if v.Status == 2 {
-				continue
-			}
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}
 
