@@ -39,7 +39,7 @@ func (this *DxStock) SaveDxstock() {
 				WHERE create_time='` + d[0]
 		sql += `' AND f3 >0 AND f3 <3.8
 				AND dayk20 > dayK30 AND dayK5 >dayK10  AND dayK10 > dayK20
-				AND day20zdf < 10 AND day20zdf > -5
+				AND day10zdf < 10 AND day10zdf > -5
 				AND f12 NOT LIKE '688%' AND f14 NOT LIKE '*%'  AND f14 NOT LIKE 'ST%' 
 				AND f12 IN(
 				SELECT f12 FROM stock_day_k 
