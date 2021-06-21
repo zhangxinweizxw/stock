@@ -53,10 +53,12 @@ func (this *ZtStock) ZtStockFx() {
 		//}
 		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
 		if len(sc) <= 0 {
+			name = v.StockName
 			continue
 		}
 		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
-		if len(sci) <= 0 {
+		if len(sci) <= 7 {
+			name = v.StockName
 			continue
 		}
 
