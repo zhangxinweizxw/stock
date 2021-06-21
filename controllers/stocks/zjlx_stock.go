@@ -29,8 +29,7 @@ func (this *ZjlxStock) ZjlxStockSave() {
 
 	stocks_db.NewZjlxStockDb().DelZjlxStock()
 
-	//url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=568&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124%2Cf10"
-	url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=50&pn=3&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124%2Cf1%2Cf10"
+	url := "http://push2.eastmoney.com/api/qt/clist/get?fid=f62&po=1&pz=1000&pn=1&np=1&fltt=2&invt=2&ut=b2884a393a59ad64002292a3e90d46a5&fs=m%3A0%2Bt%3A6%2Bf%3A!2%2Cm%3A0%2Bt%3A13%2Bf%3A!2%2Cm%3A0%2Bt%3A80%2Bf%3A!2%2Cm%3A1%2Bt%3A2%2Bf%3A!2%2Cm%3A1%2Bt%3A23%2Bf%3A!2%2Cm%3A0%2Bt%3A7%2Bf%3A!2%2Cm%3A1%2Bt%3A3%2Bf%3A!2&fields=f12%2Cf14%2Cf2%2Cf3%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf84%2Cf87%2Cf204%2Cf205%2Cf124%2Cf1%2Cf13%2Cf10"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("ZjlxStock:", err)
@@ -52,12 +51,10 @@ func (this *ZjlxStock) ZjlxStockSave() {
 	ntime := time.Now().Format("2006-01-02")
 	for _, v := range data.Datas.Diff {
 
-		//if v.F3.(float64) > 3.8 || v.F3.(float64) < 2.8 || v.F2.(float64) > 58 || v.F2.(float64) < 2 || v.F184.(float64) < 8 || v.F69.(float64) < 8 || v.F62.(float64) < 10000000 || v.F66.(float64) < 8000000 || v.F10.(float64) < 0.5 {
-		//	continue
-		//}
-		if v.F3.(float64) > 5.8 || v.F3.(float64) < 0.28 || v.F2.(float64) > 58 || v.F2.(float64) < 2 || v.F10.(float64) < 0.5 || v.F62.(float64) < 10000000 || v.F66.(float64) < 8000000 {
+		if v.F2.(float64) > 58 || v.F3.(float64) < 3 || v.F3.(float64) > 5.8 || v.F62.(float64) < 10000000 || v.F66.(float64) < 5000000 || v.F72.(float64) < 1000000 || v.F10.(float64) < 0.5 || v.F10.(float64) > 8 {
 			continue
 		}
+
 		// 筛选通过   需要判断下最近涨跌和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.F12.(string)) <= 0 {
 			continue

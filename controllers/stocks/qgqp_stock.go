@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"reflect"
 	"stock/controllers"
-	"stock/share/util"
-
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
+	"stock/share/util"
 	"time"
 )
 
@@ -24,6 +23,8 @@ type QgqpStock struct {
 	PERation      float64     `json:"PERation"`      // 市盈率
 	TurnoverRate  interface{} `json:"TurnoverRate"`  // 换手率
 	TotalScore    interface{} `json:"TotalScore"`    // 评分
+	ZLCB          interface{} `json:"ZLCB"`          // 主力成本
+	ZLJLR         interface{} `json:"ZLJLR"`         // 主力净利润
 }
 
 func NewQgqpStock() *QgqpStock {
@@ -35,7 +36,8 @@ func (this *QgqpStock) QgqpStockSave() {
 
 	stocks_db.NewQgqpStockDb().DelQgqpStock()
 
-	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=ChangePercent&sr=-1&p=4&ps=128"
+	//url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=ChangePercent&sr=-1&p=4&ps=128"
+	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=TotalScore&sr=-1&p=1&ps=3000"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("qgqpStock:", err)
@@ -54,9 +56,24 @@ func (this *QgqpStock) QgqpStockSave() {
 	if len(data) <= 0 {
 		return
 	}
+
+	var d []*QgqpStock
+	for _, v := range data {
+		if reflect.TypeOf(v.New).Name() == "string" || reflect.TypeOf(v.ZLCB).Name() == "string" {
+			continue
+		}
+
+		f := (v.New.(float64) - v.ZLCB.(float64)) / v.ZLCB.(float64)
+
+		if f > 0.02 && f < 0.06 {
+			d = append(d, v)
+		}
+
+	}
+
 	ntime := time.Now().Format("2006-01-02")
 
-	for _, v := range data {
+	for _, v := range d {
 
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" || reflect.TypeOf(v.TotalScore).String() == "string" {
 			continue
