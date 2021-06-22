@@ -30,7 +30,7 @@ func (this *UtilHttps) GetXqPd(scode string) int {
 
 	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=`
 	url += `&npay.20201231=1_5000&oiy.20201231=1_5000`
-	url += `&npay.20210331=1_5000&oiy.20210331=1_5000&mc=2500000000_150000000000&pct5=0_8&pct20=-10_15`
+	url += `&npay.20210331=1_5000&oiy.20210331=1_5000&mc=2500000000_150000000000&pct5=0_8&pct20=-5.8_15`
 	url += fmt.Sprintf(`&symbol=%v`, sc)
 
 	resp, err := http.Get(url)
