@@ -101,8 +101,26 @@ func (this *ZtStock) ZtStockFx() {
 		// 最高涨跌幅
 		zgzdf := int((i.Zgjg - i.Kpj) / i.Kpj * 100)
 		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf), 64)
+		// 最低涨跌幅
+		zdzdf := int((i.Zdjg - i.Kpj) / i.Kpj * 100)
+		zdzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zdzdf), 64)
 		// 条件1 高开回调 上涨选
 		if zgzdfv > 0.5 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 8000000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
+			// 判断是否已入库
+			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				continue
+			}
+
+			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
+			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+
+		}
+
+		zlf := i.Zljlr.(float64)
+
+		if zdzdfv >= 2.8 && zgzdfv < 6 && zlf > 12800000 && i.Zxjg > i.Zdjg && zlf/2 >= f2 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
