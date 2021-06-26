@@ -120,7 +120,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		zlf := i.Zljlr.(float64)
 
-		if zdzdfv >= 2.8 && zgzdfv < 6 && zlf > 12800000 && i.Zxjg > i.Zdjg && zlf/2 >= f2 {
+		if zdzdfv >= 2.8 && zgzdfv < 6 && zlf > 12800000 && i.Zxjg > i.Zdjg && zlf/2 >= f1 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

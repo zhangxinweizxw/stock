@@ -51,7 +51,7 @@ func (this *ZjlxStock) ZjlxStockSave() {
 	ntime := time.Now().Format("2006-01-02")
 	for _, v := range data.Datas.Diff {
 
-		if v.F2.(float64) > 58 || v.F3.(float64) < 3 || v.F3.(float64) > 5.8 || v.F62.(float64) < 10000000 || v.F66.(float64) < 5000000 || v.F72.(float64) < 1000000 || v.F10.(float64) < 0.5 || v.F10.(float64) > 8 {
+		if v.F2.(float64) > 88 || v.F3.(float64) < 0.8 || v.F3.(float64) > 3.8 || v.F62.(float64) < 50000000 || v.F66.(float64) < 10000000 || v.F72.(float64) < 1000000 || v.F10.(float64) < 0.5 || v.F10.(float64) > 8 {
 			continue
 		}
 
@@ -352,7 +352,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "5800000") || (df66 < "2800000") || (df72 < "0") || d.F2.(float64) > 68 || (d.F8.(float64) < 0.5 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 128) || d.F10.(float64) < 0.5 || d.F3.(float64) > 5.8 || d.F3.(float64) < 1.28 {
+		if (df62 < "5800000") || (df66 < "2800000") || (df72 < "0") || d.F2.(float64) > 68 || (d.F8.(float64) < 0.5 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 128) || d.F10.(float64) < 0.5 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
