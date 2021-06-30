@@ -77,7 +77,7 @@ func (this *ZtStock) ZtStockFx() {
 		//	continue
 		//}
 		fsd := this.GetFsZjlr(sci).Data.KLines
-		if len(fsd) < 2 {
+		if len(fsd) < 5 {
 			continue
 		}
 
@@ -93,9 +93,17 @@ func (this *ZtStock) ZtStockFx() {
 		s2 := strings.Split(kl2, ",")
 		f2, _ := strconv.ParseFloat(s2[1], 64)
 
-		kl3 := fsd[0]
+		kl3 := fsd[len(fsd)-3]
 		s3 := strings.Split(kl3, ",")
 		f3, _ := strconv.ParseFloat(s3[1], 64)
+
+		kl4 := fsd[len(fsd)-4]
+		s4 := strings.Split(kl4, ",")
+		f4, _ := strconv.ParseFloat(s4[1], 64)
+
+		kl5 := fsd[len(fsd)-5]
+		s5 := strings.Split(kl5, ",")
+		f5, _ := strconv.ParseFloat(s5[1], 64)
 
 		// 计算涨跌幅
 		// 最高涨跌幅
@@ -105,7 +113,7 @@ func (this *ZtStock) ZtStockFx() {
 		zdzdf := int((i.Zdjg - i.Kpj) / i.Kpj * 100)
 		zdzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zdzdf), 64)
 		// 条件1 高开回调 上涨选
-		if zgzdfv > 0.5 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 8000000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
+		if zgzdfv > 2.8 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 8000000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -120,7 +128,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		zlf := i.Zljlr.(float64)
 
-		if zdzdfv >= 2.8 && zgzdfv < 6 && zlf > 12800000 && i.Zxjg > i.Zdjg && zlf/2 >= f2 {
+		if zdzdfv >= 0.8 && zgzdfv < 6 && zlf > 10000000 && i.Zxjg > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -158,7 +166,7 @@ func (this *ZtStock) ZtStockFx() {
 		//}
 
 		// 条件2 平开或者低开 然后资金流入 加速
-		if i.Zdf > 0.5 && f1 > 10800000 && f2 > 5000000 && i.Zljlr.(float64) >= f2 && f3 > 3800000 && i.Zdf < 5.8 {
+		if i.Zdf > 0.5 && f1 >= 8800000 && f2 > 5000000 && f3 > 3800000 && i.Zdf < 5.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
