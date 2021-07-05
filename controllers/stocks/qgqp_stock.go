@@ -36,6 +36,11 @@ func (this *QgqpStock) QgqpStockSave() {
 
 	stocks_db.NewQgqpStockDb().DelQgqpStock()
 
+	defer func() {
+		if err := recover(); err != nil {
+			logging.Error("Panic Error=======:%v======:%v", "保存千股千评数据", err)
+		}
+	}()
 	//url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=ChangePercent&sr=-1&p=4&ps=128"
 	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=TotalScore&sr=-1&p=1&ps=3000"
 	resp, err := http.Get(url)
