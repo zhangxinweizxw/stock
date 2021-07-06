@@ -70,7 +70,7 @@ func (this *QgqpStock) QgqpStockSave() {
 
 		f := (v.New.(float64) - v.ZLCB.(float64)) / v.ZLCB.(float64)
 
-		if f > 0.02 && f < 0.06 {
+		if f < 0.026 && f >= 0.008 {
 			d = append(d, v)
 		}
 
@@ -84,7 +84,7 @@ func (this *QgqpStock) QgqpStockSave() {
 			continue
 		}
 
-		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 0.5 || v.PERation > 68 || v.TurnoverRate.(float64) < 1 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 68 {
+		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3 || v.ChangePercent.(float64) < 1.28 || v.PERation > 68 || v.TurnoverRate.(float64) < 1 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 68 {
 			continue
 		}
 

@@ -51,7 +51,7 @@ func (this *ZjlxStock) ZjlxStockSave() {
 	ntime := time.Now().Format("2006-01-02")
 	for _, v := range data.Datas.Diff {
 
-		if v.F2.(float64) > 88 || v.F3.(float64) < 0.8 || v.F3.(float64) > 3.8 || v.F62.(float64) < 50000000 || v.F66.(float64) < 10000000 || v.F72.(float64) < 1000000 || v.F10.(float64) < 0.5 || v.F10.(float64) > 8 {
+		if v.F2.(float64) > 58 || v.F3.(float64) < 0.8 || v.F3.(float64) > 2.8 || v.F62.(float64) < 50000000 || v.F66.(float64) < 10000000 || v.F72.(float64) < 1000000 || v.F10.(float64) < 0.5 || v.F10.(float64) > 8 {
 			continue
 		}
 

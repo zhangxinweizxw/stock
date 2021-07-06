@@ -26,6 +26,9 @@ func (this *DxStock) SaveDxstock() {
 			logging.Error("Panic Error=============:%v", err)
 		}
 	}()
+
+	stocks_db.NewDxStockDb().DelDxStock()
+
 	// 获取 stock_day_k 表最近23个交易日日期
 	d := stocks_db.NewStock_Day_K().GetStockDayKDate()
 	if len(d) < 15 {
@@ -37,20 +40,20 @@ func (this *DxStock) SaveDxstock() {
 	{
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
 				WHERE create_time='` + d[0]
-		sql += `' AND f3 >0 AND f3 <3.8
-				 AND dayk20 >= dayK30  AND dayK5 >= dayK10  AND dayK10 >= dayK20
-				 AND day10zdf < 10 AND day10zdf > -5
-				 AND f12 NOT LIKE '688%' AND f14 NOT LIKE '*%'  AND f14 NOT LIKE 'ST%' 
+		sql += `' AND f3 >1.28 AND f3 <3.8
+                  AND dayk20 >= dayK30  AND dayK5 >= dayK10  AND dayK10 >= dayK20
+                  AND day10zdf < 8 AND day10zdf > -5 AND day20zdf < 10
+                  AND f12 NOT LIKE '688%' AND f14 NOT LIKE '*%'  AND f14 NOT LIKE 'ST%'  
 				AND f12 IN(
 				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[1]
 		sql += `' AND f3 > -1.8 AND f3 <3.8
-				AND dayk20 >= dayK30
+                  AND dayk20 >= dayK30 AND dayK10 >= dayK20 AND dayK5 < dayK10
 				AND f12 IN(
 				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[2]
 		sql += `' AND f3 > -1.8 AND f3 <3.8
-				AND dayk30 >= dayK20  AND dayK10 >= dayK5 )) `
+                  AND dayk30 >= dayK20  OR dayK10 >= dayK5 )) `
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 
 		if len(sdkl) > 0 {

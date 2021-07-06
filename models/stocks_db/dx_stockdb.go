@@ -54,3 +54,14 @@ func (this *DxStockDb) GetDxStockList() []*DxStockDb {
 	}
 	return dxStock
 }
+
+func (this *DxStockDb) DelDxStock() {
+
+	b := this.Db.DeleteFrom(this.TableName)
+	_, err := this.DeleteWhere(b, nil).Exec()
+
+	if err != nil {
+		fmt.Println("Delete Table TABLE_dx_stock  |  Error   %v", err)
+	}
+
+}
