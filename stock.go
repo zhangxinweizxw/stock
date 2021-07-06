@@ -114,10 +114,10 @@ func main() {
 						go stocks.NewZtStock().ZtStockFx()
 					}
 
-					go stocks.NewStockDayk(nil).XQStockFx()
-					go stocks.NewZjlxStock().ZjlxtockFx()
-					go stocks.NewQgqpStock().QgqpStockFx()
-					go stocks.NewDxStock().DxStockFx()
+					//go stocks.NewStockDayk(nil).XQStockFx()
+					//go stocks.NewZjlxStock().ZjlxtockFx()
+					//go stocks.NewQgqpStock().QgqpStockFx()
+					//go stocks.NewDxStock().DxStockFx()
 					go stocks.NewZjlxStock().PkydStockFx()
 
 					go stocks.NewZjlxStock().ZjlxStockSellFx()
