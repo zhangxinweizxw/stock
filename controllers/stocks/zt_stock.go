@@ -113,7 +113,7 @@ func (this *ZtStock) ZtStockFx() {
 		zdzdf := int((i.Zdjg - i.Kpj) / i.Kpj * 100)
 		zdzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zdzdf), 64)
 		// 条件1 高开回调 上涨选
-		if zgzdfv > 2.8 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 8000000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
+		if zgzdfv > 2.8 && zgzdfv < 8 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 12800000 && i.Zljlr.(float64) > f3 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -128,7 +128,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		zlf := i.Zljlr.(float64)
 
-		if zdzdfv >= 0.8 && zgzdfv < 6 && zlf > 10000000 && i.Zxjg > i.Zdjg && f1/2 >= f2 && f2/2 >= f3 && f3/2 >= f4 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 {
+		if zdzdfv >= 0.8 && zgzdfv < 6 && zlf > 12800000 && i.Zxjg > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 8800000 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -166,7 +166,7 @@ func (this *ZtStock) ZtStockFx() {
 		//}
 
 		// 条件2 平开或者低开 然后资金流入 加速
-		if i.Zdf > 0.5 && f1 >= 8800000 && f2 > 5000000 && f3 > 3800000 && i.Zdf < 3.8 {
+		if i.Zdf > 0.5 && f1 >= 12800000 && f2 > 8880000 && f3 > 5800000 && i.Zdf < 3.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -219,7 +219,7 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK5 || d.DayK10 > d.DayK5) || d.Day5Zdf > 6 || d.Day5Zdf < -3 || d.Day20Zdf < -10 || d.Day20Zdf > 15 {
+				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK5 || d.DayK10 > d.DayK5) || d.Day5Zdf > 6 || d.Day5Zdf < -3 || d.Day20Zdf < -10 || d.Day20Zdf > 10 {
 					continue
 				}
 
@@ -255,7 +255,7 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK5 || d.DayK10 > d.DayK5) || d.Day5Zdf > 6 || d.Day5Zdf < -3 || d.Day20Zdf < -10 || d.Day20Zdf > 15 {
+				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK5 || d.DayK10 > d.DayK5) || d.Day5Zdf > 6 || d.Day5Zdf < -3 || d.Day20Zdf < -10 || d.Day20Zdf > 12 {
 					continue
 				}
 
