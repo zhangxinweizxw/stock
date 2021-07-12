@@ -322,7 +322,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		}
 
 		fsd := NewZtStock().GetFsZjlr(sci).Data.KLines
-		if len(fsd) < 2 {
+		if len(fsd) <= 4 {
 			continue
 		}
 
