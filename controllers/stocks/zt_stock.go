@@ -118,6 +118,9 @@ func (this *ZtStock) ZtStockFx() {
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
+			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
+				continue
+			}
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
@@ -131,6 +134,9 @@ func (this *ZtStock) ZtStockFx() {
 		if zdzdfv >= 1.28 && zgzdfv < 7 && zlf > 12800000 && i.Zxjg > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 5800000 && i.Lb > 0.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				continue
+			}
+			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
 				continue
 			}
 
@@ -169,6 +175,9 @@ func (this *ZtStock) ZtStockFx() {
 		if i.Zdf > 0.5 && f1 >= 12800000 && f2 > 8800000 && f3 > 5800000 && f4 > 3800000 && f5 > 1280000 && i.Zdf < 3.8 && i.Lb > 0.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				continue
+			}
+			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
 				continue
 			}
 

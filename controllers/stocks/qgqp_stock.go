@@ -169,6 +169,9 @@ func (this *QgqpStock) QgqpStockFx() {
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
+			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
+				continue
+			}
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 4)

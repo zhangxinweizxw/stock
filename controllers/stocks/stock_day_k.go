@@ -336,6 +336,10 @@ func (this *StockDayk) XQStockFx() {
 				continue
 			}
 
+			if len(stocks_db.NewStock_Day_K().GetSStockInfo(sc)) == 0 {
+				continue
+			}
+			return
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 
 			go this.SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 1)
