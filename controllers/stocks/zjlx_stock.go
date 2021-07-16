@@ -254,6 +254,10 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				break
 			}
+			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
+				continue
+			}
+
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, i.Zxjg, 3)
 			ZjlxStockDb = append(ZjlxStockDb[:k], ZjlxStockDb[k+1:]...)
@@ -352,11 +356,14 @@ func (this *ZjlxStock) PkydStockFx() {
 		//df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "3800000") || (df66 < "2800000") || d.F2.(float64) > 68 || (d.F8.(float64) < 0.5 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 128) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
+		if (df62 < "3800000") && (df66 < "2800000") || d.F2.(float64) > 68 || (d.F8.(float64) < 0.5 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 128) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
+			continue
+		}
+		if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
 			continue
 		}
 		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息

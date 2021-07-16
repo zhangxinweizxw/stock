@@ -42,6 +42,7 @@ func main() {
 	//stocks.NewStockDayk(nil).GetDayK("002555")
 	//logging.Error("================:", stocks_db.NewTransactionHistory().GetTranHist("九安医疗"))
 	//controllers.NewUtilHttps(nil).GetXqPd()
+	//stocks_db.NewStock_Day_K().GetSStockInfo("000225")
 
 	go func() {
 		for { // 1
