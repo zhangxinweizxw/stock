@@ -297,6 +297,5 @@ func (this *Stock_Day_K) GetSStockInfo(sc string) string {
 		fmt.Println("Select Table 上个交易日 create_time  |  Error   %v", err)
 		return ""
 	}
-	logging.Error("=====", f12)
 	return f12
 }
