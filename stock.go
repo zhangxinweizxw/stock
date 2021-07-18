@@ -105,11 +105,17 @@ func main() {
 					if time.Now().Hour() == 9 && time.Now().Minute() == 33 {
 						stocks.NewZtStock().GetZTStock()
 					}
+					if time.Now().Hour() == 10 && time.Now().Minute() == 18 {
+						stocks.NewZtStock().GetZTStock()
+					}
+					if time.Now().Hour() == 13 && time.Now().Minute() == 58 {
+						stocks.NewZtStock().GetZTStock()
+					}
 
 					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:35", time.Now().Format("2006-01-02")))
-					zt2, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 11:08", time.Now().Format("2006-01-02")))
+					zt2, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 11:28", time.Now().Format("2006-01-02")))
 					zt3, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 13:08", time.Now().Format("2006-01-02")))
-					zt4, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:38", time.Now().Format("2006-01-02")))
+					zt4, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:55", time.Now().Format("2006-01-02")))
 
 					if (t1.After(zt1) && t1.Before(zt2)) || (t1.After(zt3) && t1.Before(zt4)) {
 						go stocks.NewZtStock().ZtStockFx()
