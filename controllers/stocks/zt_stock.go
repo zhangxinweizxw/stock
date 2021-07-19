@@ -39,18 +39,7 @@ func (this *ZtStock) ZtStockFx() {
 	}()
 
 	for k, v := range ZtStockDb {
-		//sc := ""
-		//sci := ""
-		//switch v.StockCode[:3] {
-		//case "600", "601", "603", "605", "688", "689", "608":
-		//	sc = fmt.Sprintf("SH%v", v.StockCode)
-		//	sci = fmt.Sprintf("1.%v", v.StockCode)
-		//case "300", "002", "000", "001", "003", "301":
-		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
-		//	sci = fmt.Sprintf("0.%v", v.StockCode)
-		//default:
-		//	continue
-		//}
+
 		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
 		if len(sc) <= 0 {
 			name = v.StockName
@@ -67,15 +56,11 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 
-		if i.Zdf < 0 {
+		if i.Zdf < -0.8 {
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			continue
 		}
-		//if i.Zdf < -1.28 || i.Zdf > 3.8 || fs > 4 {
-		//	ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-		//	go stocks_db.NewZtStockDB().DelZtStockTj(v.StockCode)
-		//	continue
-		//}
+
 		fsd := this.GetFsZjlr(sci).Data.KLines
 		if len(fsd) < 5 {
 			continue
@@ -113,76 +98,49 @@ func (this *ZtStock) ZtStockFx() {
 		zdzdf := int((i.Zdjg - i.Kpj) / i.Kpj * 100)
 		zdzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zdzdf), 64)
 		// 条件1 高开回调 上涨选
-		if zgzdfv > 2.8 && zgzdfv < 7 && i.Zxjg > i.Kpj && i.Zljlr.(float64) > 12800000 && i.Zljlr.(float64) > f3 && i.Zljlr.(float64) > f5 && i.Zxjg < i.Zgjg && i.Zxjg > i.Zdjg && i.Lb > 0.5 {
+		if reflect.TypeOf(i.Zxjg).Name() == "string" {
+			continue
+		}
+		if zgzdfv > 0.28 && zgzdfv < 7 && i.Zxjg.(float64) > i.Kpj && i.Zljlr.(float64) > 12800000 && i.Zljlr.(float64) > f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 0.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
-			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
-				continue
-			}
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+			logging.Debug("1111")
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
 
 		zlf := i.Zljlr.(float64)
 
-		if zdzdfv >= 1.28 && zgzdfv < 7 && zlf > 12800000 && i.Zxjg > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 5800000 && i.Lb > 0.5 {
+		if zdzdfv >= 0.28 && zgzdfv < 7 && zlf > 12800000 && i.Zxjg.(float64) > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 5800000 && i.Lb > 0.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
-			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
-				continue
-			}
 
+			logging.Debug("2222")
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
 
-		////name = i.Gpmc
-		//zljlrv := 0.0
-		//if reflect.TypeOf(i.Zljlr).String() != "string" {
-		//	zljlrv = i.Zljlr.(float64)
-		//}
-		//d1 := decimal.NewFromFloat(zljlrv)
-		////d3 := decimal.NewFromFloat(i.Jdd)
-		//d2 := "0"
-		//if reflect.TypeOf(i.Jcd).String() != "string" {
-		//	d2 = fmt.Sprintf("%v", i.Jcd.(float64))
-		//}
-		////if i.Zdf > 1.8 && i.Zdf < 5.8 && i.Lb > 1 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > "10000000" && d2 > "1000000" && d3.String() > "500000" {
-		//if i.Zdjg > v.Dayk20 && i.Zxjg > v.Dayk10 && i.Zdf > 0 && i.Zdf < 5.7 && i.Lb > 0.28 && i.Lb < 10 && d1.String() > "10000000" && d2 > "5000000" {
-		//	// 判断是否已入库
-		//	if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
-		//		continue
-		//	}
-		//
-		//	// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-		//	go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
-		//	ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-		//	//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
-		//}
-
 		// 条件2 平开或者低开 然后资金流入 加速
-		if i.Zdf > 0.5 && f1 >= 12800000 && f2 > 8800000 && f3 > 5800000 && f4 > 3800000 && f5 > 1280000 && i.Zdf < 3.8 && i.Lb > 0.5 {
+		if i.Zdf > 0.5 && f1 >= 12800000 && f2 > 8800000 && f3 > 5800000 && f4 > 3800000 && f5 > 1280000 && i.Zdf < 3.8 && i.Lb > 0.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
-			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
-				continue
-			}
+			logging.Debug("3333")
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 2)
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
@@ -228,7 +186,7 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK10 || d.DayK10 > d.DayK5) || d.Day5Zdf > 5.8 || d.Day5Zdf < 0 || d.Day20Zdf < -5 || d.Day20Zdf > 18 {
+				if (d.DayK30 > d.DayK20 || d.DayK20 > d.DayK10 || d.DayK10 > d.DayK5) || d.Day5Zdf > 5.8 || d.Day5Zdf < 0 || d.Day20Zdf < -3 || d.Day20Zdf > 13 {
 					continue
 				}
 
@@ -265,7 +223,7 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK10 || d.DayK20 > d.DayK10 || d.DayK10 > d.DayK5) || d.Day5Zdf > 5.8 || d.Day5Zdf < 0 || d.Day20Zdf < -5 || d.Day20Zdf > 18 {
+				if (d.DayK30 > d.DayK20 || d.DayK20 > d.DayK10 || d.DayK10 > d.DayK5) || d.Day5Zdf > 5.8 || d.Day5Zdf < 0 || d.Day20Zdf < -3 || d.Day20Zdf > 13 {
 					continue
 				}
 

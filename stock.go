@@ -63,7 +63,7 @@ func main() {
 					time.Sleep(18 * time.Minute)
 					stocks.NewStockDayk(cfg).GetXueqiu()
 
-					stocks.NewZjlxStock().ZjlxStockSave()
+					//stocks.NewZjlxStock().ZjlxStockSave()
 
 					stocks.NewQgqpStock().QgqpStockSave()
 
@@ -102,17 +102,15 @@ func main() {
 
 				if err == nil && t1.After(t2) && t1.Before(t3) {
 
-					if time.Now().Hour() == 9 && time.Now().Minute() == 33 {
+					if time.Now().Hour() == 9 && time.Now().Minute() == 35 {
 						stocks.NewZtStock().GetZTStock()
 					}
-					if time.Now().Hour() == 10 && time.Now().Minute() == 18 {
-						stocks.NewZtStock().GetZTStock()
-					}
+
 					if time.Now().Hour() == 13 && time.Now().Minute() == 58 {
 						stocks.NewZtStock().GetZTStock()
 					}
 
-					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:35", time.Now().Format("2006-01-02")))
+					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:38", time.Now().Format("2006-01-02")))
 					zt2, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 11:28", time.Now().Format("2006-01-02")))
 					zt3, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 13:08", time.Now().Format("2006-01-02")))
 					zt4, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:55", time.Now().Format("2006-01-02")))
@@ -122,7 +120,7 @@ func main() {
 					}
 
 					go stocks.NewStockDayk(nil).XQStockFx()
-					go stocks.NewZjlxStock().ZjlxtockFx()
+					//go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
 					go stocks.NewDxStock().DxStockFx()
 					go stocks.NewZjlxStock().PkydStockFx()

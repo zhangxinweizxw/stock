@@ -125,15 +125,6 @@ func (this *QgqpStock) QgqpStockFx() {
 
 	for k, v := range QgqpStockDb {
 
-		//sc := ""
-		//switch v.StockCode[:3] {
-		//case "600", "601", "603", "605", "688", "689", "608":
-		//	sc = fmt.Sprintf("SH%v", v.StockCode)
-		//case "300", "002", "000", "001", "003", "301":
-		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
-		//default:
-		//	continue
-		//}
 		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
 		if len(sc) <= 0 {
 			continue
@@ -149,8 +140,7 @@ func (this *QgqpStock) QgqpStockFx() {
 			zljlrv = i.Zljlr.(float64)
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
-		////d2 := decimal.NewFromFloat(i.Jcd)
-		//d3 := decimal.NewFromFloat(i.Jdd.(float64))
+
 		d2 := "0"
 		if reflect.TypeOf(i.Jcd).String() != "string" {
 			d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
@@ -164,17 +154,16 @@ func (this *QgqpStock) QgqpStockFx() {
 			continue
 		}
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 10 && i.Hsl > 0.5 && d1.String() > "5880000" && d2 > "1000000" && d3 > "500000" {
+		if i.Zdf > 0.5 && i.Zdf < 2.8 && i.Lb > 0.5 && i.Lb < 10 && i.Hsl > 0.8 && d1.String() > "5880000" && d2 > "1000000" && d3 > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
-			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
+			if reflect.TypeOf(i.Zxjg).Name() == "string" {
 				continue
 			}
-
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 4)
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 4)
 			QgqpStockDb = append(QgqpStockDb[:k], QgqpStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}

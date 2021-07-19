@@ -51,10 +51,10 @@ func (this *ZjlxStock) ZjlxStockSave() {
 	ntime := time.Now().Format("2006-01-02")
 	for _, v := range data.Datas.Diff {
 
-		if v.F2.(float64) > 58 || v.F3.(float64) < 0.8 || v.F3.(float64) > 2.8 || v.F62.(float64) < 50000000 || v.F66.(float64) < 10000000 || v.F72.(float64) < 1000000 || v.F10.(float64) < 0.5 || v.F10.(float64) > 8 {
+		if v.F2.(float64) > 58 || v.F3.(float64) < -2 || v.F3.(float64) > 1.28 || v.F62.(float64) < 58000000 || v.F66.(float64) < 28800000 || v.F72.(float64) < 1280000 || v.F10.(float64) < 1 || v.F10.(float64) > 8 {
 			continue
 		}
-
+		logging.Debug("=====", v.F12)
 		// 筛选通过   需要判断下最近涨跌和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.F12.(string)) <= 0 {
 			continue
@@ -206,15 +206,6 @@ func (this *ZjlxStock) ZjlxtockFx() {
 
 	for k, v := range ZjlxStockDb {
 
-		//sc := ""
-		//switch v.StockCode[:3] {
-		//case "600", "601", "603", "605", "688", "689", "608":
-		//	sc = fmt.Sprintf("SH%v", v.StockCode)
-		//case "300", "002", "000", "001", "003", "301":
-		//	sc = fmt.Sprintf("SZ%v", v.StockCode)
-		//default:
-		//	continue
-		//}
 		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
 		if len(sc) <= 0 {
 			continue
@@ -230,8 +221,7 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			zljlrv = i.Zljlr.(float64)
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
-		//d2 := decimal.NewFromFloat(i.Jcd)
-		//d3 := decimal.NewFromFloat(i.Jdd.(float64))
+
 		d2 := "0"
 		if reflect.TypeOf(i.Jcd).String() != "string" {
 			d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
@@ -245,7 +235,7 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			continue
 		}
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.3 && i.Lb < 8 && i.Hsl > 0.5 && d1.String() > "3880000" && d2 > "1000000" && d3 > "500000" {
+		if i.Zdf > 0.5 && i.Zdf < 2.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 1 && d1.String() > "3880000" && d2 > "1000000" && d3 > "500000" {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -254,12 +244,11 @@ func (this *ZjlxStock) ZjlxtockFx() {
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				break
 			}
-			if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
+			if reflect.TypeOf(i.Zxjg).Name() == "string" {
 				continue
 			}
-
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, i.Zxjg, 3)
+			go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, i.Zxjg.(float64), 3)
 			ZjlxStockDb = append(ZjlxStockDb[:k], ZjlxStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", v.StockName, v.StockCode, i.Zxjg))
 
@@ -309,17 +298,6 @@ func (this *ZjlxStock) PkydStockFx() {
 	}
 	for _, v := range data.Data.AData {
 
-		//sci := ""
-		//switch v.StockCode[:3] {
-		//case "600", "601", "603", "605", "688", "689", "608":
-		//	//sc = fmt.Sprintf("SH%v", v.StockCode)
-		//	sci = fmt.Sprintf("1.%v", v.StockCode)
-		//case "300", "002", "000", "001", "003", "301":
-		//	//sc = fmt.Sprintf("SZ%v", v.StockCode)
-		//	sci = fmt.Sprintf("0.%v", v.StockCode)
-		//default:
-		//	continue
-		//}
 		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
 		if len(sci) <= 0 {
 			continue
@@ -341,7 +319,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		s3 := strings.Split(kl3, ",")
 		f3, _ := strconv.ParseFloat(s3[1], 64)
 
-		if f3 < 1000000 || f1 < f2 || f2 < f3 || f1/2 < f3 || f1 < 3800000 {
+		if f3 < 1000000 || f1 < f2 || f2 < f3 || f1 < 5800000 {
 			continue
 		}
 		// 判断是否以入库
@@ -356,16 +334,14 @@ func (this *ZjlxStock) PkydStockFx() {
 		//df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		//logging.Error("=========:", df62, "====:", d.F184, "=====:", df66, "====:", d.F69, "====:", df72, "====:", d.F75, "=====:", d.F2, "=====:", d.F8, "====:", d.F9, "====:", d.F10)
-		if (df62 < "3800000") && (df66 < "2800000") || d.F2.(float64) > 68 || (d.F8.(float64) < 0.5 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 128) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
+		if (df62 < "3800000") && (df66 < "2800000") || d.F2.(float64) > 68 || (d.F8.(float64) < 1 || d.F8.(float64) > 8) || (d.F9.(float64) < 5.8 || d.F9.(float64) > 128) || d.F10.(float64) < 0.5 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
-		if len(stocks_db.NewStock_Day_K().GetSStockInfo(v.StockCode)) == 0 {
-			continue
-		}
+
 		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 		go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, d.F2.(float64), 6)
 

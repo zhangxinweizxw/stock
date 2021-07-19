@@ -38,7 +38,7 @@ type Date struct {
 
 type StockDayk struct {
 	C     *config.AppConfig
-	Zxjg  float64     `json:"f43"`
+	Zxjg  interface{} `json:"f43"`
 	Zgjg  float64     `json:"f44"`
 	Zdjg  float64     `json:"f45"`
 	Cjj   float64     `json:"f47"`
@@ -329,20 +329,19 @@ func (this *StockDayk) XQStockFx() {
 			d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
 		}
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.3 && i.Lb < 8 && i.Hsl > 0.5 && i.Hsl < 10 && d1.String() > "3800000" && d2 > "1880000" && d3 > "500000" {
+		if i.Zdf > 0.5 && i.Zdf < 2.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 0.8 && i.Hsl < 10 && d1.String() > "3800000" && d2 > "1880000" && d3 > "500000" {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {
 				continue
 			}
 
-			if len(stocks_db.NewStock_Day_K().GetSStockInfo(sc)) == 0 {
-				continue
-			}
-			return
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 
-			go this.SaveStock(i.Gpdm, i.Gpmc, i.Zxjg, 1)
+			if reflect.TypeOf(i.Zxjg).Name() == "string" {
+				continue
+			}
+			go this.SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 1)
 			XQStock = append(XQStock[:k], XQStock[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
