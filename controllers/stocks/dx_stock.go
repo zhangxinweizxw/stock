@@ -40,20 +40,20 @@ func (this *DxStock) SaveDxstock() {
 	{
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
 				WHERE create_time='` + d[0]
-		sql += `' AND f3 >1.28 AND f3 <3.8
-                  AND dayk20 >= dayK30  AND dayK5 >= dayK10  AND dayK10 >= dayK20
-                  AND day10zdf < 8 AND day10zdf > -5 AND day20zdf < 10
-                  AND f12 NOT LIKE '688%' AND f14 NOT LIKE '*%'  AND f14 NOT LIKE 'ST%'  
-				AND f12 IN(
+		sql += `' AND dayK20 > dayK30 AND dayK10 > dayK20
+				AND day5zdf > 0 AND day5zdf <3.8
+				AND f3 > 0.8 AND f3 < 3.6 AND f7 < 6
+				AND f8 > 1.5 AND f16 >= dayK20 AND f2 >= dayK5
+				AND f12 IN (
 				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[1]
-		sql += `' AND f3 > -1.8 AND f3 <3.8
-                  AND dayk20 >= dayK30 AND dayK10 >= dayK20 AND dayK5 < dayK10
-				AND f12 IN(
+		sql += `' AND dayK20 > dayK30 
+				AND f3 > -1  AND f3 < 3 AND f8 >1.28 and f7 <6
+				AND f12 IN (
 				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[2]
-		sql += `' AND f3 > -1.8 AND f3 <3.8
-                  AND dayk30 >= dayK20  OR dayK10 >= dayK5 )) `
+		sql += `' AND f3 > -1 AND f3 < 2.8 AND f8 >1
+				AND dayK20 > dayK30 and f7 <6 ) ) `
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 
 		if len(sdkl) > 0 {
@@ -132,14 +132,14 @@ func (this *DxStock) DxStockFx() {
 		}
 		zxjgf := i.Zxjg.(float64)
 		// 最新交易日判断 最低价最好是 回探 跌破五日 10日之上。然后 当前价 >= 5日的时候选出
-		if i.Zdjg < v.DayK5 && (i.Zdjg >= v.DayK10 || i.Zdjg >= v.DayK20) && zxjgf >= v.DayK5 && d1.String() > "3800000" && d2 > "1000000" {
+		if i.Zdjg < v.DayK5 && (i.Zdjg >= v.DayK10 || i.Zdjg >= v.DayK20) && zxjgf >= v.DayK10 && d1.String() > "12800000" && d2 > "2800000" {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 		// 开盘 最低价格 >= 五日K线 涨跌幅 不大于 3.8 量比 > 0.5  主力净流入 >0
-		if i.Zdjg >= v.DayK5 && i.Zdf < 2.8 && i.Zdf > 0.28 && d1.String() > "3800000" && d2 > "1000000" && i.Lb > 0.5 {
+		if i.Zdjg >= v.DayK5 && i.Zdf < 3.6 && i.Zdf > 0.28 && d1.String() > "12800000" && d2 > "2800000" && i.Lb > 0.5 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)
