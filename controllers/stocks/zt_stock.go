@@ -132,7 +132,8 @@ func (this *ZtStock) ZtStockFx() {
 		}
 
 		// 条件2 平开或者低开 然后资金流入 加速
-		if i.Zdf > 0.5 && f1 >= 12800000 && f2 > 8800000 && f3 > 5800000 && f4 > 3800000 && f5 > 1280000 && i.Zdf < 3.8 && i.Lb > 0.8 {
+
+		if i.Zdf > 0.5 && f1 >= 12800000 && f2 > 8800000 && f3 > 5800000 && f4 > 3800000 && f5 > 1280000 && i.Zdf < 3.8 && i.Lb > 0.8 && (zgzdfv-i.Zdf) < 2.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
