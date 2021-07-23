@@ -101,7 +101,7 @@ func (this *ZtStock) ZtStockFx() {
 		if reflect.TypeOf(i.Zxjg).Name() == "string" {
 			continue
 		}
-		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && i.Zljlr.(float64) > 12800000 && i.Zljlr.(float64) >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 0.8 {
+		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && i.Zljlr.(float64) > 12800000 && i.Zljlr.(float64) >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 0.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -117,7 +117,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		zlf := i.Zljlr.(float64)
 
-		if zdzdfv >= 1.28 && zgzdfv < 9 && zlf > 12800000 && i.Zxjg.(float64) > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 5800000 && i.Lb > 0.8 {
+		if zdzdfv >= 1.28 && zgzdfv < 9 && zlf > 12800000 && i.Zxjg.(float64) > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 5800000 && i.Lb > 0.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -133,7 +133,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 1.28 && f1 >= 38000000 && f2 >= 12800000 && f3 >= 5800000 && f4 >= 3800000 && f5 > 1280000 && i.Zdf < 5.6 && i.Lb > 1 && (zgzdfv-i.Zdf) < 2.8 {
+		if i.Zdf > 1.28 && f1 >= 38000000 && f2 >= 16800000 && f3 >= 8800000 && f4 >= 5800000 && f5 > 1280000 && i.Zdf < 3.6 && i.Lb > 1 && (zgzdfv-i.Zdf) < 2.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
