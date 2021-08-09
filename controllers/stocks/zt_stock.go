@@ -56,7 +56,7 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 
-		if i.Zdf < 0 {
+		if i.Zdf < 0.28 {
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			continue
 		}
@@ -101,7 +101,9 @@ func (this *ZtStock) ZtStockFx() {
 		if reflect.TypeOf(i.Zxjg).Name() == "string" {
 			continue
 		}
-		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && i.Zljlr.(float64) > 12800000 && i.Zljlr.(float64) >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 0.5 {
+
+		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", i.Zljlr)
+		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && i.Zljlr.(float64) > 5800000 && i.Zljlr.(float64) >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 0.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -117,7 +119,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		zlf := i.Zljlr.(float64)
 
-		if zdzdfv >= 1.28 && zgzdfv < 9 && zlf > 12800000 && i.Zxjg.(float64) > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 5800000 && i.Lb > 0.5 {
+		if zdzdfv >= 1.28 && zgzdfv < 9 && zlf > 5800000 && i.Zxjg.(float64) > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 3800000 && i.Lb > 0.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -133,7 +135,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 1.28 && f1 >= 38000000 && f2 >= 16800000 && f3 >= 8800000 && f4 >= 5800000 && f5 > 1280000 && i.Zdf < 3.6 && i.Lb > 1 && (zgzdfv-i.Zdf) < 2.8 {
+		if i.Zdf > 0.28 && f1 >= 8800000 && f2 >= 5800000 && f3 >= 3800000 && f4 >= 1800000 && f5 > 800000 && i.Zdf < 3.6 && i.Lb > 1 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -183,11 +185,11 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				//f62 := decimal.NewFromFloat(v.F62.(float64))
-				if v.F3.(float64) < -1.8 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 0 || v.F23.(float64) < 1.28 || v.F23.(float64) > 10 {
+				if v.F3.(float64) < 0 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 0 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 5.8 || d.Day5Zdf < 0 || d.Day20Zdf < -3 || d.Day20Zdf > 13 {
+				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 2 || d.Day20Zdf < -3 || d.Day20Zdf > 13 {
 					continue
 				}
 
@@ -220,11 +222,11 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				//f62 := decimal.NewFromFloat(v.F62.(float64))
-				if v.F3.(float64) < -0.8 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 0 || v.F23.(float64) < 1.28 || v.F23.(float64) > 10 {
+				if v.F3.(float64) < 0 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 0 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 5.8 || d.Day5Zdf < 0 || d.Day20Zdf < -3 || d.Day20Zdf > 13 {
+				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 2 || d.Day20Zdf < -3 || d.Day20Zdf > 13 {
 					continue
 				}
 

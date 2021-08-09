@@ -38,22 +38,38 @@ func (this *DxStock) SaveDxstock() {
 	ntime := time.Now().Format("2006-01-02")
 
 	{
+		//sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
+		//		WHERE create_time='` + d[0]
+		//sql += `' AND day5zdf > 0 AND day5zdf < 6
+		//         AND f3 > 0.8 AND f3 < 3.6 AND f7 < 10
+		//         AND f8 > 3 AND f2 >= dayK5 AND dayK20 >= dayK30 AND dayK10 >= dayK20 AND dayK5 > dayK10
+		//         AND f12 IN (
+		//           SELECT f12 FROM stock_day_k
+		//           WHERE create_time='` + d[1]
+		//sql += `' AND dayK20 > dayK30
+		//          AND f3 > -0.8  AND f3 < 3.6 AND f8 >1.5 and f7 < 10
+		//			AND dayK20 >= dayK30 AND  f16 <= dayK5 AND f16 >= dayK20
+		//            AND f12 IN (
+		//               SELECT f12 FROM stock_day_k
+		//               WHERE create_time='` + d[2]
+		//sql += `' AND f3 > -1.8 AND f3 < 3.6 AND f8 >1.28
+		//          AND dayK20 >= dayK30 AND  f16 <= dayK10 AND f16 >= dayK20 and f7 < 10 ) ) `
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
 				WHERE create_time='` + d[0]
-		sql += `' AND day5zdf > 0 AND day5zdf < 6
-                 AND f3 > 0.8 AND f3 < 3.6 AND f7 < 10
-                 AND f8 > 3 AND f2 >= dayK5 AND dayK20 >= dayK30 AND dayK10 >= dayK20 AND dayK5 > dayK10
-                 AND f12 IN (
-                   SELECT f12 FROM stock_day_k 
-                   WHERE create_time='` + d[1]
-		sql += `' AND dayK20 > dayK30 
-                  AND f3 > -0.8  AND f3 < 3.6 AND f8 >1.5 and f7 < 10
-					AND dayK20 >= dayK30 AND  f16 <= dayK5 AND f16 >= dayK20
-                    AND f12 IN (
-                       SELECT f12 FROM stock_day_k 
-                       WHERE create_time='` + d[2]
-		sql += `' AND f3 > -1.8 AND f3 < 3.6 AND f8 >1.28
-                  AND dayK20 >= dayK30 AND  f16 <= dayK10 AND f16 >= dayK20 and f7 < 10 ) ) `
+		sql += `' AND dayK20 > dayK30 AND day5zdf < 8 AND  day5zdf >3
+				AND f8 > 3 AND f10 >1.28 AND f16 < dayK5 AND f12 not LIKE '688%'
+				AND f3 >0 AND f3 <5.8
+				AND f12 IN (
+				SELECT f12 FROM stock_day_k 
+				WHERE create_time='` + d[1]
+		sql += `' AND f8 >1.8 AND f10 >0.25
+				AND f3 > 0 AND f16 < dayK5
+				AND dayK20 > dayK30
+				AND f12 IN (
+				SELECT f12 FROM stock_day_k 
+				WHERE create_time='` + d[2]
+		sql += `' AND dayK20 > dayK30
+				AND f3 > 0 ) )`
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 
 		if len(sdkl) > 0 {
