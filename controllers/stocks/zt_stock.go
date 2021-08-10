@@ -75,24 +75,23 @@ func (this *ZtStock) ZtStockFx() {
 		kl1 := fsd[len(fsd)-1]
 		s1 := strings.Split(kl1, ",")
 		//f1, _ := strconv.ParseFloat(s1[1], 64)
-		f1 := fmt.Sprintf("%.2f", s1[1])
+		f1 := fmt.Sprintf("%v", s1[1])[:len(s1[1])-2]
 		kl2 := fsd[len(fsd)-2]
 		s2 := strings.Split(kl2, ",")
 		//f2, _ := strconv.ParseFloat(s2[1], 64)
-		f2 := fmt.Sprintf("%.2f", s2[1])
+		f2 := fmt.Sprintf("%v", s2[1])[:len(s2[1])-2]
 		kl3 := fsd[len(fsd)-3]
 		s3 := strings.Split(kl3, ",")
 		//f3, _ := strconv.ParseFloat(s3[1], 64)
-		f3 := fmt.Sprintf("%.2f", s3[1])
+		f3 := fmt.Sprintf("%v", s3[1])[:len(s3[1])-2]
 
 		kl4 := fsd[len(fsd)-4]
 		s4 := strings.Split(kl4, ",")
 		//f4, _ := strconv.ParseFloat(s4[1], 64)
-		f4 := fmt.Sprintf("%.2f", s4[1])
+		f4 := fmt.Sprintf("%v", s4[1])[:len(s4[1])-2]
 		kl5 := fsd[len(fsd)-5]
 		s5 := strings.Split(kl5, ",")
-		f5 := fmt.Sprintf("%.2f", s5[1])
-
+		f5 := fmt.Sprintf("%v", s5[1])[:len(s5[1])-2]
 		// 计算涨跌幅
 		// 最高涨跌幅
 		zgzdf := (i.Zgjg - i.Kpj) / i.Kpj
@@ -108,6 +107,7 @@ func (this *ZtStock) ZtStockFx() {
 		}
 		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
 		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", dzljlr, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", f1, f2, f3, f4, f5)
+
 		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && dzljlr > "12800000" && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.28 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {

@@ -12,7 +12,6 @@ import (
 	"stock/models/stocks_db"
 	"stock/share/logging"
 	"stock/share/util"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -311,7 +310,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		kl1 := fsd[len(fsd)-1]
 		s1 := strings.Split(kl1, ",")
 		//f1, _ := strconv.ParseFloat(s1[1], 64)
-		f1, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", s1[1]), 64)
+		f1 := fmt.Sprintf("%v", s1[1])[:len(s1[1])-2]
 		//kl2 := fsd[len(fsd)-2]
 		//s2 := strings.Split(kl2, ",")
 		//f2, _ := strconv.ParseFloat(s2[1], 64)
@@ -319,9 +318,9 @@ func (this *ZjlxStock) PkydStockFx() {
 		kl3 := fsd[len(fsd)-3]
 		s3 := strings.Split(kl3, ",")
 		//f3, _ := strconv.ParseFloat(s3[1], 64)
-		f3, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", s3[1]), 64)
+		f3 := fmt.Sprintf("%v", s3[1])[:len(s3[1])-2]
 
-		if f3 < 2800000 || f1 < f3 || f1 < 5800000 {
+		if f3 < "2800000" || f1 < f3 || f1 < "5800000" {
 			continue
 		}
 		// 判断是否以入库
