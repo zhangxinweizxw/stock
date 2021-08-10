@@ -3,6 +3,7 @@ package stocks
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/shopspring/decimal"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -73,37 +74,41 @@ func (this *ZtStock) ZtStockFx() {
 
 		kl1 := fsd[len(fsd)-1]
 		s1 := strings.Split(kl1, ",")
-		f1, _ := strconv.ParseFloat(s1[1], 64)
+		//f1, _ := strconv.ParseFloat(s1[1], 64)
+		f1 := fmt.Sprintf("%.2f", s1[1])
 		kl2 := fsd[len(fsd)-2]
 		s2 := strings.Split(kl2, ",")
-		f2, _ := strconv.ParseFloat(s2[1], 64)
-
+		//f2, _ := strconv.ParseFloat(s2[1], 64)
+		f2 := fmt.Sprintf("%.2f", s2[1])
 		kl3 := fsd[len(fsd)-3]
 		s3 := strings.Split(kl3, ",")
-		f3, _ := strconv.ParseFloat(s3[1], 64)
+		//f3, _ := strconv.ParseFloat(s3[1], 64)
+		f3 := fmt.Sprintf("%.2f", s3[1])
 
 		kl4 := fsd[len(fsd)-4]
 		s4 := strings.Split(kl4, ",")
-		f4, _ := strconv.ParseFloat(s4[1], 64)
-
+		//f4, _ := strconv.ParseFloat(s4[1], 64)
+		f4 := fmt.Sprintf("%.2f", s4[1])
 		kl5 := fsd[len(fsd)-5]
 		s5 := strings.Split(kl5, ",")
-		f5, _ := strconv.ParseFloat(s5[1], 64)
+		f5 := fmt.Sprintf("%.2f", s5[1])
 
 		// 计算涨跌幅
 		// 最高涨跌幅
-		zgzdf := int((i.Zgjg - i.Kpj) / i.Kpj * 100)
-		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf), 64)
+		zgzdf := (i.Zgjg - i.Kpj) / i.Kpj
+
+		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
 		// 最低涨跌幅
-		zdzdf := int((i.Zdjg - i.Kpj) / i.Kpj * 100)
-		zdzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zdzdf), 64)
+		zdzdf := (i.Zdjg - i.Kpj) / i.Kpj
+		zdzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zdzdf*100), 64)
+
 		// 条件1 高开回调 上涨选
 		if reflect.TypeOf(i.Zxjg).Name() == "string" {
 			continue
 		}
-
-		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", i.Zljlr)
-		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && i.Zljlr.(float64) > 5800000 && i.Zljlr.(float64) >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 0.5 {
+		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
+		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", dzljlr, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", f1, f2, f3, f4, f5)
+		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && dzljlr > "12800000" && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.28 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -116,10 +121,13 @@ func (this *ZtStock) ZtStockFx() {
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
-
-		zlf := i.Zljlr.(float64)
-
-		if zdzdfv >= 1.28 && zgzdfv < 9 && zlf > 5800000 && i.Zxjg.(float64) > i.Zdjg && f1/2 >= f3 && f2/2 >= f4 && f3/2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= 3800000 && i.Lb > 0.5 {
+		f1s1, _ := strconv.ParseFloat(f1, 64)
+		f1s2 := decimal.NewFromFloat(f1s1 / 2).String()
+		f2s1, _ := strconv.ParseFloat(f2, 64)
+		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
+		f3s1, _ := strconv.ParseFloat(f3, 64)
+		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
+		if zdzdfv >= 1.28 && zgzdfv < 9 && dzljlr > "8800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= "3800000" && i.Lb > 1.28 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -135,7 +143,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 0.28 && f1 >= 8800000 && f2 >= 5800000 && f3 >= 3800000 && f4 >= 1800000 && f5 > 800000 && i.Zdf < 3.6 && i.Lb > 1 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg {
+		if i.Zdf > 1.28 && f1 >= "12800000" && f2 >= "8800000" && f3 >= "5800000" && f4 >= "3800000" && f5 > "1800000" && i.Zdf < 3.6 && i.Lb > 1.28 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

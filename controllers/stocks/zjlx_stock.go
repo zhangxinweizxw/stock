@@ -310,14 +310,16 @@ func (this *ZjlxStock) PkydStockFx() {
 
 		kl1 := fsd[len(fsd)-1]
 		s1 := strings.Split(kl1, ",")
-		f1, _ := strconv.ParseFloat(s1[1], 64)
+		//f1, _ := strconv.ParseFloat(s1[1], 64)
+		f1, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", s1[1]), 64)
 		//kl2 := fsd[len(fsd)-2]
 		//s2 := strings.Split(kl2, ",")
 		//f2, _ := strconv.ParseFloat(s2[1], 64)
 
 		kl3 := fsd[len(fsd)-3]
 		s3 := strings.Split(kl3, ",")
-		f3, _ := strconv.ParseFloat(s3[1], 64)
+		//f3, _ := strconv.ParseFloat(s3[1], 64)
+		f3, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", s3[1]), 64)
 
 		if f3 < 2800000 || f1 < f3 || f1 < 5800000 {
 			continue
@@ -333,8 +335,8 @@ func (this *ZjlxStock) PkydStockFx() {
 		df66 := decimal.NewFromFloat(d.F66.(float64)).String()
 		//df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
-		logging.Info(fmt.Sprintf("123321=========df62:%v======df66:%v=====f2:%v=====f8:%v======f9:%v=====f10:%v", df62, df66, d.F2, d.F8, d.F9, d.F10))
-		if (df62 < "8800000") && (df66 < "5800000") || d.F2.(float64) > 68 || (d.F8.(float64) < 3 || d.F8.(float64) > 8) || d.F10.(float64) < 1 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0.28 {
+		logging.Info(fmt.Sprintf("123321=========df62:%v======df66:%v=====f2:%v=====f8:%v======f9:%v=====f10:%v======f1:%v====f3:%v", df62, df66, d.F2, d.F8, d.F9, d.F10, f1, f3))
+		if (df62 < "8800000") && (df66 < "2800000") || d.F2.(float64) > 68 || (d.F8.(float64) < 1.8 || d.F8.(float64) > 8) || d.F10.(float64) < 1 || d.F3.(float64) > 3.8 || d.F3.(float64) < 1.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
