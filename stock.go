@@ -67,7 +67,7 @@ func main() {
 
 					stocks.NewQgqpStock().QgqpStockSave()
 
-					stocks.NewDxStock().SaveDxstock()
+				stocks.NewDxStock().SaveDxstock()
 				}
 				time.Sleep(1 * time.Hour)
 			} else {
