@@ -60,14 +60,14 @@ func main() {
 					//每天下午跑日K数据
 					stocks.NewStockDayk(cfg).GetStockDayK()
 
-					time.Sleep(18 * time.Minute)
+					time.Sleep(15 * time.Minute)
 					stocks.NewStockDayk(cfg).GetXueqiu()
 
 					//stocks.NewZjlxStock().ZjlxStockSave()
 
 					stocks.NewQgqpStock().QgqpStockSave()
 
-				stocks.NewDxStock().SaveDxstock()
+					stocks.NewDxStock().SaveDxstock()
 				}
 				time.Sleep(1 * time.Hour)
 			} else {
