@@ -117,7 +117,7 @@ func (this *ZtStock) ZtStockFx() {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-			logging.Debug("1111")
+			logging.Debug("=11111")
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
@@ -127,13 +127,13 @@ func (this *ZtStock) ZtStockFx() {
 		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
 		f3s1, _ := strconv.ParseFloat(f3, 64)
 		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
-		if zdzdfv >= 1.28 && zgzdfv < 9 && dzljlr > "8800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= "3800000" && i.Lb > 1.28 {
+		if zdzdfv >= 1.28 && zgzdfv < 9 && dzljlr > "12800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= "5800000" && i.Lb > 1.28 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
 
-			logging.Debug("2222")
+			logging.Debug("=22222")
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
@@ -143,12 +143,12 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 1.28 && f1 >= "12800000" && f2 >= "8800000" && f3 >= "5800000" && f4 >= "3800000" && f5 > "1800000" && i.Zdf < 3.6 && i.Lb > 1.28 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg {
+		if i.Zdf > 1.28 && f1 >= "38800000" && f2 >= "12800000" && f3 >= "6800000" && f4 >= "3800000" && f5 > "1800000" && i.Zdf < 3.6 && i.Lb > 3 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk10 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
 			}
-			logging.Debug("3333")
+			logging.Debug("=33333")
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
