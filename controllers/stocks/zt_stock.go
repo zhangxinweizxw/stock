@@ -92,6 +92,11 @@ func (this *ZtStock) ZtStockFx() {
 		kl5 := fsd[len(fsd)-5]
 		s5 := strings.Split(kl5, ",")
 		f5 := fmt.Sprintf("%v", s5[1])[:len(s5[1])-2]
+
+		kl6 := fsd[0]
+		s6 := strings.Split(kl6, ",")
+		f6 := fmt.Sprintf("%v", s6[1])[:len(s6[1])-2]
+
 		// 计算涨跌幅
 		// 最高涨跌幅
 		zgzdf := (i.Zgjg - i.Kpj) / i.Kpj
@@ -108,7 +113,7 @@ func (this *ZtStock) ZtStockFx() {
 		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
 		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", dzljlr, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", f1, f2, f3, f4, f5)
 
-		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && dzljlr > "38800000" && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 3 {
+		if zgzdfv > 2.28 && zgzdfv < 9 && i.Zxjg.(float64) > i.Kpj && dzljlr > "38800000" && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 3 && f6 > "1000000" && f6 < f1 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -143,7 +148,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 1.28 && f1 >= "38800000" && f2 >= "12800000" && f3 >= "6800000" && f4 >= "3800000" && f5 > "1800000" && i.Zdf < 3.6 && i.Lb > 3 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk10 {
+		if i.Zdf > 1.28 && f1 >= "38800000" && f2 >= "12800000" && f3 >= "6800000" && f4 >= "3800000" && f5 > "1800000" && i.Zdf < 3.6 && i.Lb > 3 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk10 && i.Zdjg < v.Dayk5 && f6 > "1000000" && f6 < f1 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
