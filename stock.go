@@ -102,7 +102,7 @@ func main() {
 
 				if err == nil && t1.After(t2) && t1.Before(t3) {
 
-					if time.Now().Hour() == 9 && time.Now().Minute() == 32 {
+					if time.Now().Hour() == 9 && time.Now().Minute() == 33 {
 						stocks.NewZtStock().GetZTStock()
 					}
 

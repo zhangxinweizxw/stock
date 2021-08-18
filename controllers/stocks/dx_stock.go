@@ -64,12 +64,12 @@ func (this *DxStock) SaveDxstock() {
 				WHERE create_time='` + d[1]
 		sql += `' AND f8 >1.8 AND f10 >0.25
 				AND f3 > 0 AND f16 < dayK5
-				AND dayK20 > dayK30
+				AND dayK20 > dayK30 AND dayK5 > dayK20 AND  dayK10 > dayK20 
 				AND f12 IN (
 				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[2]
-		sql += `' AND dayK20 > dayK30
-				AND f3 > 0 ) )`
+		sql += `' AND dayK5 > dayK20 AND  dayK10 > dayK20
+				AND f3 > -1 ) )`
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 
 		if len(sdkl) > 0 {
