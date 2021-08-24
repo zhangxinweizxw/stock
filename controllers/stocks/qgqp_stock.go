@@ -41,8 +41,8 @@ func (this *QgqpStock) QgqpStockSave() {
 			logging.Error("Panic Error=======:%v======:%v", "保存千股千评数据", err)
 		}
 	}()
-	//url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=ChangePercent&sr=-1&p=4&ps=128"
-	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=TotalScore&sr=-1&p=1&ps=3000"
+	url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=RankingUp&sr=-1&p=1&ps=1280"
+	//url := "http://dcfm.eastmoney.com/em_mutisvcexpandinterface/api/js/get?type=QGQP_LB&token=70f12f2f4f091e459a279469fe49eca5&cmd=&st=TotalScore&sr=-1&p=1&ps=3000"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("qgqpStock:", err)
@@ -70,7 +70,7 @@ func (this *QgqpStock) QgqpStockSave() {
 
 		f := (v.New.(float64) - v.ZLCB.(float64)) / v.ZLCB.(float64)
 
-		if f < 0.026 && f >= 0.008 {
+		if f < 0.088 && f >= 0.0128 {
 			d = append(d, v)
 		}
 
@@ -84,7 +84,7 @@ func (this *QgqpStock) QgqpStockSave() {
 			continue
 		}
 
-		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3.6 || v.ChangePercent.(float64) < 1.28 || v.PERation > 88 || v.TurnoverRate.(float64) < 2.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 78 {
+		if v.New.(float64) > 88 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 128 || v.TurnoverRate.(float64) < 3 || v.TurnoverRate.(float64) > 10 || v.TotalScore.(float64) < 60 {
 			continue
 		}
 

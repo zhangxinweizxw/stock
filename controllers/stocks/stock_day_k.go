@@ -254,8 +254,7 @@ func (this *StockDayk) GetXueqiu() {
 	stocks_db.NewXQ_Stock().DelXqStock()
 
 	// 为了简单手动改报告期
-	//url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1_68&pct=1.28_5.8&pettm=5_68&npay.20210331=1_5000&oiy.20210331=1_5000&pb=1.28_2.8&mc=2500000000_150000000000&pct5=1.28_8&volume_ratio=1_10&tr=3_10&pct60=-10_10&pct120=-30_20&_=1623251526595`
-	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=88&only_count=0&current=1_68&pct=2.8_3.8&pettm=5_68&npay.20210331=30_5000&oiy.20210331=30_5000&pb=1_2.8&mc=2500000000_150000000000&pct5=1.8_6&volume_ratio=1.6_6&tr=1.8_6&pct20=-5_13&pct10=-3_8"
+	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_5.8&netprofit.20210630=50000000_61150000000&fmc=2500000000_15000000000&npay.20210630=5_17594.51&oiy.20210630=5_151223.7&volume_ratio=1.8_10&tr=3_10&pct5=0_8&pct20=-5_12"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("", err)

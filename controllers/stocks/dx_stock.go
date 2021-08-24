@@ -56,20 +56,13 @@ func (this *DxStock) SaveDxstock() {
 		//          AND dayK20 >= dayK30 AND  f16 <= dayK10 AND f16 >= dayK20 and f7 < 10 ) ) `
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
 				WHERE create_time='` + d[0]
-		sql += `' AND dayK20 > dayK30 AND day5zdf < 8 AND  day5zdf >3
-				AND f8 > 3 AND f10 >1.28 AND f16 < dayK5 AND f12 not LIKE '688%'
-				AND f3 >0 AND f3 <5.8 AND f62 >0 
-				AND f12 IN (
-				SELECT f12 FROM stock_day_k 
-				WHERE create_time='` + d[1]
-		sql += `' AND f8 >1.8 AND f10 >0.25
-				AND f3 > 0 AND f16 < dayK5
-				AND dayK20 > dayK30 AND dayK5 > dayK20 AND  dayK10 > dayK20 
-				AND f12 IN (
-				SELECT f12 FROM stock_day_k 
-				WHERE create_time='` + d[2]
-		sql += `' AND dayK5 > dayK20 AND  dayK10 > dayK20
-				AND f3 > -1 ) )`
+		sql += `' AND dayK10 > dayK20 AND dayK20 >= dayK30  AND day5zdf < 6
+					AND f3 >0 AND f3 <5.8 AND f8 > 1.5 AND f10 >1.5 AND f8 <8
+					AND f12 IN(
+					SELECT f12  FROM stock_day_k 
+					WHERE create_time='` + d[1]
+		sql += `' AND dayK10 > dayK20 AND dayK30 >= dayK20 
+					AND f3 >0 AND f3 <5.8 AND f8 > 1.5 AND f10 >1.5 )`
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 
 		if len(sdkl) > 0 {
