@@ -132,7 +132,7 @@ func (this *ZtStock) ZtStockFx() {
 		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
 		f3s1, _ := strconv.ParseFloat(f3, 64)
 		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
-		if zdzdfv >= 1.28 && zgzdfv < 9 && dzljlr > "12800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && f3 >= "5800000" && i.Lb > 1.28 {
+		if zdzdfv >= 1.28 && zgzdfv < 9 && dzljlr > "12800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.58 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

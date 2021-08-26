@@ -128,10 +128,10 @@ func (this *DxStock) DxStockFx() {
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
 
-		d2 := "0"
-		if reflect.TypeOf(i.Jcd).String() != "string" {
-			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
-		}
+		//d2 := "0"
+		//if reflect.TypeOf(i.Jcd).String() != "string" {
+		//	d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+		//}
 		// 判断是否以入库
 		if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 			continue
@@ -141,14 +141,14 @@ func (this *DxStock) DxStockFx() {
 		}
 		zxjgf := i.Zxjg.(float64)
 		// 最新交易日判断 最低价最好是 回探 跌破五日 10日之上。然后 当前价 >= 5日的时候选出
-		if i.Zdjg < v.DayK5 && (i.Zdjg >= v.DayK10 || i.Zdjg >= v.DayK20) && zxjgf >= v.DayK10 && d1.String() > "12800000" && d2 > "2800000" {
+		if i.Zdjg < v.DayK5 && (i.Zdjg >= v.DayK10 || i.Zdjg >= v.DayK20) && zxjgf >= v.DayK10 && d1.String() > "5800000" && i.Lb > 1.28 && i.Hsl > 1 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 		// 开盘 最低价格 >= 五日K线 涨跌幅 不大于 3.8 量比 > 0.5  主力净流入 >0
-		if i.Zdjg >= v.DayK5 && i.Zdf < 3.6 && i.Zdf > 0.28 && d1.String() > "12800000" && d2 > "2800000" && i.Lb > 0.5 {
+		if i.Zdjg >= v.DayK5 && i.Zdf < 3.6 && i.Zdf > 0.28 && d1.String() > "5800000" && i.Lb > 1.28 && i.Hsl > 1 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)
