@@ -132,7 +132,7 @@ func (this *ZtStock) ZtStockFx() {
 		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
 		f3s1, _ := strconv.ParseFloat(f3, 64)
 		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
-		if zdzdfv >= 1.28 && zgzdfv < 9 && dzljlr > "12800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.58 {
+		if zdzdfv >= 1.28 && zgzdfv < 7 && dzljlr > "12800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -148,7 +148,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 0.8 && f1 >= "12800000" && f2 >= "6800000" && f3 >= "3800000" && f4 >= "1800000" && f5 > "0" && i.Zdf < 5.8 && i.Lb > 2 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk10 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
+		if i.Zdf > 0.8 && f1 >= "12800000" && f2 >= "8800000" && f3 >= "5800000" && f4 >= "3800000" && f5 > "0" && i.Zdf < 3.8 && i.Lb > 2 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk10 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
