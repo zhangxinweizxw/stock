@@ -66,9 +66,9 @@ type Stock_Day_K struct {
 	F5    string // 成交量(手)
 	F6    string // 成交额
 	F7    string // 振幅
-	F8    string // 换手率
+	F8    string `db:"f8"` // 换手率
 	F9    string // 市盈率(动态)
-	F10   string // 量比
+	F10   string `db:"f10"` // 量比
 	F11   string // 5分钟涨跌
 	F12   string `db:"f12"` // 代码
 	F13   string
@@ -270,7 +270,7 @@ func (this *Stock_Day_K) ZtSelStockDayk() []*Stock_Day_K {
 func (this *Stock_Day_K) GetStockDayKJJ(sc string) *Stock_Day_K {
 	// 查询最新日期
 	var d *Stock_Day_K
-	bulid := this.Db.Select("dayK5,dayK10,dayK20,dayK30,day5zdf,day10zdf,day20zdf").
+	bulid := this.Db.Select("dayK5,dayK10,dayK20,dayK30,day5zdf,day10zdf,day20zdf,f8,f10").
 		From(this.TableName).
 		Where(fmt.Sprintf("f12='%v'", sc)).
 		OrderBy("create_time DESC").
