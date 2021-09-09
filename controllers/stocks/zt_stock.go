@@ -111,7 +111,7 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
-		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", dzljlr, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", f1, f2, f3, f4, f5)
+		//logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", dzljlr, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", f1, f2, f3, f4, f5)
 
 		if zgzdfv > 1.28 && zgzdfv < 5.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > "38800000" && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.8 && f6 > "5880000" && f6 < f1 && f6 < f3 && i.Zxjg.(float64) >= v.Dayk5 {
 			// 判断是否已入库
@@ -202,7 +202,7 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "2.8" || d.F8 > "8.8" || d.F10 < "1.5" {
+				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "2.8" {
 					continue
 				}
 
