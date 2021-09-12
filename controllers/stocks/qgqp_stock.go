@@ -84,7 +84,7 @@ func (this *QgqpStock) QgqpStockSave() {
 			continue
 		}
 
-		if v.New.(float64) > 88 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 128 || v.TurnoverRate.(float64) < 3 || v.TurnoverRate.(float64) > 10 || v.TotalScore.(float64) < 60 {
+		if v.New.(float64) > 88 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 128 || v.TurnoverRate.(float64) < 3.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 60 {
 			continue
 		}
 

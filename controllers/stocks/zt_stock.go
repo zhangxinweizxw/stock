@@ -198,11 +198,11 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				//f62 := decimal.NewFromFloat(v.F62.(float64))
-				if v.F3.(float64) < 0 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 1000000 {
+				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 1000000 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "2.8" {
+				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
 					continue
 				}
 
@@ -239,7 +239,7 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "2.8" || d.F8 > "8.8" || d.F10 < "1.5" {
+				if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
 					continue
 				}
 

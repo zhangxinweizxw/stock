@@ -38,7 +38,7 @@ func main() {
 	//go util.NewDdRobot().DdRobotPush("test 数据 更新异常预警信息")
 
 	//stocks.NewStockDayk(cfg).GetStockDayK()
-	//f10.NewFinancialReports().SaveFinaRepo()
+	//f10.NewFinancialReports().SaveFinaRepo(nil)
 	//stocks.NewStockDayk(nil).GetDayK("002555")
 	//logging.Error("================:", stocks_db.NewTransactionHistory().GetTranHist("九安医疗"))
 	//controllers.NewUtilHttps(nil).GetXqPd()
