@@ -40,9 +40,8 @@ func (this *DxStock) SaveDxstock() {
 	{
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
 				WHERE create_time='` + d[0]
-		sql += `' AND f8 > 3 AND f8 < 6  AND f12 NOT LIKE '688%'
-				AND day5zdf < 6 
-				AND dayK20 > dayK30  
+		sql += `' AND f8 > 3 AND f8 < 8  AND f12 NOT LIKE '688%'
+  				AND dayK20 > dayK30 AND dayK5 > dayK10 AND f2 >dayK5  
 				AND f12 IN (
 				SELECT f12 FROM stock_day_k 
 				WHERE create_time='` + d[1]
