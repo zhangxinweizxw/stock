@@ -113,7 +113,7 @@ func (this *ZtStock) ZtStockFx() {
 		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
 		//logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", dzljlr, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", f1, f2, f3, f4, f5)
 
-		if i.Zgjg > i.Kpj && dzljlr > "50000000" && i.Jdd.(float64) > 10000000 && i.Zxjg.(float64) > i.Kpj && i.Zxjg.(float64) >= i.Zgjg && i.Zdf < 5 && i.Hsl > 1.8 && i.Zxjg.(float64) >= v.Dayk10 {
+		if i.Zgjg > i.Kpj && dzljlr > "50000000" && i.Jdd.(float64) > 10000000 && i.Zxjg.(float64) > i.Kpj && i.Zxjg.(float64) >= i.Zgjg && i.Zdf < 5.8 && i.Hsl > 1 && i.Zxjg.(float64) >= v.Dayk10 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -122,7 +122,7 @@ func (this *ZtStock) ZtStockFx() {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-			logging.Debug("=11111")
+			logging.Debug("=55555")
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
