@@ -111,9 +111,9 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
-		//logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zljl:", dzljlr, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", f1, f2, f3, f4, f5)
+		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zxjg:", i.Zxjg, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", i.Hsl, v.Dayk10)
 
-		if i.Zgjg > i.Kpj && dzljlr > "50000000" && i.Jdd.(float64) > 10000000 && i.Zxjg.(float64) > i.Kpj && i.Zxjg.(float64) >= i.Zgjg && i.Zdf < 5.8 && i.Hsl > 1 && i.Zxjg.(float64) >= v.Dayk10 {
+		if i.Zgjg > i.Kpj && dzljlr > "50000000" && i.Jdd.(float64) > 10000000 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1 && i.Zxjg.(float64) >= v.Dayk10 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -127,7 +127,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		}
 
-		if zgzdfv > 1.28 && zgzdfv < 5.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > "38800000" && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.8 && f6 > "5880000" && f6 < f1 && f6 < f3 && i.Zxjg.(float64) >= v.Dayk5 {
+		if zgzdfv > 0.28 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > "38800000" && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.8 && f6 > "3880000" && f6 < f1 && f6 < f3 && i.Zxjg.(float64) >= v.Dayk10 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -146,7 +146,7 @@ func (this *ZtStock) ZtStockFx() {
 		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
 		f3s1, _ := strconv.ParseFloat(f3, 64)
 		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
-		if zdzdfv >= 1.28 && zgzdfv < 7 && dzljlr > "12800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.8 {
+		if zdzdfv >= 0.28 && zgzdfv < 5.8 && dzljlr > "12800000" && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
