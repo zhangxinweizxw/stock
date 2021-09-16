@@ -342,7 +342,7 @@ func (this *StockDayk) XQStockFx() {
 			}
 			go this.SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 1)
 			XQStock = append(XQStock[:k], XQStock[k+1:]...)
-			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+			//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 	}
 
