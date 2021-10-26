@@ -292,6 +292,47 @@ func (this *StockDayk) GetXueqiu() {
 
 }
 
+// 雪球最新业绩分析筛选
+func (this *StockDayk) SaveXueqiuFx() {
+
+	// 为了简单手动改报告期
+	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=0_3&pettm=5_60&pb=5_10&oiy.20210630=5_151223.7&npay.20210630=5_74261.79&pct120=-35_30&pct5=-5_8"
+	resp, err := http.Get(url)
+	if err != nil {
+		logging.Error("", err)
+	}
+	defer resp.Body.Close()
+
+	body, err1 := ioutil.ReadAll(resp.Body)
+	if err1 != nil {
+		logging.Error("ioutil.ReadAll", err1)
+	}
+	//logging.Error("=====", string(body))
+	var data *util.XQResult
+	if err = json.Unmarshal(body, &data); err != nil {
+		logging.Error("解析雪球筛选 | Error:=", err)
+	}
+	//logging.Error("=====", len(data.XQResuData.List))
+
+	// 操作mysql  不符合要求剔除 符合加入不清库
+	for _, v := range data.XQResuData.List {
+
+		t := stocks_db.NewXQ_Stock_FX()
+
+		params := map[string]interface{}{
+			"stock_code":  v.StockCode[2:],
+			"stock_name":  v.StockName,
+			"create_time": time.Now().Format("2006-01-02"),
+		}
+		_, err := t.Insert(params)
+		if err != nil {
+			logging.Error("Insert xq_stock | %v", err)
+			return
+		}
+	}
+
+}
+
 // 需求个股分析监控 9：15 - 11：30   13：00-15：00 XQ
 func (this *StockDayk) XQStockFx() {
 	//logging.Error("=======", len(XQStock))

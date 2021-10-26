@@ -62,12 +62,14 @@ func main() {
 
 					time.Sleep(15 * time.Minute)
 					stocks.NewStockDayk(cfg).GetXueqiu()
+					stocks.NewStockDayk(cfg).SaveXueqiuFx()
 
 					//stocks.NewZjlxStock().ZjlxStockSave()
 
 					stocks.NewQgqpStock().QgqpStockSave()
 
 					stocks.NewDxStock().SaveDxstock()
+					stocks_db.NewZtStockDB().DelZtStock()
 				}
 				time.Sleep(1 * time.Hour)
 			} else {
