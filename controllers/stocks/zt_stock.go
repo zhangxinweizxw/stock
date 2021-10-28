@@ -32,23 +32,25 @@ func (this *ZtStock) ZtStockFx() {
 			return
 		}
 	}
-	name := ""
-	defer func() {
-		if err := recover(); err != nil {
-			logging.Error("Panic Error=======:%v======:%v", name, err)
-		}
-	}()
+	//name := ""
+	//defer func() {
+	//	if err := recover(); err != nil {
+	//		logging.Error("Panic Error=======:%v======:%v", name, err)
+	//	}
+	//}()
 
 	for k, v := range ZtStockDb {
-
+		if k >= k+1 {
+			continue
+		}
 		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
 		if len(sc) <= 0 {
-			name = v.StockName
+			//name = v.StockName
 			continue
 		}
 		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
 		if len(sci) <= 6 {
-			name = v.StockName
+			//name = v.StockName
 			continue
 		}
 
@@ -120,7 +122,7 @@ func (this *ZtStock) ZtStockFx() {
 			}
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
+			//go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			logging.Debug("=55555")
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
@@ -134,7 +136,7 @@ func (this *ZtStock) ZtStockFx() {
 			}
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
+			//go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			logging.Debug("=11111")
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
@@ -154,7 +156,7 @@ func (this *ZtStock) ZtStockFx() {
 
 			logging.Debug("=22222")
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
+			//go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
@@ -170,7 +172,7 @@ func (this *ZtStock) ZtStockFx() {
 			logging.Debug("=33333")
 
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
+			//go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
 			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
@@ -213,6 +215,15 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				//f62 := decimal.NewFromFloat(v.F62.(float64))
+				if reflect.TypeOf(v.F3).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F2).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F62).Name() == "string" {
+					continue
+				}
 				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 1000000 {
 					continue
 				}
@@ -250,6 +261,15 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 				//f62 := decimal.NewFromFloat(v.F62.(float64))
+				if reflect.TypeOf(v.F3).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F2).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F62).Name() == "string" {
+					continue
+				}
 				if v.F3.(float64) < 0 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 0 {
 					continue
 				}
