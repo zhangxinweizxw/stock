@@ -56,6 +56,7 @@ type StockDayk struct {
 	Jdd   interface{} `json:"f143"`
 	//Jzd   float64     `json:"f146"`
 	Kpj float64 `json:"f46"`
+	Zsz float64 `json:"f116"`
 }
 
 func NewStockDayk(cfg *config.AppConfig) *StockDayk {
@@ -408,7 +409,7 @@ func (this *StockDayk) StockInfoSS(sc string) *Date {
 		return nil
 	}
 
-	url := fmt.Sprintf("http://push2.eastmoney.com/api/qt/stock/get?ut=fa5fd1943c7b386f172d6893dbfba10b&invt=2&fltt=2&fields=f43,f44,f45,f47,f48,f50,f51,f52,f57,f58,f168,f169,f170,f137,f140,f143,f146,f46&secid=%v", code)
+	url := fmt.Sprintf("http://push2.eastmoney.com/api/qt/stock/get?ut=fa5fd1943c7b386f172d6893dbfba10b&invt=2&fltt=2&fields=f43,f44,f45,f47,f48,f50,f51,f52,f57,f58,f168,f169,f170,f137,f140,f143,f146,f46,f116&secid=%v", code)
 	//logging.Info("===============:", url)
 	resp, err := http.Get(url)
 	if err != nil {

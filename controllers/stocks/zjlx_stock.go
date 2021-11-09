@@ -334,8 +334,27 @@ func (this *ZjlxStock) PkydStockFx() {
 		df66 := decimal.NewFromFloat(d.F66.(float64)).String()
 		//df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
+		// 根据不同市值筛选条件做出改变
+		df6201, df6601 := "", ""
+		f2001 := d.F20.(float64)
+		if f2001 < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+			df6201 = "3880000"
+			df6601 = "1880000"
+		}
+		if f2001 > 3000000000 && f2001 < 5000000000 { //
+			df6201 = "8880000"
+			df6601 = "3880000"
+		}
+		if f2001 > 5000000000 && f2001 < 15000000000 { //
+			df6201 = "38800000"
+			df6601 = "12880000"
+		}
+		if f2001 > 15000000000 { //
+			df6201 = "88800000"
+			df6601 = "58880000"
+		}
 		//logging.Info(fmt.Sprintf("stockCode:%v===123321=========df62:%v======df66:%v=====f2:%v=====f8:%v======f9:%v=====f10:%v======f1:%v====f3:%v", v.StockCode, df62, df66, d.F2, d.F8, d.F9, d.F10, f1, f3))
-		if (df62 < "8800000") && (df66 < "5800000") || d.F2.(float64) > 68 || (d.F8.(float64) < 2.8 || d.F8.(float64) > 8) || d.F10.(float64) < 1.28 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
+		if (df62 < df6201) && (df66 < df6601) || d.F2.(float64) > 68 || (d.F8.(float64) < 1.8 || d.F8.(float64) > 8) || d.F10.(float64) < 1.28 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.28 {
 			continue
 		}
 		// 筛选通过   需要判断下最近涨跌和财务数据
