@@ -336,6 +336,9 @@ func (this *ZjlxStock) PkydStockFx() {
 
 		// 根据不同市值筛选条件做出改变
 		df6201, df6601 := "", ""
+		if d.F20 == nil {
+			continue
+		}
 		f2001 := d.F20.(float64)
 		if f2001 < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
 			df6201 = "3880000"

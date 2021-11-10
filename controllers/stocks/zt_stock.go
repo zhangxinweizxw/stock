@@ -232,7 +232,12 @@ func (this *ZtStock) ZtStockFx() {
 func (this *ZtStock) GetZTStock() {
 
 	//stocks_db.NewZtStockDB().DelZtStock()
-
+	name := ""
+	defer func() {
+		if err := recover(); err != nil {
+			logging.Error("Panic Error=======:%v======:%v", name, err)
+		}
+	}()
 	url := "http://73.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1280&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
 	resp, err := http.Get(url)
 
@@ -251,101 +256,138 @@ func (this *ZtStock) GetZTStock() {
 	if err = json.Unmarshal(body, &data); err != nil {
 		logging.Error("解析日K  | Error:=", err)
 	}
+
 	d := data.Datas.Diff
 	//l := len(d)
-	//i2 := int(len(d) / 2)
-	//go func() {
-	for _, v := range d {
-		//if i >= 0 && i < i2 {
-		if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
-			continue
-		}
-		//f62 := decimal.NewFromFloat(v.F62.(float64))
-		if reflect.TypeOf(v.F3).Name() == "string" {
-			continue
-		}
-		if reflect.TypeOf(v.F2).Name() == "string" {
-			continue
-		}
-		if reflect.TypeOf(v.F62).Name() == "string" {
-			continue
-		}
-		if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 1000000 {
-			continue
-		}
-		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-		if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
-			continue
-		}
+	i2 := int(len(d) / 2)
+	go func() {
+		for i, v := range d {
+			if i >= 0 && i < i2 {
+				if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
+					continue
+				}
+				//f62 := decimal.NewFromFloat(v.F62.(float64))
+				if reflect.TypeOf(v.F3).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F2).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F62).Name() == "string" {
+					continue
+				}
 
-		ntime := time.Now().Format("2006-01-02")
+				jlr01 := 0.0
+				f2001 := v.F20.(float64)
+				if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+					jlr01 = 1880000
+				}
+				if f2001 > 3000000000 && f2001 < 5000000000 { //
+					jlr01 = 3880000
+				}
+				if f2001 > 5000000000 && f2001 < 15000000000 { //
+					jlr01 = 5880000
+				}
+				if f2001 > 15000000000 { //
+					jlr01 = 12880000
+				}
 
-		// 股票信息写入zt_stock表方便使用
-		i := stocks_db.NewZtStockDB()
-		p := map[string]interface{}{
-			"create_time": ntime,
-			"stock_code":  v.F12,
-			"stock_name":  v.F14,
-			"dayk5":       d.DayK5,
-			"dayk10":      d.DayK10,
-			"dayk20":      d.DayK20,
-			"dayk30":      d.DayK30,
-		}
-		_, err := i.Insert(p)
-		if err != nil {
-			logging.Error("Insert Table zt_stock | %v", err)
-			continue
-		}
+				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < jlr01 {
+					continue
+				}
+				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
+				if d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
+					continue
+				}
 
-		//}
-	}
-	//}()
-	//go func() {
-	//	for i, v := range d {
-	//		if i >= i2 && i < len(d)-1 {
-	//			if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
-	//				continue
-	//			}
-	//			//f62 := decimal.NewFromFloat(v.F62.(float64))
-	//			if reflect.TypeOf(v.F3).Name() == "string" {
-	//				continue
-	//			}
-	//			if reflect.TypeOf(v.F2).Name() == "string" {
-	//				continue
-	//			}
-	//			if reflect.TypeOf(v.F62).Name() == "string" {
-	//				continue
-	//			}
-	//			if v.F3.(float64) < 0 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < 0 {
-	//				continue
-	//			}
-	//			d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-	//			if (d.DayK30 > d.DayK20 && d.DayK20 > d.DayK10) || d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
-	//				continue
-	//			}
-	//
-	//			ntime := time.Now().Format("2006-01-02")
-	//
-	//			// 股票信息写入zt_stock表方便使用
-	//			i := stocks_db.NewZtStockDB()
-	//			p := map[string]interface{}{
-	//				"create_time": ntime,
-	//				"stock_code":  v.F12,
-	//				"stock_name":  v.F14,
-	//				"dayk5":       d.DayK5,
-	//				"dayk10":      d.DayK10,
-	//				"dayk20":      d.DayK20,
-	//				"dayk30":      d.DayK30,
-	//			}
-	//			_, err := i.Insert(p)
-	//			if err != nil {
-	//				logging.Error("Insert Table zt_stock | %v", err)
-	//				continue
-	//			}
-	//
-	//		}
-	//	}
-	//}()
+				ntime := time.Now().Format("2006-01-02")
+
+				// 股票信息写入zt_stock表方便使用
+				i := stocks_db.NewZtStockDB()
+				p := map[string]interface{}{
+					"create_time": ntime,
+					"stock_code":  v.F12,
+					"stock_name":  v.F14,
+					"dayk5":       d.DayK5,
+					"dayk10":      d.DayK10,
+					"dayk20":      d.DayK20,
+					"dayk30":      d.DayK30,
+				}
+				_, err := i.Insert(p)
+				logging.Debug("Insert  Table zt_stock 11")
+				if err != nil {
+					logging.Error("Insert Table zt_stock | %v", err)
+					name = "11"
+					continue
+				}
+
+			}
+		}
+	}()
+	go func() {
+		for i, v := range d {
+			if i >= i2 && i < len(d)-1 {
+				if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
+					continue
+				}
+				//f62 := decimal.NewFromFloat(v.F62.(float64))
+				if reflect.TypeOf(v.F3).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F2).Name() == "string" {
+					continue
+				}
+				if reflect.TypeOf(v.F62).Name() == "string" {
+					continue
+				}
+
+				jlr01 := 0.0
+				f2001 := v.F20.(float64)
+				if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+					jlr01 = 1880000
+				}
+				if f2001 > 3000000000 && f2001 < 5000000000 { //
+					jlr01 = 3880000
+				}
+				if f2001 > 5000000000 && f2001 < 15000000000 { //
+					jlr01 = 5880000
+				}
+				if f2001 > 15000000000 { //
+					jlr01 = 12880000
+				}
+
+				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < jlr01 {
+					continue
+				}
+				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
+				if d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
+					continue
+				}
+
+				ntime := time.Now().Format("2006-01-02")
+
+				// 股票信息写入zt_stock表方便使用
+				i := stocks_db.NewZtStockDB()
+				p := map[string]interface{}{
+					"create_time": ntime,
+					"stock_code":  v.F12,
+					"stock_name":  v.F14,
+					"dayk5":       d.DayK5,
+					"dayk10":      d.DayK10,
+					"dayk20":      d.DayK20,
+					"dayk30":      d.DayK30,
+				}
+				_, err := i.Insert(p)
+				logging.Debug("Insert  Table zt_stock 22")
+				if err != nil {
+					logging.Error("Insert  Table zt_stock | %v", err)
+					name = "22"
+					continue
+				}
+
+			}
+		}
+	}()
 	ZtStockDb = nil
 }
 

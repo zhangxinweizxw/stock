@@ -104,7 +104,7 @@ func main() {
 
 				if err == nil && t1.After(t2) && t1.Before(t3) {
 
-					if time.Now().Hour() == 9 && time.Now().Minute() == 33 {
+					if time.Now().Hour() == 9 && time.Now().Minute() == 32 {
 						stocks.NewZtStock().GetZTStock()
 					}
 
@@ -112,7 +112,7 @@ func main() {
 					//	stocks.NewZtStock().GetZTStock()
 					//}
 
-					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:36", time.Now().Format("2006-01-02")))
+					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:34", time.Now().Format("2006-01-02")))
 					zt2, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 11:28", time.Now().Format("2006-01-02")))
 					zt3, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 13:28", time.Now().Format("2006-01-02")))
 					zt4, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 14:56", time.Now().Format("2006-01-02")))
