@@ -106,6 +106,7 @@ func main() {
 
 					if time.Now().Hour() == 9 && time.Now().Minute() == 32 {
 						stocks.NewZtStock().GetZTStock()
+						time.Sleep(1 * time.Second * 30)
 					}
 
 					//if time.Now().Hour() == 13 && time.Now().Minute() == 18 {
