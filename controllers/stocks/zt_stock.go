@@ -322,6 +322,9 @@ func (this *ZtStock) GetZTStock() {
 				}
 
 			}
+			if i == i2-1 {
+				break
+			}
 		}
 	}()
 	go func() {
