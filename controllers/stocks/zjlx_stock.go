@@ -86,16 +86,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 	}
 
 	for _, v := range scl {
-		//logging.Error("=====", v)
-		//stockCodes := ""
-		//switch v.StockCode[:3] {
-		//case "600", "601", "603", "605", "688", "689", "608":
-		//	stockCodes = fmt.Sprintf("1.%v", v.StockCode)
-		//case "300", "002", "000", "001", "003", "301":
-		//	stockCodes = fmt.Sprintf("0.%v", v.StockCode)
-		//default:
-		//	continue
-		//}
+
 		stockCodes := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
 		if len(stockCodes) <= 0 {
 			continue
@@ -115,14 +106,30 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 		}
 		df := decimal.NewFromFloat(s1.F62.(float64))
 
-		//if (df.String() < "-5000000") && (s1.F66.(float64) < 0) && s1.F10.(float64) > 0.5 {
-		//	stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
-		//	go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
-		//}
-
-		// 放量下跌  跌破10均线 主力资金流出5000000 大资金流出 <0
+		// 放量下跌  跌破10均线 主力资金流出5000000 大资金流出 <0  需要根据市值判断流出资金量
 		dk10 := stocks_db.NewStock_Day_K().GetStockDayK10Date(v.StockCode)
-		if (df.String() > "-5000000" && np < dk10) || (s1.F3.(float64) < -1.8 && s1.F10.(float64) > 0.3) {
+
+		// 根据不同市值筛选条件做出改变
+		jlc := ""
+		//jdd01 := 0.0
+		//f601 := ""
+		//f101, f201, f301, f401 := "", "", "", ""
+		sz := s1.F20.(float64)
+		if sz < 3000000000 { // 市值30亿以内公司
+			jlc = "1880000"
+
+		}
+		if sz > 3000000000 && sz < 5000000000 { //
+			jlc = "2880000"
+		}
+		if sz > 5000000000 && sz < 15000000000 { //
+			jlc = "5880000"
+		}
+		if sz > 15000000000 { //
+			jlc = "8880000"
+		}
+
+		if (df.String() < jlc && np < dk10) || (s1.F3.(float64) < -3 && s1.F10.(float64) > 0.8) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}

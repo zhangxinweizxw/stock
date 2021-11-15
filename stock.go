@@ -104,9 +104,9 @@ func main() {
 
 				if err == nil && t1.After(t2) && t1.Before(t3) {
 
-					if time.Now().Hour() == 9 && time.Now().Minute() == 34 {
-						stocks.NewZtStock().GetZTStock()
-						time.Sleep(1 * time.Second * 30)
+					if time.Now().Hour() == 9 && time.Now().Minute() == 33 {
+						go stocks.NewZtStock().GetZTStock()
+
 					}
 
 					//if time.Now().Hour() == 13 && time.Now().Minute() == 18 {
