@@ -114,6 +114,9 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 		//jdd01 := 0.0
 		//f601 := ""
 		//f101, f201, f301, f401 := "", "", "", ""
+		if reflect.TypeOf(s1.F20) == nil {
+			continue
+		}
 		sz := s1.F20.(float64)
 		if sz < 3000000000 { // 市值30亿以内公司
 			jlc = "1880000"
