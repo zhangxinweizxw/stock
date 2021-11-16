@@ -331,7 +331,7 @@ func (this *StockDayk) SaveXueqiuFx() {
 			return
 		}
 	}
-
+	XqFxStockDb = nil
 }
 
 // 需求个股分析监控 9：15 - 11：30   13：00-15：00 XQ

@@ -16,3 +16,4 @@ var ZtStockDb []*stocks_db.ZtStockDB
 var ZjlxStockDb []*stocks_db.ZjlxStockDb
 var QgqpStockDb []*stocks_db.QgqpStockDb
 var DxStockDb []*stocks_db.DxStockDb
+var XqFxStockDb []*stocks_db.XQ_Stock_FX
