@@ -487,7 +487,7 @@ func (this *StockDayk) GetZJlxDFCF(stockC string) *util.StockDayK {
 	if stockCodes[:2] != "1." && stockCodes[:2] != "0." {
 		return nil
 	}
-	url := "http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=" + stockCodes + "&fields=f62%2Cf66%2Cf69%2Cf72%2Cf75%2Cf184%2Cf2%2Cf8%2Cf9%2Cf10%2Cf3"
+	url := "http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=" + stockCodes + "&fields=f20%2Cf62%2Cf66%2Cf69%2Cf72%2Cf75%2Cf184%2Cf2%2Cf8%2Cf9%2Cf10%2Cf3"
 
 	resp, err := http.Get(url)
 	if err != nil {

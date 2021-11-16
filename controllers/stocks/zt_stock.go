@@ -113,7 +113,7 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
-		logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zxjg:", i.Zxjg, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", i.Hsl, v.Dayk10)
+		//logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zxjg:", i.Zxjg, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", i.Hsl, v.Dayk10)
 
 		// 根据不同市值筛选条件做出改变
 		dzljlr01 := ""
@@ -121,44 +121,44 @@ func (this *ZtStock) ZtStockFx() {
 		f601 := ""
 		f101, f201, f301, f401 := "", "", "", ""
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			dzljlr01 = "8800000"
+			dzljlr01 = "3800000"
 			jdd01 = 1880000
-			f601 = "1880000"
+			f601 = "1000000"
 
 			f101 = "3880000"
 			f201 = "2880000"
 			f301 = "1880000"
-			f401 = "880000"
+			f401 = "580000"
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			dzljlr01 = "18800000"
+			dzljlr01 = "5800000"
 			jdd01 = 3880000
-			f601 = "3880000"
+			f601 = "1880000"
 
-			f101 = "8880000"
-			f201 = "4880000"
-			f301 = "2880000"
-			f401 = "180000"
+			f101 = "5880000"
+			f201 = "3880000"
+			f301 = "1880000"
+			f401 = "880000"
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			dzljlr01 = "58800000"
-			jdd01 = 12880000
+			dzljlr01 = "12880000"
+			jdd01 = 8880000
 			f601 = "3880000"
 
-			f101 = "32880000"
-			f201 = "12880000"
-			f301 = "8880000"
+			f101 = "12880000"
+			f201 = "6880000"
+			f301 = "3880000"
 			f401 = "1280000"
 		}
 		if i.Zsz > 15000000000 { //
-			dzljlr01 = "188000000"
-			jdd01 = 58880000
-			f601 = "12880000"
+			dzljlr01 = "18800000"
+			jdd01 = 28880000
+			f601 = "8880000"
 
-			f101 = "91880000"
-			f201 = "52880000"
-			f301 = "12880000"
-			f401 = "5980000"
+			f101 = "51880000"
+			f201 = "22880000"
+			f301 = "8880000"
+			f401 = "5800000"
 		}
 
 		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1.28 && i.Zxjg.(float64) >= v.Dayk10 {
@@ -280,23 +280,30 @@ func (this *ZtStock) GetZTStock() {
 				jlr01 := 0.0
 				f2001 := v.F20.(float64)
 				if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-					jlr01 = 1880000
+					jlr01 = 880000
 				}
 				if f2001 > 3000000000 && f2001 < 5000000000 { //
-					jlr01 = 3880000
+					jlr01 = 1880000
 				}
 				if f2001 > 5000000000 && f2001 < 15000000000 { //
-					jlr01 = 5880000
+					jlr01 = 2880000
 				}
 				if f2001 > 15000000000 { //
-					jlr01 = 12880000
+					jlr01 = 5880000
 				}
 
-				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < jlr01 {
+				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < jlr01 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
+				if reflect.TypeOf(v.F8).Name() == "string" {
+					continue
+				}
+
+				if reflect.TypeOf(v.F8).Name() == "string" {
+					continue
+				}
+				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 1.28 || v.F10.(float64) < 1.28 {
 					continue
 				}
 
@@ -347,23 +354,30 @@ func (this *ZtStock) GetZTStock() {
 				jlr01 := 0.0
 				f2001 := v.F20.(float64)
 				if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-					jlr01 = 1880000
+					jlr01 = 880000
 				}
 				if f2001 > 3000000000 && f2001 < 5000000000 { //
-					jlr01 = 3880000
+					jlr01 = 1880000
 				}
 				if f2001 > 5000000000 && f2001 < 15000000000 { //
-					jlr01 = 5880000
+					jlr01 = 2880000
 				}
 				if f2001 > 15000000000 { //
-					jlr01 = 12880000
+					jlr01 = 5880000
 				}
 
-				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F2.(float64) > 68 || v.F62.(float64) < jlr01 {
+				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < jlr01 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if d.Day5Zdf > 8 || d.Day5Zdf < 1 || d.Day20Zdf < 0 || d.Day20Zdf > 13 || d.F8 < "1.28" {
+				if reflect.TypeOf(v.F8).Name() == "string" {
+					continue
+				}
+
+				if reflect.TypeOf(v.F8).Name() == "string" {
+					continue
+				}
+				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 1.28 || v.F10.(float64) < 1.28 {
 					continue
 				}
 

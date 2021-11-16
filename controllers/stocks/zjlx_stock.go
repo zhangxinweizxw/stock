@@ -132,7 +132,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 			jlc = "8880000"
 		}
 
-		if (df.String() < jlc && np < dk10) || (s1.F3.(float64) < -3 && s1.F10.(float64) > 0.8) {
+		if df.String() < jlc || np < dk10 || (s1.F3.(float64) < -2.8 && s1.F10.(float64) > 0.8) {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}
@@ -143,7 +143,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 // 个股资金实时流向 获取
 func (this *ZjlxStock) ZjlxStockInfo(stockCode string) *util.StockInfo {
 
-	url := "http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=" + stockCode + "&fields=f62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf10%2Cf3&ut=b2884a393a59ad64002292a3e90d46a5"
+	url := "http://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=" + stockCode + "&fields=f20%2Cf62%2Cf184%2Cf66%2Cf69%2Cf72%2Cf75%2Cf78%2Cf81%2Cf10%2Cf3&ut=b2884a393a59ad64002292a3e90d46a5"
 	//logging.Error("=======%v", url)
 	resp, err := http.Get(url)
 	if err != nil {
