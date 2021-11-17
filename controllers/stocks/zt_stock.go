@@ -277,22 +277,22 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 
-				jlr01 := 0.0
-				f2001 := v.F20.(float64)
-				if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-					jlr01 = 880000
-				}
-				if f2001 > 3000000000 && f2001 < 5000000000 { //
-					jlr01 = 1880000
-				}
-				if f2001 > 5000000000 && f2001 < 15000000000 { //
-					jlr01 = 2880000
-				}
-				if f2001 > 15000000000 { //
-					jlr01 = 5880000
-				}
+				//jlr01 := 0.0
+				//f2001 := v.F20.(float64)
+				//if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+				//	jlr01 = 880000
+				//}
+				//if f2001 > 3000000000 && f2001 < 5000000000 { //
+				//	jlr01 = 1880000
+				//}
+				//if f2001 > 5000000000 && f2001 < 15000000000 { //
+				//	jlr01 = 2880000
+				//}
+				//if f2001 > 15000000000 { //
+				//	jlr01 = 5880000
+				//}
 
-				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < jlr01 {
+				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -303,7 +303,7 @@ func (this *ZtStock) GetZTStock() {
 				if reflect.TypeOf(v.F8).Name() == "string" {
 					continue
 				}
-				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 1.28 || v.F10.(float64) < 1.28 {
+				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 0.8 || v.F10.(float64) < 0.8 {
 					continue
 				}
 
@@ -351,22 +351,22 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 
-				jlr01 := 0.0
-				f2001 := v.F20.(float64)
-				if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-					jlr01 = 880000
-				}
-				if f2001 > 3000000000 && f2001 < 5000000000 { //
-					jlr01 = 1880000
-				}
-				if f2001 > 5000000000 && f2001 < 15000000000 { //
-					jlr01 = 2880000
-				}
-				if f2001 > 15000000000 { //
-					jlr01 = 5880000
-				}
+				//jlr01 := 0.0
+				//f2001 := v.F20.(float64)
+				//if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+				//	jlr01 = 880000
+				//}
+				//if f2001 > 3000000000 && f2001 < 5000000000 { //
+				//	jlr01 = 1880000
+				//}
+				//if f2001 > 5000000000 && f2001 < 15000000000 { //
+				//	jlr01 = 2880000
+				//}
+				//if f2001 > 15000000000 { //
+				//	jlr01 = 5880000
+				//}
 
-				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < jlr01 {
+				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
 					continue
 				}
 				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -377,7 +377,7 @@ func (this *ZtStock) GetZTStock() {
 				if reflect.TypeOf(v.F8).Name() == "string" {
 					continue
 				}
-				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 1.28 || v.F10.(float64) < 1.28 {
+				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 0.8 || v.F10.(float64) < 0.8 {
 					continue
 				}
 

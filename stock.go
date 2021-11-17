@@ -122,6 +122,7 @@ func main() {
 						go stocks.NewZtStock().ZtStockFx()
 					}
 
+					go stocks.NewXqFxStock().XqFxTs()
 					go stocks.NewStockDayk(nil).XQStockFx()
 					//go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
