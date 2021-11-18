@@ -122,43 +122,43 @@ func (this *ZtStock) ZtStockFx() {
 		f101, f201, f301, f401 := "", "", "", ""
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
 			dzljlr01 = "3800000"
-			jdd01 = 1880000
-			f601 = "1000000"
-
-			f101 = "3880000"
-			f201 = "2880000"
-			f301 = "1880000"
-			f401 = "580000"
-		}
-		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			dzljlr01 = "5800000"
 			jdd01 = 3880000
-			f601 = "1880000"
+			f601 = "2800000"
 
 			f101 = "5880000"
 			f201 = "3880000"
-			f301 = "1880000"
-			f401 = "880000"
-		}
-		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			dzljlr01 = "12880000"
-			jdd01 = 8880000
-			f601 = "3880000"
-
-			f101 = "12880000"
-			f201 = "6880000"
-			f301 = "3880000"
+			f301 = "2880000"
 			f401 = "1280000"
 		}
+		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
+			dzljlr01 = "8800000"
+			jdd01 = 5880000
+			f601 = "3880000"
+
+			f101 = "8880000"
+			f201 = "5880000"
+			f301 = "3880000"
+			f401 = "2880000"
+		}
+		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
+			dzljlr01 = "32880000"
+			jdd01 = 12880000
+			f601 = "5880000"
+
+			f101 = "32880000"
+			f201 = "12880000"
+			f301 = "8880000"
+			f401 = "5280000"
+		}
 		if i.Zsz > 15000000000 { //
-			dzljlr01 = "18800000"
-			jdd01 = 28880000
-			f601 = "8880000"
+			dzljlr01 = "58800000"
+			jdd01 = 38880000
+			f601 = "12880000"
 
 			f101 = "51880000"
 			f201 = "22880000"
-			f301 = "8880000"
-			f401 = "5800000"
+			f301 = "12880000"
+			f401 = "8800000"
 		}
 
 		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1.28 && i.Zxjg.(float64) >= v.Dayk10 {
@@ -175,7 +175,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		}
 
-		if zgzdfv > 0.28 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.8 && f6 > f601 && f6 < f1 && f6 < f3 && i.Zxjg.(float64) >= v.Dayk10 {
+		if zgzdfv > 0.28 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.8 && f6 > f601 && f6 < f1 && f6 < f3 && i.Zxjg.(float64) >= v.Dayk5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -210,7 +210,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 0.8 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 2 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk10 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
+		if i.Zdf > 0.8 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 2 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -258,11 +258,13 @@ func (this *ZtStock) GetZTStock() {
 	}
 
 	d := data.Datas.Diff
-	//l := len(d)
-	i2 := int(len(d) / 2)
+	l := len(d)
+	i2 := int(len(data.Datas.Diff) / 2)
+
 	go func() {
-		for i, v := range d {
-			if i >= 0 && i < i2 {
+		for s := 0; s < l; s++ {
+			if s >= 0 && s < i2 {
+				v := d[s]
 				if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
 					continue
 				}
@@ -328,15 +330,16 @@ func (this *ZtStock) GetZTStock() {
 					continue
 				}
 
-			}
-			if i == i2-1 {
+			} else {
 				break
 			}
+
 		}
 	}()
 	go func() {
-		for i, v := range d {
-			if i >= i2 && i < len(d)-1 {
+		for s := i2; s < l; s++ {
+			if s >= i2 && s < len(d)-1 {
+				v := d[s]
 				if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
 					continue
 				}
@@ -403,6 +406,7 @@ func (this *ZtStock) GetZTStock() {
 				}
 
 			}
+
 		}
 	}()
 	ZtStockDb = nil
