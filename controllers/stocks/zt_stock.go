@@ -259,156 +259,151 @@ func (this *ZtStock) GetZTStock() {
 
 	d := data.Datas.Diff
 	l := len(d)
-	i2 := int(len(data.Datas.Diff) / 2)
+	//i2 := int(len(data.Datas.Diff) / 2)
 
-	go func() {
-		for s := 0; s < l; s++ {
-			if s >= 0 && s < i2 {
-				v := d[s]
-				if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
-					continue
-				}
-				//f62 := decimal.NewFromFloat(v.F62.(float64))
-				if reflect.TypeOf(v.F3).Name() == "string" {
-					continue
-				}
-				if reflect.TypeOf(v.F2).Name() == "string" {
-					continue
-				}
-				if reflect.TypeOf(v.F62).Name() == "string" {
-					continue
-				}
-
-				//jlr01 := 0.0
-				//f2001 := v.F20.(float64)
-				//if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-				//	jlr01 = 880000
-				//}
-				//if f2001 > 3000000000 && f2001 < 5000000000 { //
-				//	jlr01 = 1880000
-				//}
-				//if f2001 > 5000000000 && f2001 < 15000000000 { //
-				//	jlr01 = 2880000
-				//}
-				//if f2001 > 15000000000 { //
-				//	jlr01 = 5880000
-				//}
-
-				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
-					continue
-				}
-				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if reflect.TypeOf(v.F8).Name() == "string" {
-					continue
-				}
-
-				if reflect.TypeOf(v.F8).Name() == "string" {
-					continue
-				}
-				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 0.8 || v.F10.(float64) < 0.8 {
-					continue
-				}
-
-				ntime := time.Now().Format("2006-01-02")
-
-				// 股票信息写入zt_stock表方便使用
-				i := stocks_db.NewZtStockDB()
-				p := map[string]interface{}{
-					"create_time": ntime,
-					"stock_code":  v.F12,
-					"stock_name":  v.F14,
-					"dayk5":       d.DayK5,
-					"dayk10":      d.DayK10,
-					"dayk20":      d.DayK20,
-					"dayk30":      d.DayK30,
-				}
-				_, err := i.Insert(p)
-				logging.Debug("Insert  Table zt_stock 11")
-				if err != nil {
-					logging.Error("Insert Table zt_stock | %v", err)
-					name = "11"
-					continue
-				}
-
-			} else {
-				break
-			}
-
+	for s := 0; s < l; s++ {
+		//if s >= 0 && s < l {
+		v := d[s]
+		if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
+			continue
 		}
-	}()
-	go func() {
-		for s := i2; s < l; s++ {
-			if s >= i2 && s < len(d)-1 {
-				v := d[s]
-				if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
-					continue
-				}
-				//f62 := decimal.NewFromFloat(v.F62.(float64))
-				if reflect.TypeOf(v.F3).Name() == "string" {
-					continue
-				}
-				if reflect.TypeOf(v.F2).Name() == "string" {
-					continue
-				}
-				if reflect.TypeOf(v.F62).Name() == "string" {
-					continue
-				}
-
-				//jlr01 := 0.0
-				//f2001 := v.F20.(float64)
-				//if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-				//	jlr01 = 880000
-				//}
-				//if f2001 > 3000000000 && f2001 < 5000000000 { //
-				//	jlr01 = 1880000
-				//}
-				//if f2001 > 5000000000 && f2001 < 15000000000 { //
-				//	jlr01 = 2880000
-				//}
-				//if f2001 > 15000000000 { //
-				//	jlr01 = 5880000
-				//}
-
-				if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
-					continue
-				}
-				d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
-				if reflect.TypeOf(v.F8).Name() == "string" {
-					continue
-				}
-
-				if reflect.TypeOf(v.F8).Name() == "string" {
-					continue
-				}
-				if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 0.8 || v.F10.(float64) < 0.8 {
-					continue
-				}
-
-				ntime := time.Now().Format("2006-01-02")
-
-				// 股票信息写入zt_stock表方便使用
-				i := stocks_db.NewZtStockDB()
-				p := map[string]interface{}{
-					"create_time": ntime,
-					"stock_code":  v.F12,
-					"stock_name":  v.F14,
-					"dayk5":       d.DayK5,
-					"dayk10":      d.DayK10,
-					"dayk20":      d.DayK20,
-					"dayk30":      d.DayK30,
-				}
-				_, err := i.Insert(p)
-				logging.Debug("Insert  Table zt_stock 22")
-				if err != nil {
-					logging.Error("Insert  Table zt_stock | %v", err)
-					name = "22"
-					continue
-				}
-
-			}
-
+		//f62 := decimal.NewFromFloat(v.F62.(float64))
+		if reflect.TypeOf(v.F3).Name() == "string" {
+			continue
 		}
-	}()
+		if reflect.TypeOf(v.F2).Name() == "string" {
+			continue
+		}
+		if reflect.TypeOf(v.F62).Name() == "string" {
+			continue
+		}
+
+		//jlr01 := 0.0
+		//f2001 := v.F20.(float64)
+		//if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+		//	jlr01 = 880000
+		//}
+		//if f2001 > 3000000000 && f2001 < 5000000000 { //
+		//	jlr01 = 1880000
+		//}
+		//if f2001 > 5000000000 && f2001 < 15000000000 { //
+		//	jlr01 = 2880000
+		//}
+		//if f2001 > 15000000000 { //
+		//	jlr01 = 5880000
+		//}
+
+		if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
+			continue
+		}
+		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
+		if reflect.TypeOf(v.F8).Name() == "string" {
+			continue
+		}
+
+		if reflect.TypeOf(v.F8).Name() == "string" {
+			continue
+		}
+		if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 0.8 || v.F10.(float64) < 0.8 {
+			continue
+		}
+
+		ntime := time.Now().Format("2006-01-02")
+
+		// 股票信息写入zt_stock表方便使用
+		i := stocks_db.NewZtStockDB()
+		p := map[string]interface{}{
+			"create_time": ntime,
+			"stock_code":  v.F12,
+			"stock_name":  v.F14,
+			"dayk5":       d.DayK5,
+			"dayk10":      d.DayK10,
+			"dayk20":      d.DayK20,
+			"dayk30":      d.DayK30,
+		}
+		_, err := i.Insert(p)
+		logging.Debug("Insert  Table zt_stock 11")
+		if err != nil {
+			logging.Error("Insert Table zt_stock | %v", err)
+			name = "11"
+			continue
+		}
+
+	}
+
+	//go func() {
+	//	for s := i2; s < l; s++ {
+	//		if s >= i2 && s < len(d)-1 {
+	//			v := d[s]
+	//			if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
+	//				continue
+	//			}
+	//			//f62 := decimal.NewFromFloat(v.F62.(float64))
+	//			if reflect.TypeOf(v.F3).Name() == "string" {
+	//				continue
+	//			}
+	//			if reflect.TypeOf(v.F2).Name() == "string" {
+	//				continue
+	//			}
+	//			if reflect.TypeOf(v.F62).Name() == "string" {
+	//				continue
+	//			}
+	//
+	//			//jlr01 := 0.0
+	//			//f2001 := v.F20.(float64)
+	//			//if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+	//			//	jlr01 = 880000
+	//			//}
+	//			//if f2001 > 3000000000 && f2001 < 5000000000 { //
+	//			//	jlr01 = 1880000
+	//			//}
+	//			//if f2001 > 5000000000 && f2001 < 15000000000 { //
+	//			//	jlr01 = 2880000
+	//			//}
+	//			//if f2001 > 15000000000 { //
+	//			//	jlr01 = 5880000
+	//			//}
+	//
+	//			if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
+	//				continue
+	//			}
+	//			d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
+	//			if reflect.TypeOf(v.F8).Name() == "string" {
+	//				continue
+	//			}
+	//
+	//			if reflect.TypeOf(v.F8).Name() == "string" {
+	//				continue
+	//			}
+	//			if d.Day5Zdf > 13 || d.Day5Zdf < -1.8 || d.Day20Zdf < -3 || d.Day20Zdf > 18 || v.F8.(float64) < 0.8 || v.F10.(float64) < 0.8 {
+	//				continue
+	//			}
+	//
+	//			ntime := time.Now().Format("2006-01-02")
+	//
+	//			// 股票信息写入zt_stock表方便使用
+	//			i := stocks_db.NewZtStockDB()
+	//			p := map[string]interface{}{
+	//				"create_time": ntime,
+	//				"stock_code":  v.F12,
+	//				"stock_name":  v.F14,
+	//				"dayk5":       d.DayK5,
+	//				"dayk10":      d.DayK10,
+	//				"dayk20":      d.DayK20,
+	//				"dayk30":      d.DayK30,
+	//			}
+	//			_, err := i.Insert(p)
+	//			logging.Debug("Insert  Table zt_stock 22")
+	//			if err != nil {
+	//				logging.Error("Insert  Table zt_stock | %v", err)
+	//				name = "22"
+	//				continue
+	//			}
+	//
+	//		}
+	//
+	//	}
+	//}()
 	ZtStockDb = nil
 }
 
