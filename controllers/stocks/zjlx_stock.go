@@ -119,17 +119,17 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 		}
 		sz := s1.F20.(float64)
 		if sz < 3000000000 { // 市值30亿以内公司
-			jlc = "1880000"
+			jlc = "880000"
 
 		}
 		if sz > 3000000000 && sz < 5000000000 { //
-			jlc = "2880000"
+			jlc = "1880000"
 		}
 		if sz > 5000000000 && sz < 15000000000 { //
-			jlc = "5880000"
+			jlc = "3880000"
 		}
 		if sz > 15000000000 { //
-			jlc = "8880000"
+			jlc = "5880000"
 		}
 
 		if df.String() < jlc || np < dk10 || (s1.F3.(float64) < -2.8 && s1.F10.(float64) > 0.8) {

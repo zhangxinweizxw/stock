@@ -44,6 +44,8 @@ func main() {
 	//controllers.NewUtilHttps(nil).GetXqPd()
 	//stocks_db.NewStock_Day_K().GetSStockInfo("000225")
 
+	var status = 1
+
 	go func() {
 		for { // 1
 			//判断当天是否是交易日
@@ -70,6 +72,7 @@ func main() {
 
 					stocks.NewDxStock().SaveDxstock()
 					stocks_db.NewZtStockDB().DelZtStock()
+					status = 1
 				}
 				time.Sleep(1 * time.Hour)
 			} else {
@@ -103,8 +106,9 @@ func main() {
 				}
 
 				if err == nil && t1.After(t2) && t1.Before(t3) {
-					if time.Now().Hour() == 9 && time.Now().Minute() == 33 {
+					if time.Now().Hour() == 9 && time.Now().Minute() == 33 && status == 1 {
 						stocks.NewZtStock().GetZTStock()
+						status = 0
 					}
 
 					//if time.Now().Hour() == 13 && time.Now().Minute() == 18 {
