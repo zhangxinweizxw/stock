@@ -332,6 +332,7 @@ func (this *StockDayk) SaveXueqiuFx() {
 			return
 		}
 	}
+	stocks_db.NewXQ_Stock_FX().DelStockFx()
 	XqFxStockDb = nil
 }
 

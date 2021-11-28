@@ -175,7 +175,7 @@ func (this *QgqpStock) QgqpStockFx() {
 			d201 = "8880000"
 			d301 = "3288000"
 		}
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.8 && i.Lb < 10 && i.Hsl > 0.8 && d1.String() > d101 && d2 > d201 && d3 > d301 {
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.28 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > d101 && d2 > d201 && d3 > d301 {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

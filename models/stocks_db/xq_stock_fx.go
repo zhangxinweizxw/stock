@@ -25,6 +25,24 @@ func NewXQ_Stock_FX() *XQ_Stock_FX {
 	}
 }
 
+func (this *XQ_Stock_FX) DelStockFx() {
+
+	var create_time string
+	bulid := this.Db.SelectBySql("SELECT create_time FROM xq_fx GROUP BY create_time ORDER BY create_time DESC LIMIT 5,1")
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&create_time)
+	if err != nil {
+		fmt.Println("Select Table xq_fx table  create_time |  Error   %v", err)
+	}
+
+	b := this.Db.DeleteFrom(this.TableName).
+		Where(fmt.Sprintf("create_time < '%v'", create_time))
+	_, err1 := this.DeleteWhere(b, nil).Exec()
+
+	if err1 != nil {
+		fmt.Println("Delete Table xq_fx   |  Error   %v", err1)
+	}
+}
+
 // xq_fx 表中数据筛选
 func (this *XQ_Stock_FX) GetXqFxStockList() []*XQ_Stock_FX {
 	var xqfxL []*XQ_Stock_FX
