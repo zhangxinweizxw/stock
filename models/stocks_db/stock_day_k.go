@@ -60,11 +60,11 @@ type Dfcf struct {
 type Stock_Day_K struct {
 	Model `db:"-" `
 	F1    string
-	F2    string // 最新价
+	F2    string `db:"f2"` // 最新价
 	F3    string // 涨跌幅
 	F4    string // 涨跌额
 	F5    string // 成交量(手)
-	F6    string // 成交额
+	F6    string `db:"f6"` // 成交额
 	F7    string // 振幅
 	F8    string `db:"f8"` // 换手率
 	F9    string // 市盈率(动态)
@@ -75,8 +75,8 @@ type Stock_Day_K struct {
 	F14   string `db:"f14"` // 名称
 	F15   string // 最高
 	F16   string // 最低
-	F17   string // 今开
-	F18   string // 昨收
+	F17   string `db:"f17"` // 今开
+	F18   string `db:"f18"` // 昨收
 	//F19 float32 `json:"f19"`
 	F20      string // 总市值
 	F21      string // 流通市值
@@ -299,3 +299,68 @@ func (this *Stock_Day_K) GetStockDayKJJ(sc string) *Stock_Day_K {
 //	}
 //	return f12
 //}
+
+// 返回 今日cjje和前面平均五日成交金额
+func (this *Stock_Day_K) ReturnIsBuy(sc string) (avg5cjje float64, sdkInfo *Stock_Day_K) {
+
+	t := time.Now().Format("2006-01-02")
+	cjje := 0.0
+	sql := fmt.Sprintf(`SELECT AVG(a.f6) FROM(
+				SELECT f6,create_time FROM stock_day_k
+				WHERE f12='%v'
+				AND create_time < '%v'
+				ORDER BY create_time DESC 
+				LIMIT 5
+				)a`, sc, t)
+	_, err := this.Db.SelectBySql(sql).
+		LoadStructs(&cjje)
+	if err != nil {
+		logging.Error("Select Stock_day_k avg(f6) 5day Error：%v", err)
+		return cjje, nil
+	}
+
+	//查询当日日K数据
+	var d *Stock_Day_K
+	bulid := this.Db.Select("f6,f17,f18,f2,create_time").
+		From(this.TableName).
+		Where(fmt.Sprintf("f12='%v' AND create_time = '%v'", sc, t))
+	_, err1 := this.SelectWhere(bulid, nil).LoadStructs(&d)
+	if err != nil {
+		fmt.Println("Select Table stock_day_k   |  Error   %v", err1)
+		return cjje, d
+	}
+	return cjje, d
+}
+
+// 返回 今日cjje和前面平均五日成交金额  zt 专用
+func (this *Stock_Day_K) ReturnIsBuyZt(sc string) (avg5cjje float64, sdkInfo *Stock_Day_K) {
+
+	l := this.GetStockDayKDate()
+
+	cjje := 0.0
+	sql := fmt.Sprintf(`SELECT AVG(a.f6) FROM(
+				SELECT f6,create_time FROM stock_day_k
+				WHERE f12='%v'
+				AND create_time < '%v'
+				ORDER BY create_time DESC 
+				LIMIT 5
+				)a`, sc, l[0])
+	_, err := this.Db.SelectBySql(sql).
+		LoadStructs(&cjje)
+	if err != nil {
+		logging.Error("Select Stock_day_k avg(f6) 5day Error：%v", err)
+		return cjje, nil
+	}
+
+	//查询当日日K数据
+	var d *Stock_Day_K
+	bulid := this.Db.Select("f6,f17,f18,f2,create_time").
+		From(this.TableName).
+		Where(fmt.Sprintf("f12='%v' AND create_time = '%v'", sc, l[0]))
+	_, err1 := this.SelectWhere(bulid, nil).LoadStructs(&d)
+	if err != nil {
+		fmt.Println("Select Table stock_day_k   |  Error   %v", err1)
+		return cjje, d
+	}
+	return cjje, d
+}

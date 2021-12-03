@@ -83,6 +83,9 @@ func (this *QgqpStock) QgqpStockSave() {
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" || reflect.TypeOf(v.TotalScore).String() == "string" {
 			continue
 		}
+		if NewStockDayk(nil).GetReturnIsBuy(v.StockCode) == false {
+			continue
+		}
 
 		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 80 || v.TurnoverRate.(float64) < 1.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 68 {
 			continue

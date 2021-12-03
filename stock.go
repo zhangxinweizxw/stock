@@ -43,6 +43,7 @@ func main() {
 	//logging.Error("================:", stocks_db.NewTransactionHistory().GetTranHist("九安医疗"))
 	//controllers.NewUtilHttps(nil).GetXqPd()
 	//stocks_db.NewStock_Day_K().GetSStockInfo("000225")
+	//stocks.NewStockDayk(nil).GetReturnIsBuy()
 
 	var status = 1
 

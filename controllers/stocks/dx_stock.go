@@ -61,6 +61,9 @@ func (this *DxStock) SaveDxstock() {
 		if len(sdkl) > 0 {
 			for _, v := range sdkl {
 				//logging.Error("=========", v.F12, v.F14)
+				if NewStockDayk(nil).GetReturnIsBuy(v.F12) == false {
+					continue
+				}
 
 				this.Save(v.F12, v.F14, ntime, v.DayK5, v.DayK10, v.DayK20, v.DayK30, 2)
 			}

@@ -292,6 +292,9 @@ func (this *ZtStock) GetZTStock() {
 		//if f2001 > 15000000000 { //
 		//	jlr01 = 5880000
 		//}
+		if NewStockDayk(nil).GetReturnIsBuyZt(v.F12.(string)) == false {
+			continue
+		}
 
 		if v.F3.(float64) < 0.28 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
 			continue
