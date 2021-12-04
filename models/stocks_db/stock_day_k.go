@@ -305,6 +305,7 @@ func (this *Stock_Day_K) ReturnIsBuy(sc string) (avg5cjje float64, sdkInfo *Stoc
 
 	t := time.Now().Format("2006-01-02")
 	cjje := 0.0
+	//t = "2021-12-03"
 	sql := fmt.Sprintf(`SELECT AVG(a.f6) FROM(
 				SELECT f6,create_time FROM stock_day_k
 				WHERE f12='%v'

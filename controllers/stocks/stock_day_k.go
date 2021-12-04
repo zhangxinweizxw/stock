@@ -634,8 +634,9 @@ func (this *StockDayk) GetReturnIsBuy(stockC string) bool {
 	f6, _ := strconv.ParseFloat(d.F6, 64)
 	avg5f := decimal.NewFromFloat(f6 / f)
 	f, _ = avg5f.Float64()
-	logging.Debug("============", f)
+
 	if f > 0 && f > 1.5 {
+		logging.Debug("============", f)
 		return true
 	}
 	return false
