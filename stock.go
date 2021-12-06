@@ -112,8 +112,8 @@ func main() {
 						status = 0
 					}
 
-					//if time.Now().Hour() == 13 && time.Now().Minute() == 18 {
-					//	stocks.NewZtStock().GetZTStock()
+					//if time.Now().Hour() == 14 && time.Now().Minute() == 29 {
+					//stocks.NewZtStock().GetZTStock01()
 					//}
 
 					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:35", time.Now().Format("2006-01-02")))

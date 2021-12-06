@@ -39,43 +39,50 @@ func (this *DxStock) SaveDxstock() {
 
 	{
 		//sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
-		//                        WHERE create_time='` + d[0]
+		//                       WHERE create_time='` + d[0]
 		//sql += `' AND dayk20 >= dayK30 AND dayK5 > dayK20 AND dayK10 > dayK20
-		//                        AND f16 >= dayK5  AND f2 > dayK5  AND f8 >2
-		//                        AND day5zdf < 13 AND f62 > 0
-		//                        AND f12 IN (
-		//                        SELECT f12 FROM stock_day_k
-		//                        WHERE create_time='` + d[1]
+		//                       AND f16 >= dayK5  AND f2 > dayK5  AND f8 >2
+		//                       AND day5zdf < 13 AND f62 > 0
+		//                       AND f12 IN (
+		//                       SELECT f12 FROM stock_day_k
+		//                       WHERE create_time='` + d[1]
 		//sql += `' AND dayk20 >= dayK30
 		//						AND dayK5 > dayK20 AND dayK10 > dayK20
-		//                        AND f16 < dayK5 AND f2 > dayK10 AND f8 >1.8
-		//                        AND f3 >0 AND f12 IN (
-		//                        SELECT f12 FROM stock_day_k
-		//                        WHERE create_time='` + d[2]
+		//                       AND f16 < dayK5 AND f2 > dayK10 AND f8 >1.8
+		//                       AND f3 >0 AND f12 IN (
+		//                       SELECT f12 FROM stock_day_k
+		//                       WHERE create_time='` + d[2]
 		//sql += `' AND dayK5 > dayK20 AND dayK10 > dayK20
-		//                        AND f16 <= dayK5
-		//                        AND f2 >= dayK10 AND f8 >1.28 AND f10 >1.28  ) )`
+		//                       AND f16 <= dayK5
+		//                       AND f2 >= dayK10 AND f8 >1.28 AND f10 >1.28  ) )`
 
-		sql := fmt.Sprintf(`SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM stock_day_k 
-				WHERE create_time='%v'
-				AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
-				AND f3 > 0 AND f3 < 3 AND f8 >1
-				AND f2 < 88 AND f12 NOT LIKE '688%v'
-				AND dayk5 < 8 AND dayk5 > -3
-				AND f12 IN(
-					SELECT f12 FROM stock_day_k 
-					WHERE create_time='%v'
-					AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
-					AND f3 > -1 AND f3 < 3 AND f8 >1
-					AND f2 < 88 AND f12 NOT LIKE '688%v'
-					AND f12 IN(
-						SELECT f12 FROM stock_day_k 
-						WHERE create_time='%v'
-						AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
-						AND f3 > -1 AND f3 < 3 AND f8 >1
-						AND f2 < 88 AND f12 NOT LIKE '688%v'
-					)
-				)`, d[0], "%", d[1], "%", d[2], "%")
+		//sql := fmt.Sprintf(`SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM stock_day_k
+		//		WHERE create_time='%v'
+		//		AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
+		//		AND f3 > 0 AND f3 < 3 AND f8 >1
+		//		AND f2 < 88 AND f12 NOT LIKE '688%v'
+		//		AND dayk5 < 8 AND dayk5 > -3
+		//		AND f12 IN(
+		//			SELECT f12 FROM stock_day_k
+		//			WHERE create_time='%v'
+		//			AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
+		//			AND f3 > -1 AND f3 < 3 AND f8 >1
+		//			AND f2 < 88 AND f12 NOT LIKE '688%v'
+		//			AND f12 IN(
+		//				SELECT f12 FROM stock_day_k
+		//				WHERE create_time='%v'
+		//				AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
+		//				AND f3 > -1 AND f3 < 3 AND f8 >1
+		//				AND f2 < 88 AND f12 NOT LIKE '688%v'
+		//			)
+		//		)`, d[0], "%", d[1], "%", d[2], "%")
+
+		sql := fmt.Sprintf(`SELECT * FROM stock_day_k
+				WHERE f16 < dayK5 AND f16 < dayK10 AND f16 < dayK20 AND f16 < dayK30 
+				AND f2 > dayK5 AND f2 > dayK10 AND f2 > dayK20 AND f2 > dayK30 
+				AND f62 >10000000 AND f8 >1.8 AND f10 >1.8
+				AND f3 <8 AND f3 >3
+				AND create_time='%v'`, d[0])
 
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 
