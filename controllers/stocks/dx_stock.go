@@ -77,7 +77,7 @@ func (this *DxStock) SaveDxstock() {
 		//			)
 		//		)`, d[0], "%", d[1], "%", d[2], "%")
 
-		sql := fmt.Sprintf(`SELECT * FROM stock_day_k
+		sql := fmt.Sprintf(`SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM stock_day_k
 				WHERE f16 < dayK5 AND f16 < dayK10 AND f16 < dayK20 AND f16 < dayK30 
 				AND f2 > dayK5 AND f2 > dayK10 AND f2 > dayK20 AND f2 > dayK30 
 				AND f62 >10000000 AND f8 >1.8 AND f10 >1.8
