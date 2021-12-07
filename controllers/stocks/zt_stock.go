@@ -371,13 +371,8 @@ func (this *ZtStock) GetZTStock01() {
 	//i2 := int(len(data.Datas.Diff) / 2)
 
 	for s := 0; s < l; s++ {
-		//if s >= 0 && s < l {
 		v := d[s]
-		//if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
-		//	continue
-		//}
 
-		//f62 := decimal.NewFromFloat(v.F62.(float64))
 		if reflect.TypeOf(v.F3).Name() == "string" {
 			continue
 		}
@@ -388,25 +383,11 @@ func (this *ZtStock) GetZTStock01() {
 			continue
 		}
 
-		//jlr01 := 0.0
-		//f2001 := v.F20.(float64)
-		//if v.F20.(float64) < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-		//	jlr01 = 880000
-		//}
-		//if f2001 > 3000000000 && f2001 < 5000000000 { //
-		//	jlr01 = 1880000
-		//}
-		//if f2001 > 5000000000 && f2001 < 15000000000 { //
-		//	jlr01 = 2880000
-		//}
-		//if f2001 > 15000000000 { //
-		//	jlr01 = 5880000
-		//}
 		if NewStockDayk(nil).GetReturnIsBuyZt(v.F12.(string)) == false {
 			continue
 		}
 
-		if v.F3.(float64) < -0.8 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
+		if v.F3.(float64) < 0.28 || v.F3.(float64) > 5.8 || v.F62.(float64) < 5000000 {
 			continue
 		}
 		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -417,14 +398,14 @@ func (this *ZtStock) GetZTStock01() {
 		if reflect.TypeOf(v.F8).Name() == "string" {
 			continue
 		}
-		if d.Day5Zdf > 13 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5 || d.Day20Zdf > 18 || v.F8.(float64) < 3 || v.F8.(float64) > 10 || v.F10.(float64) < 1.28 {
+		if d.Day5Zdf > 13 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5 || d.Day20Zdf > 18 || v.F8.(float64) < 1.8 || v.F8.(float64) > 8 || v.F10.(float64) < 1.56 {
 			continue
 		}
 
 		ntime := time.Now().Format("2006-01-02")
 
 		// 股票信息写入zt_stock表方便使用
-		i := stocks_db.NewZtStockDB()
+		i := stocks_db.NewZtStockDB01()
 		p := map[string]interface{}{
 			"create_time": ntime,
 			"stock_code":  v.F12,
@@ -435,16 +416,15 @@ func (this *ZtStock) GetZTStock01() {
 			"dayk30":      d.DayK30,
 		}
 		_, err := i.Insert(p)
-		logging.Debug("Insert  Table zt_stock 11")
+		logging.Debug("Insert  Table zt_stock01 11")
 		if err != nil {
-			logging.Error("Insert Table zt_stock | %v", err)
-			name = "11"
+			logging.Error("Insert Table zt_stock01 | %v", err)
+			name = "22"
 			continue
 		}
 
 	}
 
-	ZtStockDb = nil
 }
 
 type FRul struct {

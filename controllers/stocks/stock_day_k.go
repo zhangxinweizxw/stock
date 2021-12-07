@@ -635,7 +635,7 @@ func (this *StockDayk) GetReturnIsBuy(stockC string) bool {
 	avg5f := decimal.NewFromFloat(f6 / f)
 	f, _ = avg5f.Float64()
 
-	if f > 0 && f > 1.5 {
+	if f > 0 && f > 1.28 && f < 1.8 {
 		logging.Debug("============", f)
 		return true
 	}
@@ -659,7 +659,7 @@ func (this *StockDayk) GetReturnIsBuyZt(stockC string) bool {
 	avg5f := decimal.NewFromFloat(f6 / f)
 	f, _ = avg5f.Float64()
 	logging.Debug("============", f)
-	if f > 0 && f > 1.5 {
+	if f > 0 && f > 1.28 && f < 1.8 {
 		return true
 	}
 	return false
