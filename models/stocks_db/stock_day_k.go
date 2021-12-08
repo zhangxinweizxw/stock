@@ -311,7 +311,7 @@ func (this *Stock_Day_K) ReturnIsBuy(sc string) (avg5cjje float64, sdkInfo *Stoc
 				WHERE f12='%v'
 				AND create_time < '%v'
 				ORDER BY create_time DESC 
-				LIMIT 10
+				LIMIT 30
 				)a`, sc, t)
 	_, err := this.Db.SelectBySql(sql).
 		LoadStructs(&cjje)
@@ -344,7 +344,7 @@ func (this *Stock_Day_K) ReturnIsBuyZt(sc string) (avg5cjje float64, sdkInfo *St
 				WHERE f12='%v'
 				AND create_time < '%v'
 				ORDER BY create_time DESC 
-				LIMIT 10
+				LIMIT 30
 				)a`, sc, l[0])
 	_, err := this.Db.SelectBySql(sql).
 		LoadStructs(&cjje)

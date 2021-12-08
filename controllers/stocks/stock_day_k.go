@@ -256,7 +256,7 @@ func (this *StockDayk) GetXueqiu() {
 
 	// 为了简单手动改报告期
 	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_5.8&netprofit.20210630=50000000_61150000000&fmc=2500000000_15000000000&npay.20210630=5_17594.51&oiy.20210630=5_151223.7&volume_ratio=1.8_10&tr=3_10&pct5=0_8&pct20=-5_12"
-	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=2_50&pct=-2_5&oiy.20210930=10_118173.56&npay.20210930=10_58997.1&mc=3500000000_10000000000&netprofit.20210930=100000000_251821000000&volume_ratio=1.8_8&tr=1.8_8&_=1637313990167"
+	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_3.8&pettm=10_58&oiy.20210930=5_118173.56&npay.20210930=5_58997.1&follow7d=300_17574&tr=2.8_8&volume_ratio=1_9.48&pct5=-3_8"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("", err)
@@ -635,7 +635,7 @@ func (this *StockDayk) GetReturnIsBuy(stockC string) bool {
 	avg5f := decimal.NewFromFloat(f6 / f)
 	f, _ = avg5f.Float64()
 
-	if f > 0 && f > 1.28 && f < 1.8 {
+	if f > 0 && f > 0.58 && f < 1.58 {
 		logging.Debug("============", f)
 		return true
 	}
@@ -659,7 +659,7 @@ func (this *StockDayk) GetReturnIsBuyZt(stockC string) bool {
 	avg5f := decimal.NewFromFloat(f6 / f)
 	f, _ = avg5f.Float64()
 	logging.Debug("============", f)
-	if f > 0 && f > 1.28 && f < 1.8 {
+	if f > 0 && f > 1.28 && f < 3.8 {
 		return true
 	}
 	return false

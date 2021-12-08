@@ -87,14 +87,14 @@ func (this *QgqpStock) QgqpStockSave() {
 			continue
 		}
 
-		if v.New.(float64) > 88 || v.ChangePercent.(float64) > 5.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 80 || v.TurnoverRate.(float64) < 2.8 || v.TurnoverRate.(float64) > 10 || v.TotalScore.(float64) < 68 {
+		if v.New.(float64) > 88 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 80 || v.TurnoverRate.(float64) < 1.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 58 {
 			continue
 		}
 
 		// 筛选通过   需要判断下最近涨跌和财务数据
-		//if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
-		//	continue
-		//}
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
+			continue
+		}
 
 		// 股票信息写入qgqp_stock表方便使用
 		i := stocks_db.NewQgqpStockDb()

@@ -387,7 +387,7 @@ func (this *ZtStock) GetZTStock01() {
 			continue
 		}
 
-		if v.F3.(float64) < 0.28 || v.F3.(float64) > 5.8 || v.F62.(float64) < 5000000 {
+		if v.F3.(float64) < 1.28 || v.F3.(float64) > 5.8 || v.F62.(float64) < 5000000 {
 			continue
 		}
 		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))

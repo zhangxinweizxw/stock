@@ -28,7 +28,7 @@ func NewXQ_Stock_FX() *XQ_Stock_FX {
 func (this *XQ_Stock_FX) DelStockFx() {
 
 	var create_time string
-	bulid := this.Db.SelectBySql("SELECT create_time FROM xq_fx GROUP BY create_time ORDER BY create_time DESC LIMIT 5,1")
+	bulid := this.Db.SelectBySql("SELECT create_time FROM xq_fx GROUP BY create_time ORDER BY create_time DESC LIMIT 4,1")
 	_, err := this.SelectWhere(bulid, nil).LoadStructs(&create_time)
 	if err != nil {
 		fmt.Println("Select Table xq_fx table  create_time |  Error   %v", err)
