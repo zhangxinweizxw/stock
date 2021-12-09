@@ -383,17 +383,17 @@ func (this *StockDayk) XQStockFx() {
 
 		d101, d201, d301 := "", "", ""
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			d101 = "1880000"
-			d201 = "880000"
-			d301 = "180000"
+			d101 = "3880000"
+			d201 = "1280000"
+			d301 = "880000"
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			d101 = "3880000"
+			d101 = "5880000"
 			d201 = "1288000"
 			d301 = "880000"
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			d101 = "5880000"
+			d101 = "6880000"
 			d201 = "3880000"
 			d301 = "1288000"
 		}
@@ -403,7 +403,7 @@ func (this *StockDayk) XQStockFx() {
 			d301 = "1288000"
 		}
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 0.8 && i.Hsl < 10 && d1.String() > d101 && d2 > d201 && d3 > d301 {
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.28 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > d101 && d2 > d201 && d3 > d301 {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {

@@ -161,7 +161,7 @@ func (this *ZtStock) ZtStockFx() {
 			f401 = "8800000"
 		}
 
-		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1.28 && i.Zxjg.(float64) >= v.Dayk10 {
+		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1.28 && i.Hsl < 8 && i.Zxjg.(float64) >= v.Dayk10 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
