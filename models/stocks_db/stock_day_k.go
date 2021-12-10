@@ -303,7 +303,8 @@ func (this *Stock_Day_K) GetStockDayKJJ(sc string) *Stock_Day_K {
 // 返回 今日cjje和前面平均五日成交金额
 func (this *Stock_Day_K) ReturnIsBuy(sc string) (avg5cjje float64, sdkInfo *Stock_Day_K) {
 
-	t := time.Now().Format("2006-01-02")
+	//t := time.Now().Format("2006-01-02")
+	l := this.GetStockDayKDate()
 	cjje := 0.0
 	//t = "2021-12-07"
 	sql := fmt.Sprintf(`SELECT AVG(a.f6) FROM(
@@ -312,7 +313,7 @@ func (this *Stock_Day_K) ReturnIsBuy(sc string) (avg5cjje float64, sdkInfo *Stoc
 				AND create_time < '%v'
 				ORDER BY create_time DESC 
 				LIMIT 30
-				)a`, sc, t)
+				)a`, sc, l[0])
 	_, err := this.Db.SelectBySql(sql).
 		LoadStructs(&cjje)
 	if err != nil {
@@ -324,7 +325,7 @@ func (this *Stock_Day_K) ReturnIsBuy(sc string) (avg5cjje float64, sdkInfo *Stoc
 	var d *Stock_Day_K
 	bulid := this.Db.Select("f6,f17,f18,f2,create_time").
 		From(this.TableName).
-		Where(fmt.Sprintf("f12='%v' AND create_time = '%v'", sc, t))
+		Where(fmt.Sprintf("f12='%v' AND create_time = '%v'", sc, l[0]))
 	_, err1 := this.SelectWhere(bulid, nil).LoadStructs(&d)
 	if err != nil {
 		fmt.Println("Select Table stock_day_k   |  Error   %v", err1)
