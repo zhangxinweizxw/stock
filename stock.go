@@ -46,6 +46,7 @@ func main() {
 	//stocks.NewStockDayk(nil).GetReturnIsBuy()
 
 	var status = 1
+	var status01 = 1
 
 	go func() {
 		for { // 1
@@ -73,7 +74,7 @@ func main() {
 
 					stocks.NewDxStock().SaveDxstock()
 					stocks_db.NewZtStockDB().DelZtStock()
-					status = 1
+					status, status01 = 1, 1
 				}
 				time.Sleep(1 * time.Hour)
 			} else {
@@ -112,8 +113,9 @@ func main() {
 						status = 0
 					}
 
-					if time.Now().Hour() == 14 && time.Now().Minute() == 29 {
+					if time.Now().Hour() == 14 && time.Now().Minute() == 29 && status01 == 1 {
 						stocks.NewZtStock().GetZTStock01()
+						status01 = 0
 					}
 
 					zt1, _ := time.Parse("2006-01-02 15:04", fmt.Sprintf("%v 09:34", time.Now().Format("2006-01-02")))

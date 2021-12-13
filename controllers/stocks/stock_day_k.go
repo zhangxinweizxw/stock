@@ -278,7 +278,7 @@ func (this *StockDayk) GetXueqiu() {
 	// 写入mysql
 	for _, v := range data.XQResuData.List {
 
-		if NewStockDayk(nil).GetReturnIsBuy(v.StockCode[2:]) == false {
+		if NewStockDayk(nil).GetReturnIsBuyZt(v.StockCode[2:]) == false {
 			continue
 		}
 
@@ -324,7 +324,7 @@ func (this *StockDayk) SaveXueqiuFx() {
 	// 操作mysql  不符合要求剔除 符合加入不清库
 	for _, v := range data.XQResuData.List {
 
-		if NewStockDayk(nil).GetReturnIsBuy(v.StockCode[2:]) == false {
+		if NewStockDayk(nil).GetReturnIsBuyZt(v.StockCode[2:]) == false {
 			continue
 		}
 
@@ -635,7 +635,7 @@ func (this *StockDayk) GetReturnIsBuy(stockC string) bool {
 	avg5f := decimal.NewFromFloat(f6 / f)
 	f, _ = avg5f.Float64()
 
-	if f > 0 && f > 0.58 && f < 1.58 {
+	if f > 0 && f > 0.68 && f < 1.58 {
 		logging.Debug("============", f)
 		return true
 	}
@@ -659,7 +659,7 @@ func (this *StockDayk) GetReturnIsBuyZt(stockC string) bool {
 	avg5f := decimal.NewFromFloat(f6 / f)
 	f, _ = avg5f.Float64()
 	logging.Debug("============", f)
-	if f > 0 && f > 1.28 && f < 3.8 {
+	if f > 0 && f > 1.58 {
 		return true
 	}
 	return false
