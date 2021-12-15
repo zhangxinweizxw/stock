@@ -60,7 +60,7 @@ func main() {
 					continue
 				}
 				//雪球筛选
-				if time.Now().Hour() >= 17 {
+				if time.Now().Hour() >= 18 {
 					//每天下午跑日K数据
 					stocks.NewStockDayk(cfg).GetStockDayK()
 

@@ -165,14 +165,14 @@ func (this *DxStock) DxStockFx() {
 		}
 		zxjgf := i.Zxjg.(float64)
 		// 最新交易日判断 最低价最好是 回探 跌破五日 10日之上。然后 当前价 >= 5日的时候选出
-		if i.Zdjg < v.DayK5 && i.Zdjg >= v.DayK10 && zxjgf >= v.DayK10 && d1.String() > "3888880" && i.Lb > 1.28 && i.Hsl > 1 {
+		if i.Zdjg <= v.DayK5 && i.Zdjg >= v.DayK10 && zxjgf >= v.DayK10 && d1.String() > "3888880" && i.Lb > 1.28 && i.Hsl > 1.28 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 		// 开盘 最低价格 >= 五日K线 涨跌幅 不大于 3.8 量比 > 0.5  主力净流入 >0
-		if i.Zdjg >= v.DayK5 && i.Zdf < 3.6 && i.Zdf > 0.28 && d1.String() > "3888880" && i.Lb > 1.28 && i.Hsl > 1 {
+		if i.Zdjg >= v.DayK5 && i.Zdf < 3.6 && i.Zdf > 0.58 && d1.String() > "5888880" && i.Lb > 1.28 && i.Hsl > 1.28 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)

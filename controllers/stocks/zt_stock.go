@@ -175,7 +175,7 @@ func (this *ZtStock) ZtStockFx() {
 
 		}
 
-		if zgzdfv > 0.28 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) < i.Zgjg && i.Zxjg.(float64) > i.Zdjg && i.Lb > 1.8 && f6 > f601 && f6 < f1 && f6 < f3 && i.Zxjg.(float64) >= v.Dayk5 {
+		if zgzdfv > 0.58 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) <= i.Zgjg && i.Zxjg.(float64) >= i.Zdjg && i.Lb > 1.58 && f6 > f601 && f6 < f1 && f6 < f3 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -194,7 +194,7 @@ func (this *ZtStock) ZtStockFx() {
 		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
 		f3s1, _ := strconv.ParseFloat(f3, 64)
 		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
-		if zdzdfv >= 0.28 && zgzdfv < 5.8 && dzljlr > dzljlr01 && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.5 {
+		if zdzdfv >= 0.58 && zgzdfv < 5.8 && dzljlr > dzljlr01 && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.5 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -210,18 +210,34 @@ func (this *ZtStock) ZtStockFx() {
 
 		// 条件2 平开或者低开 然后资金流入 加速
 
-		if i.Zdf > 0.8 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 2 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
-			// 判断是否已入库
-			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
-				continue
+		if v.Dayk5 == 0 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 1.8 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) > i.Zdjg && f6 > "0" && f6 < f1 {
+				// 判断是否已入库
+				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+					continue
+				}
+				logging.Debug("=33333")
+
+				// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+				go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
+				ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+				go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+
 			}
-			logging.Debug("=33333")
+		} else {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 1.8 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
+				// 判断是否已入库
+				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+					continue
+				}
+				logging.Debug("=33333")
 
-			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
-			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+				// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+				go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
+				ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+				go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
+			}
 		}
 
 	}
@@ -387,7 +403,7 @@ func (this *ZtStock) GetZTStock01() {
 			continue
 		}
 
-		if v.F3.(float64) < 1.28 || v.F3.(float64) > 5.8 || v.F62.(float64) < 5000000 {
+		if v.F3.(float64) < 2.58 || v.F3.(float64) > 3.8 || v.F62.(float64) < 5880000 || v.F7.(float64) > 8 {
 			continue
 		}
 		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -398,7 +414,7 @@ func (this *ZtStock) GetZTStock01() {
 		if reflect.TypeOf(v.F8).Name() == "string" {
 			continue
 		}
-		if d.Day5Zdf > 13 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5 || d.Day20Zdf > 18 || v.F8.(float64) < 1.8 || v.F8.(float64) > 8 || v.F10.(float64) < 1.56 {
+		if d.Day5Zdf > 13 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5 || d.Day20Zdf > 16 || v.F8.(float64) < 1.68 || v.F8.(float64) > 8 || v.F10.(float64) < 1.56 {
 			continue
 		}
 
