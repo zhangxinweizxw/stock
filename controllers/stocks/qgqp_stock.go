@@ -128,12 +128,12 @@ func (this *QgqpStock) QgqpStockFx() {
 
 	for k, v := range QgqpStockDb {
 
-		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
-		if len(sc) <= 0 {
-			continue
-		}
+		//sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		//if len(sc) <= 0 {
+		//	continue
+		//}
 
-		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
+		i := NewStockDayk(nil).StockInfoSS(v.StockCode).StockDate
 		if i == nil {
 			continue
 		}

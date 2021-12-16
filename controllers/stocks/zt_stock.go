@@ -43,18 +43,18 @@ func (this *ZtStock) ZtStockFx() {
 
 	for k := 0; k < len(ZtStockDb); k++ {
 		v := ZtStockDb[k]
-		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
-		if len(sc) <= 0 {
-			name = v.StockName
-			continue
-		}
+		//sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		//if len(sc) <= 0 {
+		//	name = v.StockName
+		//	continue
+		//}
 		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
 		if len(sci) <= 6 {
 			name = v.StockName
 			continue
 		}
 
-		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
+		i := NewStockDayk(nil).StockInfoSS(v.StockCode).StockDate
 		if i == nil {
 			continue
 		}

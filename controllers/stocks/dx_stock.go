@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/shopspring/decimal"
 	"reflect"
-	"stock/controllers"
 	. "stock/models"
 	"stock/models/stocks_db"
 	"stock/share/logging"
@@ -136,12 +135,12 @@ func (this *DxStock) DxStockFx() {
 
 	for k, v := range DxStockDb {
 
-		sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
-		if len(sc) <= 0 {
-			continue
-		}
+		//sc := controllers.NewUtilHttps(nil).GetUtilCode(v.StockCode)
+		//if len(sc) <= 0 {
+		//	continue
+		//}
 
-		i := NewStockDayk(nil).StockInfoSS(sc).StockDate
+		i := NewStockDayk(nil).StockInfoSS(v.StockCode).StockDate
 		if i == nil {
 			continue
 		}

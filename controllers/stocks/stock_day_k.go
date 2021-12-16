@@ -284,7 +284,7 @@ func (this *StockDayk) GetXueqiu() {
 
 		t := stocks_db.NewXQ_Stock()
 		params := map[string]interface{}{
-			"stock_code":  v.StockCode,
+			"stock_code":  v.StockCode[2:],
 			"stock_name":  v.StockName,
 			"create_time": time.Now().Format("2006-01-02"),
 		}
@@ -360,6 +360,7 @@ func (this *StockDayk) XQStockFx() {
 
 	for k, v := range XQStock {
 		i := this.StockInfoSS(v.StockCode).StockDate
+
 		if i == nil {
 			continue
 		}
@@ -434,11 +435,19 @@ func (this *StockDayk) StockInfoSS(sc string) *Date {
 		return nil
 	}
 	code := ""
-	if sc[:2] == "SH" {
-		code = strings.Replace(sc, "SH", "1.", 1)
-	} else if sc[:2] == "SZ" {
-		code = strings.Replace(sc, "SZ", "0.", 1)
-	} else {
+	//if sc[:2] == "SH" {
+	//	code = strings.Replace(sc, "SH", "1.", 1)
+	//} else if sc[:2] == "SZ" {
+	//	code = strings.Replace(sc, "SZ", "0.", 1)
+	//} else {
+	//	return nil
+	//}
+	switch sc[:3] {
+	case "600", "601", "603", "605", "688", "689", "608":
+		code = fmt.Sprintf("1.%v", sc)
+	case "300", "002", "000", "001", "003", "301":
+		sc = fmt.Sprintf("0.%v", sc)
+	default:
 		return nil
 	}
 

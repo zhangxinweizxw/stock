@@ -53,7 +53,7 @@ func (this *ZtStockDB) DelZtStock() {
 	bulid1 := this.Db.Select("id,f3").From("stock_day_k s").
 		Join("zt_stock t", "s.f12=t.stock_code").
 		Where(fmt.Sprintf("s.create_time='%v'", d)).
-		Where(" f3 < 0.28 ")
+		Where(" ( f3 < 0.28 or f62 < 0 or f8 < 0.58 or f10 < 0.58 )")
 
 	_, err1 := this.SelectWhere(bulid1, nil).LoadStructs(&sd)
 	if err1 != nil {
