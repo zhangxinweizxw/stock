@@ -133,6 +133,7 @@ func main() {
 					go stocks.NewQgqpStock().QgqpStockFx()
 					go stocks.NewDxStock().DxStockFx()
 					go stocks.NewZjlxStock().PkydStockFx()
+					go stocks.NewZtStock().ZtStockFx01()
 
 					go stocks.NewZjlxStock().ZjlxStockSellFx()
 

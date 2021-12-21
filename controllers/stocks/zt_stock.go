@@ -356,7 +356,7 @@ func (this *ZtStock) GetZTStock() {
 
 func (this *ZtStock) GetZTStock01() {
 
-	//stocks_db.NewZtStockDB().DelZtStock()
+	stocks_db.NewZtStockDB01().DelZtStock01()
 	name := ""
 	defer func() {
 		if err := recover(); err != nil {
@@ -473,4 +473,218 @@ func (this *ZtStock) GetFsZjlr(sc string) *FRul {
 	}
 	return d
 	//logging.Error("=====", len(d.Data.KLines))
+}
+
+func (this *ZtStock) ZtStockFx01() {
+
+	if len(ZtStockDb01) <= 0 {
+		ZtStockDb01 = stocks_db.NewZtStockDB01().GetZtStockList01()
+		if ZtStockDb01 == nil {
+			return
+		}
+	}
+	name := ""
+	defer func() {
+		if err := recover(); err != nil {
+			logging.Error("Panic Error=======:%v======:%v", name, err)
+		}
+	}()
+
+	for k := 0; k < len(ZtStockDb01); k++ {
+		v := ZtStockDb01[k]
+
+		sci := controllers.NewUtilHttps(nil).GetUtilCode1(v.StockCode)
+		if len(sci) <= 6 {
+			name = v.StockName
+			continue
+		}
+
+		i := NewStockDayk(nil).StockInfoSS(v.StockCode).StockDate
+		if i == nil {
+			continue
+		}
+
+		if i.Zdf < -3 {
+			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+			continue
+		}
+
+		fsd := this.GetFsZjlr(sci).Data.KLines
+		if len(fsd) < 5 {
+			continue
+		}
+
+		if reflect.TypeOf(i.Zljlr).Name() == "string" {
+			continue
+		}
+		//d1 := decimal.NewFromFloat(zljlrv)
+
+		kl1 := fsd[len(fsd)-1]
+		s1 := strings.Split(kl1, ",")
+		//f1, _ := strconv.ParseFloat(s1[1], 64)
+		f1 := fmt.Sprintf("%v", s1[1])[:len(s1[1])-2]
+		kl2 := fsd[len(fsd)-2]
+		s2 := strings.Split(kl2, ",")
+		//f2, _ := strconv.ParseFloat(s2[1], 64)
+		f2 := fmt.Sprintf("%v", s2[1])[:len(s2[1])-2]
+		kl3 := fsd[len(fsd)-3]
+		s3 := strings.Split(kl3, ",")
+		//f3, _ := strconv.ParseFloat(s3[1], 64)
+		f3 := fmt.Sprintf("%v", s3[1])[:len(s3[1])-2]
+
+		kl4 := fsd[len(fsd)-4]
+		s4 := strings.Split(kl4, ",")
+		//f4, _ := strconv.ParseFloat(s4[1], 64)
+		f4 := fmt.Sprintf("%v", s4[1])[:len(s4[1])-2]
+		kl5 := fsd[len(fsd)-5]
+		s5 := strings.Split(kl5, ",")
+		f5 := fmt.Sprintf("%v", s5[1])[:len(s5[1])-2]
+
+		kl6 := fsd[0]
+		s6 := strings.Split(kl6, ",")
+		f6 := fmt.Sprintf("%v", s6[1])[:len(s6[1])-2]
+
+		// 计算涨跌幅
+		// 最高涨跌幅
+		zgzdf := (i.Zgjg - i.Kpj) / i.Kpj
+
+		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
+		// 最低涨跌幅
+		zdzdf := (i.Zdjg - i.Kpj) / i.Kpj
+		zdzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zdzdf*100), 64)
+
+		// 条件1 高开回调 上涨选
+		if reflect.TypeOf(i.Zxjg).Name() == "string" {
+			continue
+		}
+		dzljlr := decimal.NewFromFloat(i.Zljlr.(float64)).String()
+		//logging.Debug("name:", v.StockName, "zgzdf:", zgzdfv, "zdzdf:", zdzdfv, "zxjg:", i.Zxjg, "zgjg:", i.Zgjg, "zdjg:", i.Zdjg, "kpj:", i.Kpj, "fffff:", i.Hsl, v.Dayk10)
+
+		// 根据不同市值筛选条件做出改变
+		dzljlr01 := ""
+		jdd01 := 0.0
+		f601 := ""
+		f101, f201, f301, f401 := "", "", "", ""
+		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+			dzljlr01 = "3800000"
+			jdd01 = 3880000
+			f601 = "2800000"
+
+			f101 = "5880000"
+			f201 = "3880000"
+			f301 = "2880000"
+			f401 = "1280000"
+		}
+		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
+			dzljlr01 = "8800000"
+			jdd01 = 5880000
+			f601 = "3880000"
+
+			f101 = "8880000"
+			f201 = "5880000"
+			f301 = "3880000"
+			f401 = "2880000"
+		}
+		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
+			dzljlr01 = "32880000"
+			jdd01 = 12880000
+			f601 = "5880000"
+
+			f101 = "32880000"
+			f201 = "12880000"
+			f301 = "8880000"
+			f401 = "5280000"
+		}
+		if i.Zsz > 15000000000 { //
+			dzljlr01 = "58800000"
+			jdd01 = 38880000
+			f601 = "12880000"
+
+			f101 = "51880000"
+			f201 = "22880000"
+			f301 = "12880000"
+			f401 = "8800000"
+		}
+
+		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1.28 && i.Hsl < 8 && i.Zxjg.(float64) >= v.Dayk10 {
+			// 判断是否已入库
+			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				continue
+			}
+
+			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 10)
+			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+			logging.Debug("=55555")
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+
+		}
+
+		if zgzdfv > 0.58 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) <= i.Zgjg && i.Zxjg.(float64) >= i.Zdjg && i.Lb > 1.58 && f6 > f601 && f6 < f1 && f6 < f3 {
+			// 判断是否已入库
+			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				continue
+			}
+
+			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 10)
+			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+			logging.Debug("=11111")
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+
+		}
+		f1s1, _ := strconv.ParseFloat(f1, 64)
+		f1s2 := decimal.NewFromFloat(f1s1 / 2).String()
+		f2s1, _ := strconv.ParseFloat(f2, 64)
+		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
+		f3s1, _ := strconv.ParseFloat(f3, 64)
+		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
+		if zdzdfv >= 0.58 && zgzdfv < 5.8 && dzljlr > dzljlr01 && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.5 {
+			// 判断是否已入库
+			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+				continue
+			}
+
+			logging.Debug("=22222")
+			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 10)
+			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+
+		}
+
+		// 条件2 平开或者低开 然后资金流入 加速
+
+		if v.Dayk5 == 0 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 1.8 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) > i.Zdjg && f6 > "0" && f6 < f1 {
+				// 判断是否已入库
+				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+					continue
+				}
+				logging.Debug("=33333")
+
+				// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+				go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 10)
+				ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+				go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+
+			}
+		} else {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 1.8 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
+				// 判断是否已入库
+				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
+					continue
+				}
+				logging.Debug("=33333")
+
+				// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
+				go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 10)
+				ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
+				go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
+
+			}
+		}
+
+	}
+
 }

@@ -1,6 +1,7 @@
 package stocks_db
 
 import (
+	"fmt"
 	. "stock/share/models"
 )
 
@@ -43,40 +44,25 @@ func NewZtStockDB01() *ZtStockDB01 {
 //	return avshStock
 //}
 //
-//func (this *ZtStockDB) DelZtStock() {
-//
-//	// 查询过滤走势比较弱的垃圾
-//	d := time.Now().Format("2006-01-02")
-//	var sd []*ZtStockDB
-//	bulid1 := this.Db.Select("id,f3").From("stock_day_k s").
-//		Join("zt_stock t", "s.f12=t.stock_code").
-//		Where(fmt.Sprintf("s.create_time='%v'", d)).
-//		Where("(f3 <1 OR f3 >6)")
-//
-//	_, err1 := this.SelectWhere(bulid1, nil).LoadStructs(&sd)
-//	if err1 != nil {
-//		fmt.Println("Select Table Zt_stock join stok_day_k |  Error   %v", err1)
-//	}
-//
-//	for _, v := range sd {
-//		b := this.Db.DeleteFrom(this.TableName).Where(fmt.Sprintf("id=%v", v.Id))
-//		_, err := this.DeleteWhere(b, nil).Exec()
-//
-//		if err != nil {
-//			fmt.Println("Delete Table TABLE_zt_stock  |  Error   %v", err)
-//		}
-//	}
-//
-//}
-//
-//// 带条件删除
-//func (this *ZtStockDB) DelZtStockTj(sc string) {
-//
-//	b := this.Db.DeleteFrom(this.TableName).Where(fmt.Sprintf("stock_code='%v'", sc))
-//	_, err := this.DeleteWhere(b, nil).Exec()
-//
-//	if err != nil {
-//		fmt.Println("Delete Table TABLE_zt_stock  |  Error   %v", err)
-//	}
-//
-//}
+func (this *ZtStockDB01) DelZtStock01() {
+
+	b := this.Db.DeleteFrom(this.TableName)
+	_, err := this.DeleteWhere(b, nil).Exec()
+
+	if err != nil {
+		fmt.Println("Delete Table TABLE_zt_stock01  |  Error   %v", err)
+	}
+}
+
+func (this *ZtStockDB01) GetZtStockList01() []*ZtStockDB01 {
+
+	var avshStock []*ZtStockDB01
+	bulid1 := this.Db.Select("*").From(this.TableName)
+
+	_, err1 := this.SelectWhere(bulid1, nil).LoadStructs(&avshStock)
+	if err1 != nil {
+		fmt.Println("Select Table Zt_stock01 |  Error   %v", err1)
+		return nil
+	}
+	return avshStock
+}

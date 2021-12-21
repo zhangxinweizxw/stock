@@ -117,25 +117,25 @@ func (this *XqFxStock) XqFxTs() {
 		jdd01 := 0.0
 
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			dzljlr01 = "5800000"
-			jdd01 = 3880000
+			dzljlr01 = "2800000"
+			jdd01 = 1280000
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			dzljlr01 = "8800000"
-			jdd01 = 3880000
+			dzljlr01 = "3800000"
+			jdd01 = 1880000
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			dzljlr01 = "12800000"
-			jdd01 = 8880000
+			dzljlr01 = "5800000"
+			jdd01 = 3880000
 
 		}
 		if i.Zsz > 15000000000 { //
-			dzljlr01 = "32800000"
-			jdd01 = 12880000
+			dzljlr01 = "8800000"
+			jdd01 = 5880000
 
 		}
 
-		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 2.8 && i.Lb > 2.8 {
+		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 2.8 && i.Lb > 1.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
