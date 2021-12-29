@@ -12,6 +12,7 @@ import (
 	"stock/models/stocks_db"
 	"stock/share/logging"
 	"stock/share/util"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -330,7 +331,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		//f3, _ := strconv.ParseFloat(s3[1], 64)
 		f3 := fmt.Sprintf("%v", s3[1])[:len(s3[1])-2]
 
-		if f3 < "2800000" || f1 < f3 || f1 < "5800000" {
+		if f3 < "1800000" || f1 < f3 || f1 < "3800000" {
 			continue
 		}
 		// 判断是否以入库
@@ -341,38 +342,43 @@ func (this *ZjlxStock) PkydStockFx() {
 		d := NewStockDayk(nil).GetZJlxDFCF(v.StockCode).Datas.Diff[0]
 
 		df62 := decimal.NewFromFloat(d.F62.(float64)).String()
-		df66 := decimal.NewFromFloat(d.F66.(float64)).String()
+		//df66 := decimal.NewFromFloat(d.F66.(float64)).String()
 		//df72 := decimal.NewFromFloat(d.F72.(float64)).String()
 
 		// 根据不同市值筛选条件做出改变
-		df6201, df6601 := "", ""
+		df6201 := ""
 		if d.F20 == nil {
 			continue
 		}
 		f2001 := d.F20.(float64)
 		if f2001 < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			df6201 = "3880000"
-			df6601 = "1880000"
+			df6201 = "1880000"
 		}
 		if f2001 > 3000000000 && f2001 < 5000000000 { //
-			df6201 = "8880000"
-			df6601 = "3880000"
+			df6201 = "2880000"
 		}
 		if f2001 > 5000000000 && f2001 < 15000000000 { //
-			df6201 = "38800000"
-			df6601 = "12880000"
+			df6201 = "3880000"
 		}
 		if f2001 > 15000000000 { //
-			df6201 = "88800000"
-			df6601 = "58880000"
+			df6201 = "5880000"
 		}
 
 		if NewStockDayk(nil).GetReturnIsBuy(v.StockCode) == false {
 			continue
 		}
 
+		i := NewStockDayk(nil).StockInfoSS(v.StockCode).StockDate
+		if i == nil {
+			continue
+		}
+		// 最高涨跌幅
+		zgzdf := (i.Zgjg - i.Kpj) / i.Kpj
+
+		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
+
 		//logging.Info(fmt.Sprintf("stockCode:%v===123321=========df62:%v======df66:%v=====f2:%v=====f8:%v======f9:%v=====f10:%v======f1:%v====f3:%v", v.StockCode, df62, df66, d.F2, d.F8, d.F9, d.F10, f1, f3))
-		if df62 < df6201 || df66 < df6601 || d.F2.(float64) > 68 || (d.F8.(float64) < 1.58 || d.F8.(float64) > 8) || d.F10.(float64) < 1.28 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.58 {
+		if df62 < df6201 || d.F2.(float64) > 68 || d.F8.(float64) < 1.8 || d.F8.(float64) > 15 || d.F10.(float64) < 1.8 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0.58 || (zgzdfv-i.Zdf) > 3 {
 			continue
 		}
 		//// 筛选通过   需要判断下最近涨跌和财务数据
@@ -383,6 +389,6 @@ func (this *ZjlxStock) PkydStockFx() {
 		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 		go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, d.F2.(float64), 6)
 
-		//go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", v.StockCode, v.StockName, d.F2))
+		go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", v.StockCode, v.StockName, d.F2))
 	}
 }

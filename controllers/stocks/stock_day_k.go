@@ -256,7 +256,7 @@ func (this *StockDayk) GetXueqiu() {
 
 	// 为了简单手动改报告期
 	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_5.8&netprofit.20210630=50000000_61150000000&fmc=2500000000_15000000000&npay.20210630=5_17594.51&oiy.20210630=5_151223.7&volume_ratio=1.8_10&tr=3_10&pct5=0_8&pct20=-5_12"
-	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_3.8&pettm=10_58&oiy.20210930=5_118173.56&npay.20210930=5_58997.1&follow7d=300_17574&tr=2.8_8&volume_ratio=1_9.48&pct5=-3_8"
+	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_3.8&pettm=10_58&oiy.20210930=5_118173.56&npay.20210930=5_58997.1&follow7d=300_17574&tr=2.8_8&volume_ratio=1_9.48&pct5=-1.8_8&oiy.20210630=5_118173.56&npay.20210630=5_118173.56&oiy.20201231=5_118173.56&npay.20201231=5_118173.56"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("", err)
@@ -278,9 +278,9 @@ func (this *StockDayk) GetXueqiu() {
 	// 写入mysql
 	for _, v := range data.XQResuData.List {
 
-		if NewStockDayk(nil).GetReturnIsBuyZt(v.StockCode[2:]) == false {
-			continue
-		}
+		//if NewStockDayk(nil).GetReturnIsBuyZt(v.StockCode[2:]) == false {
+		//	continue
+		//}
 
 		t := stocks_db.NewXQ_Stock()
 		params := map[string]interface{}{
@@ -324,9 +324,9 @@ func (this *StockDayk) SaveXueqiuFx() {
 	// 操作mysql  不符合要求剔除 符合加入不清库
 	for _, v := range data.XQResuData.List {
 
-		if NewStockDayk(nil).GetReturnIsBuyZt(v.StockCode[2:]) == false {
-			continue
-		}
+		//if NewStockDayk(nil).GetReturnIsBuyZt(v.StockCode[2:]) == false {
+		//	continue
+		//}
 
 		t := stocks_db.NewXQ_Stock_FX()
 
@@ -371,40 +371,37 @@ func (this *StockDayk) XQStockFx() {
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
 
-		d2 := "0"
-		if reflect.TypeOf(i.Jcd).String() != "string" {
-			d2 = fmt.Sprintf("%v", i.Jcd.(float64))
-		}
+		//d2 := "0"
+		//if reflect.TypeOf(i.Jcd).String() != "string" {
+		//	d2 = fmt.Sprintf("%v", i.Jcd.(float64))
+		//}
+		//
+		////d3 := decimal.NewFromFloat(i.Jdd.(float64))
+		//d3 := "0"
+		//if reflect.TypeOf(i.Jdd).String() != "string" {
+		//	d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
+		//}
 
-		//d3 := decimal.NewFromFloat(i.Jdd.(float64))
-		d3 := "0"
-		if reflect.TypeOf(i.Jdd).String() != "string" {
-			d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
-		}
-
-		d101, d201, d301 := "", "", ""
+		d101 := ""
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			d101 = "3880000"
-			d201 = "1280000"
-			d301 = "880000"
+			d101 = "1880000"
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			d101 = "5880000"
-			d201 = "1288000"
-			d301 = "880000"
+			d101 = "3880000"
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			d101 = "6880000"
-			d201 = "3880000"
-			d301 = "1288000"
+			d101 = "5880000"
 		}
 		if i.Zsz > 15000000000 { //
-			d101 = "12880000"
-			d201 = "5880000"
-			d301 = "1288000"
+			d101 = "8880000"
 		}
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.28 && i.Lb < 8 && i.Hsl > 1.28 && i.Hsl < 10 && d1.String() > d101 && d2 > d201 && d3 > d301 {
+		// 最高涨跌幅
+		zgzdf := (i.Zgjg - i.Kpj) / i.Kpj
+
+		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
+
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.58 && i.Lb < 8 && i.Hsl > 1.8 && i.Hsl < 10 && d1.String() > d101 && (zgzdfv-i.Zdf) < 1.4 {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {

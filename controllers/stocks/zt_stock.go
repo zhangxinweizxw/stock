@@ -118,50 +118,46 @@ func (this *ZtStock) ZtStockFx() {
 		// 根据不同市值筛选条件做出改变
 		dzljlr01 := ""
 		jdd01 := 0.0
-		f601 := ""
+
 		f101, f201, f301, f401 := "", "", "", ""
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			dzljlr01 = "3800000"
-			jdd01 = 3880000
-			f601 = "2800000"
+			dzljlr01 = "3880000"
+			jdd01 = 1880000
 
-			f101 = "5880000"
-			f201 = "3880000"
-			f301 = "2880000"
-			f401 = "1280000"
+			f101 = "880000"
+			f201 = "1880000"
+			f301 = "3880000"
+			f401 = "8880000"
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			dzljlr01 = "5800000"
-			jdd01 = 5880000
-			f601 = "3880000"
+			dzljlr01 = "5880000"
+			jdd01 = 3880000
 
-			f101 = "8880000"
-			f201 = "5880000"
-			f301 = "3880000"
-			f401 = "2880000"
+			f101 = "1880000"
+			f201 = "3880000"
+			f301 = "6880000"
+			f401 = "12880000"
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
 			dzljlr01 = "8880000"
-			jdd01 = 12880000
-			f601 = "5880000"
+			jdd01 = 5880000
 
-			f101 = "32880000"
-			f201 = "12880000"
+			f101 = "3880000"
+			f201 = "5880000"
 			f301 = "8880000"
-			f401 = "5280000"
+			f401 = "12880000"
 		}
 		if i.Zsz > 15000000000 { //
 			dzljlr01 = "12800000"
-			jdd01 = 38880000
-			f601 = "12880000"
+			jdd01 = 8880000
 
-			f101 = "51880000"
-			f201 = "22880000"
-			f301 = "12880000"
-			f401 = "8800000"
+			f101 = "3880000"
+			f201 = "5880000"
+			f301 = "8880000"
+			f401 = "12800000"
 		}
 
-		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1.28 && i.Hsl < 8 && i.Zxjg.(float64) >= v.Dayk10 {
+		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 2.8 && i.Hsl < 15 && i.Zxjg.(float64) >= v.Dayk5 && (zgzdfv-i.Zdf) < 1.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -175,26 +171,13 @@ func (this *ZtStock) ZtStockFx() {
 
 		}
 
-		if zgzdfv > 0.28 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && dzljlr >= f1 && f1 > f2 && f2 > f3 && f3 > f4 && i.Zxjg.(float64) <= i.Zgjg && i.Zxjg.(float64) >= i.Zdjg && i.Lb > 1.28 && f6 > f601 && f6 < f1 && f6 < f3 {
-			// 判断是否已入库
-			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
-				continue
-			}
-
-			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
-			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, i.Zxjg.(float64), 2)
-			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-			logging.Debug("=11111")
-			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
-
-		}
 		f1s1, _ := strconv.ParseFloat(f1, 64)
 		f1s2 := decimal.NewFromFloat(f1s1 / 2).String()
 		f2s1, _ := strconv.ParseFloat(f2, 64)
 		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
 		f3s1, _ := strconv.ParseFloat(f3, 64)
 		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
-		if zdzdfv >= 0.58 && zgzdfv < 5.8 && dzljlr > dzljlr01 && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && f1 >= f2 && f2 >= f3 && f3 >= f4 && f4 >= f5 && i.Lb > 1.28 {
+		if zdzdfv >= 0.58 && zgzdfv < 5.8 && dzljlr > dzljlr01 && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && i.Lb > 2.8 && i.Hsl > 2.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -211,7 +194,7 @@ func (this *ZtStock) ZtStockFx() {
 		// 条件2 平开或者低开 然后资金流入 加速
 
 		if v.Dayk5 == 0 {
-			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 1.28 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) > i.Zdjg && f6 > "0" && f6 < f1 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.8 && i.Hsl > 2.8 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg && f6 < f1 {
 				// 判断是否已入库
 				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 					continue
@@ -225,7 +208,7 @@ func (this *ZtStock) ZtStockFx() {
 
 			}
 		} else {
-			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && f5 > "0" && i.Zdf < 3.8 && i.Lb > 1.28 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 > "0" && f6 < f1 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 2.8 && i.Hsl > 2.8 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 < f1 {
 				// 判断是否已入库
 				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 					continue
@@ -309,11 +292,11 @@ func (this *ZtStock) GetZTStock() {
 		//if f2001 > 15000000000 { //
 		//	jlr01 = 5880000
 		//}
-		if NewStockDayk(nil).GetReturnIsBuyZt(v.F12.(string)) == false {
-			continue
-		}
+		//if NewStockDayk(nil).GetReturnIsBuyZt(v.F12.(string)) == false {
+		//	continue
+		//}
 
-		if v.F3.(float64) < -0.8 || v.F3.(float64) > 7 || v.F62.(float64) < 0 {
+		if v.F3.(float64) < -0.8 || v.F3.(float64) > 5.8 || v.F62.(float64) < 0 {
 			continue
 		}
 		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -324,7 +307,7 @@ func (this *ZtStock) GetZTStock() {
 		if reflect.TypeOf(v.F8).Name() == "string" {
 			continue
 		}
-		if d.Day5Zdf > 13 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5 || d.Day20Zdf > 18 || v.F8.(float64) < 1 || v.F10.(float64) < 0.8 {
+		if d.Day5Zdf > 8 || d.Day5Zdf < 0 || d.Day20Zdf < -3.8 || d.Day20Zdf > 13 || v.F8.(float64) < 2.8 || v.F10.(float64) < 1.8 {
 			continue
 		}
 
@@ -399,11 +382,11 @@ func (this *ZtStock) GetZTStock01() {
 			continue
 		}
 
-		if NewStockDayk(nil).GetReturnIsBuyZt(v.F12.(string)) == false {
-			continue
-		}
+		//if NewStockDayk(nil).GetReturnIsBuyZt(v.F12.(string)) == false {
+		//	continue
+		//}
 
-		if v.F3.(float64) < 2.58 || v.F3.(float64) > 3.8 || v.F62.(float64) < 5880000 || v.F7.(float64) > 8 {
+		if v.F3.(float64) < 1.8 || v.F3.(float64) > 3.8 || v.F62.(float64) < 3880000 || v.F7.(float64) > 5 {
 			continue
 		}
 		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -414,7 +397,7 @@ func (this *ZtStock) GetZTStock01() {
 		if reflect.TypeOf(v.F8).Name() == "string" {
 			continue
 		}
-		if d.Day5Zdf > 13 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5 || d.Day20Zdf > 16 || v.F8.(float64) < 1.68 || v.F8.(float64) > 8 || v.F10.(float64) < 1.56 {
+		if d.Day5Zdf > 8 || d.Day5Zdf < -0.8 || d.Day20Zdf < -3 || d.Day20Zdf > 12 || v.F8.(float64) < 2.8 || v.F8.(float64) > 15 || v.F10.(float64) < 1.8 {
 			continue
 		}
 
@@ -528,23 +511,23 @@ func (this *ZtStock) ZtStockFx01() {
 		// 根据不同市值筛选条件做出改变
 		dzljlr01 := ""
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			dzljlr01 = "3800000"
+			dzljlr01 = "1880000"
 
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			dzljlr01 = "5800000"
+			dzljlr01 = "2880000"
 
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			dzljlr01 = "8880000"
+			dzljlr01 = "3880000"
 
 		}
 		if i.Zsz > 15000000000 { //
-			dzljlr01 = "12800000"
+			dzljlr01 = "5880000"
 
 		}
 
-		if zgzdfv > 0.38 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && i.Zxjg.(float64) <= i.Zgjg && i.Zxjg.(float64) >= i.Zdjg && i.Lb > 1.28 {
+		if zgzdfv > 0.38 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && i.Zxjg.(float64) <= i.Zgjg && i.Zxjg.(float64) >= i.Zdjg && i.Lb > 1.8 && i.Hsl > 2.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

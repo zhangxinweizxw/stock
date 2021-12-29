@@ -12,6 +12,7 @@ import (
 	"stock/models/stocks_db"
 	"stock/share/logging"
 	"stock/share/util"
+	"strconv"
 	"time"
 )
 
@@ -83,9 +84,9 @@ func (this *QgqpStock) QgqpStockSave() {
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" || reflect.TypeOf(v.TotalScore).String() == "string" {
 			continue
 		}
-		if NewStockDayk(nil).GetReturnIsBuy(v.StockCode) == false {
-			continue
-		}
+		//if NewStockDayk(nil).GetReturnIsBuy(v.StockCode) == false {
+		//	continue
+		//}
 
 		if v.New.(float64) > 88 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 80 || v.TurnoverRate.(float64) < 1.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 58 {
 			continue
@@ -144,41 +145,38 @@ func (this *QgqpStock) QgqpStockFx() {
 		}
 		d1 := decimal.NewFromFloat(zljlrv)
 
-		d2 := "0"
-		if reflect.TypeOf(i.Jcd).String() != "string" {
-			d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
-		}
-		d3 := "0"
-		if reflect.TypeOf(i.Jdd).String() != "string" {
-			d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
-		}
+		//d2 := "0"
+		//if reflect.TypeOf(i.Jcd).String() != "string" {
+		//	d2 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jcd.(float64)))
+		//}
+		//d3 := "0"
+		//if reflect.TypeOf(i.Jdd).String() != "string" {
+		//	d3 = fmt.Sprintf("%v", decimal.NewFromFloat(i.Jdd.(float64)))
+		//}
 		//  判断最近 涨跌幅 和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
 
-		d101, d201, d301 := "", "", ""
+		d101 := ""
 		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
-			d101 = "5880000"
-			d201 = "1280000"
-			d301 = "880000"
+			d101 = "1280000"
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			d101 = "8880000"
-			d201 = "3288000"
-			d301 = "1280000"
+			d101 = "2880000"
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			d101 = "12880000"
-			d201 = "5880000"
-			d301 = "3288000"
+			d101 = "3880000"
 		}
 		if i.Zsz > 15000000000 { //
-			d101 = "32880000"
-			d201 = "8880000"
-			d301 = "3288000"
+			d101 = "5880000"
 		}
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.28 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > d101 && d2 > d201 && d3 > d301 {
+		// 最高涨跌幅
+		zgzdf := (i.Zgjg - i.Kpj) / i.Kpj
+
+		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
+
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.58 && i.Lb < 10 && i.Hsl > 2.8 && d1.String() > d101 && (zgzdfv-i.Zdf) < 1.4 {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

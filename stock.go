@@ -66,7 +66,7 @@ func main() {
 
 					time.Sleep(15 * time.Minute)
 					stocks.NewStockDayk(cfg).GetXueqiu()
-					stocks.NewStockDayk(cfg).SaveXueqiuFx()
+					//stocks.NewStockDayk(cfg).SaveXueqiuFx()
 
 					//stocks.NewZjlxStock().ZjlxStockSave()
 
@@ -127,7 +127,7 @@ func main() {
 						stocks.NewZtStock().ZtStockFx()
 					}
 
-					go stocks.NewXqFxStock().XqFxTs()
+					//go stocks.NewXqFxStock().XqFxTs()
 					go stocks.NewStockDayk(nil).XQStockFx()
 					//go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
