@@ -176,7 +176,7 @@ func (this *QgqpStock) QgqpStockFx() {
 
 		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.58 && i.Lb < 10 && i.Hsl > 2.8 && d1.String() > d101 && (zgzdfv-i.Zdf) < 1.4 {
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.58 && i.Lb < 10 && i.Hsl > 1.8 && d1.String() > d101 && (zgzdfv-i.Zdf) < 1.4 {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue

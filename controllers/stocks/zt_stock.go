@@ -307,7 +307,7 @@ func (this *ZtStock) GetZTStock() {
 		if reflect.TypeOf(v.F8).Name() == "string" {
 			continue
 		}
-		if d.Day5Zdf > 8 || d.Day5Zdf < 0 || d.Day20Zdf < -3.8 || d.Day20Zdf > 13 || v.F8.(float64) < 2.8 || v.F10.(float64) < 1.8 {
+		if d.Day5Zdf > 8 || d.Day5Zdf < 0 || d.Day10Zdf < -3.8 || d.Day10Zdf > 13 || v.F8.(float64) < 1.8 || v.F10.(float64) < 1.8 {
 			continue
 		}
 
@@ -397,7 +397,7 @@ func (this *ZtStock) GetZTStock01() {
 		if reflect.TypeOf(v.F8).Name() == "string" {
 			continue
 		}
-		if d.Day5Zdf > 8 || d.Day5Zdf < -0.8 || d.Day20Zdf < -3 || d.Day20Zdf > 12 || v.F8.(float64) < 2.8 || v.F8.(float64) > 15 || v.F10.(float64) < 1.8 {
+		if d.Day5Zdf > 8 || d.Day5Zdf < 0 || d.Day20Zdf < -3 || d.Day20Zdf > 12 || v.F8.(float64) < 2.8 || v.F8.(float64) > 15 || v.F10.(float64) < 1.8 {
 			continue
 		}
 
