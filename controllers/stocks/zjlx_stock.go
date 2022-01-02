@@ -364,9 +364,9 @@ func (this *ZjlxStock) PkydStockFx() {
 			df6201 = "5880000"
 		}
 
-		if NewStockDayk(nil).GetReturnIsBuy(v.StockCode) == false {
-			continue
-		}
+		//if NewStockDayk(nil).GetReturnIsBuy(v.StockCode) == false {
+		//	continue
+		//}
 
 		i := NewStockDayk(nil).StockInfoSS(v.StockCode).StockDate
 		if i == nil {
