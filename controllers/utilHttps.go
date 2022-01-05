@@ -28,7 +28,7 @@ func (this *UtilHttps) GetXqPd(scode string) int {
 		return 0
 	}
 
-	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&npay.20210630=1_5000&oiy.20210630=1_5000&npay.20210930=1_5000&oiy.20210930=1_5000&mc=2500000000_150000000000&pct5=-1_13&pct20=-5.8_16`
+	url := `https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&npay.20210630=1_5000&oiy.20210630=1_5000&npay.20210930=1_5000&oiy.20210930=1_5000&mc=2500000000_150000000000&pct5=-2.8_8.8&pct20=-5.8_13`
 	url += fmt.Sprintf(`&symbol=%v`, sc)
 
 	resp, err := http.Get(url)

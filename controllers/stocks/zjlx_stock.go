@@ -382,9 +382,9 @@ func (this *ZjlxStock) PkydStockFx() {
 			continue
 		}
 		//// 筛选通过   需要判断下最近涨跌和财务数据
-		//if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
-		//	continue
-		//}
+		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
+			continue
+		}
 
 		// 满足条件   mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 		go NewStockDayk(nil).SaveStock(v.StockCode, v.StockName, d.F2.(float64), 6)
