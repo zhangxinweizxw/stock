@@ -60,12 +60,6 @@ func (this *ZtStock) ZtStockFx() {
 		}
 
 		if i.Zdf < 0.28 {
-			ZtStockDb = append(ZtStockDb[:k], ZtStockDb[k+1:]...)
-			continue
-		}
-
-		fsd := this.GetFsZjlr(sci).Data.KLines
-		if len(fsd) < 5 {
 			continue
 		}
 
@@ -73,31 +67,6 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 		//d1 := decimal.NewFromFloat(zljlrv)
-
-		kl1 := fsd[len(fsd)-1]
-		s1 := strings.Split(kl1, ",")
-		//f1, _ := strconv.ParseFloat(s1[1], 64)
-		f1 := fmt.Sprintf("%v", s1[1])[:len(s1[1])-2]
-		kl2 := fsd[len(fsd)-2]
-		s2 := strings.Split(kl2, ",")
-		//f2, _ := strconv.ParseFloat(s2[1], 64)
-		f2 := fmt.Sprintf("%v", s2[1])[:len(s2[1])-2]
-		kl3 := fsd[len(fsd)-3]
-		s3 := strings.Split(kl3, ",")
-		//f3, _ := strconv.ParseFloat(s3[1], 64)
-		f3 := fmt.Sprintf("%v", s3[1])[:len(s3[1])-2]
-
-		kl4 := fsd[len(fsd)-4]
-		s4 := strings.Split(kl4, ",")
-		//f4, _ := strconv.ParseFloat(s4[1], 64)
-		f4 := fmt.Sprintf("%v", s4[1])[:len(s4[1])-2]
-		kl5 := fsd[len(fsd)-5]
-		s5 := strings.Split(kl5, ",")
-		f5 := fmt.Sprintf("%v", s5[1])[:len(s5[1])-2]
-
-		kl6 := fsd[0]
-		s6 := strings.Split(kl6, ",")
-		f6 := fmt.Sprintf("%v", s6[1])[:len(s6[1])-2]
 
 		// 计算涨跌幅
 		// 最高涨跌幅
@@ -170,6 +139,36 @@ func (this *ZtStock) ZtStockFx() {
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 
 		}
+
+		fsd := this.GetFsZjlr(sci).Data.KLines
+		if len(fsd) < 5 {
+			continue
+		}
+
+		kl1 := fsd[len(fsd)-1]
+		s1 := strings.Split(kl1, ",")
+		//f1, _ := strconv.ParseFloat(s1[1], 64)
+		f1 := fmt.Sprintf("%v", s1[1])[:len(s1[1])-2]
+		kl2 := fsd[len(fsd)-2]
+		s2 := strings.Split(kl2, ",")
+		//f2, _ := strconv.ParseFloat(s2[1], 64)
+		f2 := fmt.Sprintf("%v", s2[1])[:len(s2[1])-2]
+		kl3 := fsd[len(fsd)-3]
+		s3 := strings.Split(kl3, ",")
+		//f3, _ := strconv.ParseFloat(s3[1], 64)
+		f3 := fmt.Sprintf("%v", s3[1])[:len(s3[1])-2]
+
+		kl4 := fsd[len(fsd)-4]
+		s4 := strings.Split(kl4, ",")
+		//f4, _ := strconv.ParseFloat(s4[1], 64)
+		f4 := fmt.Sprintf("%v", s4[1])[:len(s4[1])-2]
+		kl5 := fsd[len(fsd)-5]
+		s5 := strings.Split(kl5, ",")
+		f5 := fmt.Sprintf("%v", s5[1])[:len(s5[1])-2]
+
+		kl6 := fsd[0]
+		s6 := strings.Split(kl6, ",")
+		f6 := fmt.Sprintf("%v", s6[1])[:len(s6[1])-2]
 
 		f1s1, _ := strconv.ParseFloat(f1, 64)
 		f1s2 := decimal.NewFromFloat(f1s1 / 2).String()

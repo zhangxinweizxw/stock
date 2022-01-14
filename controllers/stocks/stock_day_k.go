@@ -624,49 +624,49 @@ func (this *StockDayk) GetDayK(stockC string) [7]float64 {
 	return dk
 }
 
-func (this *StockDayk) GetReturnIsBuy(stockC string) bool {
-
-	f, d := stocks_db.NewStock_Day_K().ReturnIsBuy(stockC)
-	logging.Debug("f", fmt.Sprintf("%.2f", f), "info:", d.F6, d.F2, d.F17, d.F18)
-	if d == nil || f == 0.0 {
-		return false
-	}
-	f2, _ := strconv.ParseFloat(d.F2, 64)
-	f17, _ := strconv.ParseFloat(d.F17, 64)
-	f18, _ := strconv.ParseFloat(d.F18, 64)
-	if f2 < f17 || f2 < f18 {
-		return false
-	}
-	f6, _ := strconv.ParseFloat(d.F6, 64)
-	avg5f := decimal.NewFromFloat(f6 / f)
-	f, _ = avg5f.Float64()
-
-	if f > 0 && f > 0.68 && f < 1.58 {
-		logging.Debug("============", f)
-		return true
-	}
-	return false
-}
-
-func (this *StockDayk) GetReturnIsBuyZt(stockC string) bool {
-
-	f, d := stocks_db.NewStock_Day_K().ReturnIsBuyZt(stockC)
-	logging.Debug("f", fmt.Sprintf("%.2f", f), "info:", d.F6, d.F2, d.F17, d.F18)
-	if d == nil || f == 0.0 {
-		return false
-	}
-	f2, _ := strconv.ParseFloat(d.F2, 64)
-	f17, _ := strconv.ParseFloat(d.F17, 64)
-	f18, _ := strconv.ParseFloat(d.F18, 64)
-	if f2 < f17 || f2 < f18 {
-		return false
-	}
-	f6, _ := strconv.ParseFloat(d.F6, 64)
-	avg5f := decimal.NewFromFloat(f6 / f)
-	f, _ = avg5f.Float64()
-	logging.Debug("============", f)
-	if f > 0 && f > 1.58 {
-		return true
-	}
-	return false
-}
+//func (this *StockDayk) GetReturnIsBuy(stockC string) bool {
+//
+//	f, d := stocks_db.NewStock_Day_K().ReturnIsBuy(stockC)
+//	logging.Debug("f", fmt.Sprintf("%.2f", f), "info:", d.F6, d.F2, d.F17, d.F18)
+//	if d == nil || f == 0.0 {
+//		return false
+//	}
+//	f2, _ := strconv.ParseFloat(d.F2, 64)
+//	f17, _ := strconv.ParseFloat(d.F17, 64)
+//	f18, _ := strconv.ParseFloat(d.F18, 64)
+//	if f2 < f17 || f2 < f18 {
+//		return false
+//	}
+//	f6, _ := strconv.ParseFloat(d.F6, 64)
+//	avg5f := decimal.NewFromFloat(f6 / f)
+//	f, _ = avg5f.Float64()
+//
+//	if f > 0 && f > 0.68 && f < 1.58 {
+//		logging.Debug("============", f)
+//		return true
+//	}
+//	return false
+//}
+//
+//func (this *StockDayk) GetReturnIsBuyZt(stockC string) bool {
+//
+//	f, d := stocks_db.NewStock_Day_K().ReturnIsBuyZt(stockC)
+//	logging.Debug("f", fmt.Sprintf("%.2f", f), "info:", d.F6, d.F2, d.F17, d.F18)
+//	if d == nil || f == 0.0 {
+//		return false
+//	}
+//	f2, _ := strconv.ParseFloat(d.F2, 64)
+//	f17, _ := strconv.ParseFloat(d.F17, 64)
+//	f18, _ := strconv.ParseFloat(d.F18, 64)
+//	if f2 < f17 || f2 < f18 {
+//		return false
+//	}
+//	f6, _ := strconv.ParseFloat(d.F6, 64)
+//	avg5f := decimal.NewFromFloat(f6 / f)
+//	f, _ = avg5f.Float64()
+//	logging.Debug("============", f)
+//	if f > 0 && f > 1.58 {
+//		return true
+//	}
+//	return false
+//}
