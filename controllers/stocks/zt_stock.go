@@ -126,7 +126,7 @@ func (this *ZtStock) ZtStockFx() {
 			f401 = "12800000"
 		}
 
-		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 2.8 && i.Hsl < 15 && i.Zxjg.(float64) >= v.Dayk5 && (zgzdfv-i.Zdf) < 1.8 {
+		if i.Zgjg > i.Kpj && dzljlr > dzljlr01 && i.Jdd.(float64) > jdd01 && i.Zxjg.(float64) > i.Kpj && i.Zdf < 5.8 && i.Hsl > 1.8 && i.Hsl < 8 && i.Zxjg.(float64) >= v.Dayk5 && (zgzdfv-i.Zdf) < 1.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -176,7 +176,7 @@ func (this *ZtStock) ZtStockFx() {
 		f2s2 := decimal.NewFromFloat(f2s1 / 2).String()
 		f3s1, _ := strconv.ParseFloat(f3, 64)
 		f3s2 := decimal.NewFromFloat(f3s1 / 2).String()
-		if zdzdfv >= 0.58 && zgzdfv < 5.8 && dzljlr > dzljlr01 && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && i.Lb > 2.8 && i.Hsl > 2.8 {
+		if zdzdfv >= 0.58 && zgzdfv < 5.8 && dzljlr > dzljlr01 && i.Zxjg.(float64) > i.Zdjg && f1s2 >= f3 && f2s2 >= f4 && f3s2 >= f5 && i.Lb > 1.8 && i.Hsl > 1.8 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
@@ -193,7 +193,7 @@ func (this *ZtStock) ZtStockFx() {
 		// 条件2 平开或者低开 然后资金流入 加速
 
 		if v.Dayk5 == 0 {
-			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.8 && i.Hsl > 2.8 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg && f6 < f1 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.8 && i.Hsl > 1.8 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg && f6 < f1 {
 				// 判断是否已入库
 				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 					continue
@@ -207,7 +207,7 @@ func (this *ZtStock) ZtStockFx() {
 
 			}
 		} else {
-			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 2.8 && i.Hsl > 2.8 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 < f1 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.8 && i.Hsl > 1.8 && (zgzdfv-i.Zdf) < 1.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 < f1 {
 				// 判断是否已入库
 				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 					continue
