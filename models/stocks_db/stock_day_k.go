@@ -95,6 +95,7 @@ type Stock_Day_K struct {
 	DayK10   float64 `db:"dayK10"`
 	DayK20   float64 `db:"dayK20"`
 	DayK30   float64 `db:"dayK30"`
+	DayK60   float64 `db:"dayK60"`
 	Day5Zdf  float64 `db:"day5zdf"`
 	Day10Zdf float64 `db:"day10zdf"`
 	Day20Zdf float64 `db:"day20zdf"`

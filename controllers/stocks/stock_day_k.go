@@ -88,81 +88,7 @@ func (this *StockDayk) GetStockDayK() {
 
 	stocks_db.NewStockInfo().DelStockInfo() // 清空stock_info 表
 	stocks_db.NewStock_Day_K().DelStockDayK()
-	//data.Datas.Diff
-	//for _, v := range data.Datas.Diff {
-	//
-	//	//获取资金流入数据
-	//	if len(v.F12.(string)) != 6 {
-	//		continue
-	//	}
-	//	d := this.GetZJlxDFCF(v.F12.(string)).Datas.Diff[0]
-	//
-	//	//日K对应 5日 10日 20日 30日均价
-	//	df := this.GetDayK(v.F12.(string))
-	//
-	//	t := stocks_db.NewStock_Day_K()
-	//	params := map[string]interface{}{
-	//		"f1":  v.F1,
-	//		"f2":  v.F2,
-	//		"f3":  v.F3,
-	//		"f4":  v.F4,
-	//		"f5":  v.F5,
-	//		"f6":  v.F6,
-	//		"f7":  v.F7,
-	//		"f8":  v.F8,
-	//		"f9":  v.F9,
-	//		"f10": v.F10,
-	//		"f11": v.F11,
-	//		"f12": v.F12,
-	//		"f13": v.F13,
-	//		"f14": v.F14,
-	//		"f15": v.F15,
-	//		"f16": v.F16,
-	//		"f17": v.F17,
-	//		"f18": v.F18,
-	//
-	//		"f20":         v.F20,
-	//		"f21":         v.F21,
-	//		"f22":         v.F22,
-	//		"f23":         v.F23,
-	//		"f24":         v.F24,
-	//		"f25":         v.F25,
-	//		"f62":         d.F62,
-	//		"f66":         d.F66,
-	//		"f69":         d.F69,
-	//		"f72":         d.F72,
-	//		"f75":         d.F75,
-	//		"f184":        d.F184,
-	//		"f136":        v.F136,
-	//		"f128":        v.F128,
-	//		"dayK5":       df[0],
-	//		"dayK10":      df[1],
-	//		"dayK20":      df[2],
-	//		"dayK30":      df[3],
-	//		"create_time": time.Now().Format("2006-01-02"),
-	//		"update_time": time.Now().Format("2006-01-02"),
-	//	}
-	//	_, err := t.Insert(params)
-	//	if err != nil {
-	//		logging.Error("Insert Stock_day_k | %v", err)
-	//		continue
-	//	}
-	//
-	//	// 股票信息写入stock_info表方便使用
-	//	i := stocks_db.NewStockInfo()
-	//	p := map[string]interface{}{
-	//		"date":       ntime,
-	//		"stock_code": v.F12,
-	//		"stock_name": v.F14,
-	//	}
-	//	_, err1 := i.Insert(p)
-	//	if err1 != nil {
-	//		logging.Error("Insert Stock_info | %v", err)
-	//		continue
-	//	}
-	//
-	//}
-	//logging.Error("=================", len(data.Datas.Diff)/2)
+
 	i := int(len(data.Datas.Diff) / 2)
 	go this.GoFuncFor(data, 0, i)
 	go this.GoFuncFor(data, i, len(data.Datas.Diff)-1)
@@ -204,24 +130,26 @@ func (this *StockDayk) GoFuncFor(data *util.StockDayK, s, e int) {
 				"f17": v.F17,
 				"f18": v.F18,
 
-				"f20":         v.F20,
-				"f21":         v.F21,
-				"f22":         v.F22,
-				"f23":         v.F23,
-				"f24":         v.F24,
-				"f25":         v.F25,
-				"f62":         d.F62,
-				"f66":         d.F66,
-				"f69":         d.F69,
-				"f72":         d.F72,
-				"f75":         d.F75,
-				"f184":        d.F184,
-				"f136":        v.F136,
-				"f128":        v.F128,
-				"dayK5":       df[0],
-				"dayK10":      df[1],
-				"dayK20":      df[2],
-				"dayK30":      df[3],
+				"f20":    v.F20,
+				"f21":    v.F21,
+				"f22":    v.F22,
+				"f23":    v.F23,
+				"f24":    v.F24,
+				"f25":    v.F25,
+				"f62":    d.F62,
+				"f66":    d.F66,
+				"f69":    d.F69,
+				"f72":    d.F72,
+				"f75":    d.F75,
+				"f184":   d.F184,
+				"f136":   v.F136,
+				"f128":   v.F128,
+				"dayK5":  df[0],
+				"dayK10": df[1],
+				"dayK20": df[2],
+				"dayK30": df[3],
+				"dayK60": df[7],
+
 				"day5zdf":     df[4],
 				"day10zdf":    df[5],
 				"day20zdf":    df[6],
@@ -532,24 +460,10 @@ type Kl struct {
 }
 
 // 返回日K对应的 5、10、20、30 均价
-func (this *StockDayk) GetDayK(stockC string) [7]float64 {
-	var dk [7]float64
-	dk[0] = 0.0
-	dk[1] = 0.0
-	dk[2] = 0.0
-	dk[3] = 0.0
-	dk[4] = 0.0
-	dk[5] = 0.0
-	dk[6] = 0.0
-	//stockCodes := ""
-	//switch stockC[:3] {
-	//case "600", "601", "603", "605", "688", "689", "608":
-	//	stockCodes = fmt.Sprintf("1.%v", stockC)
-	//case "300", "002", "000", "001", "003", "301":
-	//	stockCodes = fmt.Sprintf("0.%v", stockC)
-	//default:
-	//	return dk
-	//}
+func (this *StockDayk) GetDayK(stockC string) [8]float64 {
+
+	var dk = [8]float64{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
+
 	stockCodes := controllers.NewUtilHttps(nil).GetUtilCode1(stockC)
 	if len(stockCodes) <= 0 {
 		return dk
@@ -576,7 +490,7 @@ func (this *StockDayk) GetDayK(stockC string) [7]float64 {
 		logging.Error("单个个股解析日K  | Error:=", err)
 	}
 	//logging.Error("==================", data.Zdata.Klines[0])
-	if len(data.Zdata.Klines) < 30 {
+	if len(data.Zdata.Klines) < 60 {
 		return dk
 	}
 	fl := len(data.Zdata.Klines) - 1
@@ -605,7 +519,11 @@ func (this *StockDayk) GetDayK(stockC string) [7]float64 {
 			f, _ := strconv.ParseFloat(s[2], 64)
 			dk[3] += f
 		}
-		if i < fl-30 {
+		if i >= fl-59 {
+			f, _ := strconv.ParseFloat(s[2], 64)
+			dk[7] += f
+		}
+		if i < fl-60 {
 			break
 		}
 
@@ -620,53 +538,9 @@ func (this *StockDayk) GetDayK(stockC string) [7]float64 {
 	dk[2] = f2
 	f3, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", dk[3]/30), 64)
 	dk[3] = f3
+
+	f7, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", dk[7]/60), 64)
+	dk[7] = f7
 	//logging.Error("==========", dk)
 	return dk
 }
-
-//func (this *StockDayk) GetReturnIsBuy(stockC string) bool {
-//
-//	f, d := stocks_db.NewStock_Day_K().ReturnIsBuy(stockC)
-//	logging.Debug("f", fmt.Sprintf("%.2f", f), "info:", d.F6, d.F2, d.F17, d.F18)
-//	if d == nil || f == 0.0 {
-//		return false
-//	}
-//	f2, _ := strconv.ParseFloat(d.F2, 64)
-//	f17, _ := strconv.ParseFloat(d.F17, 64)
-//	f18, _ := strconv.ParseFloat(d.F18, 64)
-//	if f2 < f17 || f2 < f18 {
-//		return false
-//	}
-//	f6, _ := strconv.ParseFloat(d.F6, 64)
-//	avg5f := decimal.NewFromFloat(f6 / f)
-//	f, _ = avg5f.Float64()
-//
-//	if f > 0 && f > 0.68 && f < 1.58 {
-//		logging.Debug("============", f)
-//		return true
-//	}
-//	return false
-//}
-//
-//func (this *StockDayk) GetReturnIsBuyZt(stockC string) bool {
-//
-//	f, d := stocks_db.NewStock_Day_K().ReturnIsBuyZt(stockC)
-//	logging.Debug("f", fmt.Sprintf("%.2f", f), "info:", d.F6, d.F2, d.F17, d.F18)
-//	if d == nil || f == 0.0 {
-//		return false
-//	}
-//	f2, _ := strconv.ParseFloat(d.F2, 64)
-//	f17, _ := strconv.ParseFloat(d.F17, 64)
-//	f18, _ := strconv.ParseFloat(d.F18, 64)
-//	if f2 < f17 || f2 < f18 {
-//		return false
-//	}
-//	f6, _ := strconv.ParseFloat(d.F6, 64)
-//	avg5f := decimal.NewFromFloat(f6 / f)
-//	f, _ = avg5f.Float64()
-//	logging.Debug("============", f)
-//	if f > 0 && f > 1.58 {
-//		return true
-//	}
-//	return false
-//}
