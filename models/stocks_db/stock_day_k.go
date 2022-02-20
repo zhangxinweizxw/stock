@@ -284,22 +284,22 @@ func (this *Stock_Day_K) GetStockDayKJJ(sc string) *Stock_Day_K {
 	return d
 }
 
-//// 筛选上个交易日
-//func (this *Stock_Day_K) GetSStockInfo(sc string) string {
-//
-//	f12 := ""
-//	bulid := this.Db.Select("f12").
-//		From(this.TableName).
-//		Where(fmt.Sprintf("f12='%v'", sc)).
-//		Where(" f3 > 0  AND dayK5 > dayK10 AND dayK10 > dayK20 AND dayK30 >0").
-//		Where("create_time= (SELECT date FROM stock_info ORDER BY date DESC  LIMIT 1)")
-//	_, err := this.SelectWhere(bulid, nil).LoadStructs(&f12)
-//	if err != nil {
-//		fmt.Println("Select Table 上个交易日 create_time  |  Error   %v", err)
-//		return ""
-//	}
-//	return f12
-//}
+// 筛选上个交易日
+func (this *Stock_Day_K) GetDaykJC(sc string) string {
+
+	f12 := ""
+	bulid := this.Db.Select("f12").
+		From(this.TableName).
+		Where(fmt.Sprintf("f12='%v'", sc)).
+		Where(" f8 > 0.8 AND f10 > 0.8 AND f2 > dayK60 AND  f2 > dayK30 AND dayK30 > 0 AND dayK60 >0 ").
+		Where("create_time= (SELECT date FROM stock_info ORDER BY date DESC  LIMIT 1)")
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&f12)
+	if err != nil {
+		fmt.Println("Select Table 上个交易日 create_time  |  Error   %v", err)
+		return ""
+	}
+	return f12
+}
 
 //// 返回 今日cjje和前面平均五日成交金额
 //func (this *Stock_Day_K) ReturnIsBuy(sc string) (avg5cjje float64, sdkInfo *Stock_Day_K) {

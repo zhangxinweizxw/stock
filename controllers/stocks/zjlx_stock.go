@@ -378,7 +378,7 @@ func (this *ZjlxStock) PkydStockFx() {
 		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
 
 		//logging.Info(fmt.Sprintf("stockCode:%v===123321=========df62:%v======df66:%v=====f2:%v=====f8:%v======f9:%v=====f10:%v======f1:%v====f3:%v", v.StockCode, df62, df66, d.F2, d.F8, d.F9, d.F10, f1, f3))
-		if df62 < df6201 || d.F2.(float64) > 68 || d.F8.(float64) < 1.8 || d.F8.(float64) > 15 || d.F10.(float64) < 1.8 || d.F3.(float64) > 5.8 || d.F3.(float64) < 0.58 || (zgzdfv-i.Zdf) > 3 {
+		if df62 < df6201 || d.F2.(float64) > 58 || d.F8.(float64) < 1.28 || d.F8.(float64) > 8 || d.F10.(float64) < 1.28 || d.F3.(float64) > 3.8 || d.F3.(float64) < 0.58 || (zgzdfv-i.Zdf) > 2.8 {
 			continue
 		}
 		//// 筛选通过   需要判断下最近涨跌和财务数据

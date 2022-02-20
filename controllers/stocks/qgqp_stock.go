@@ -84,17 +84,17 @@ func (this *QgqpStock) QgqpStockSave() {
 		if reflect.TypeOf(v.New).String() == "string" || reflect.TypeOf(v.ChangePercent).String() == "string" || reflect.TypeOf(v.TotalScore).String() == "string" {
 			continue
 		}
-		//if NewStockDayk(nil).GetReturnIsBuy(v.StockCode) == false {
-		//	continue
-		//}
 
-		if v.New.(float64) > 88 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 1.28 || v.PERation > 80 || v.TurnoverRate.(float64) < 1.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 58 {
+		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 0.28 || v.PERation > 58 || v.TurnoverRate.(float64) < 0.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 58 {
 			continue
 		}
 
 		// 筛选通过   需要判断下最近涨跌和财务数据
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
+		}
+		if len(stocks_db.NewStock_Day_K().GetDaykJC(v.StockCode)) <= 0 {
+			continue //基础较差
 		}
 
 		// 股票信息写入qgqp_stock表方便使用
@@ -159,7 +159,7 @@ func (this *QgqpStock) QgqpStockFx() {
 		}
 
 		d101 := ""
-		if i.Zsz < 3000000000 { // 市值30亿以内公司 净流入 1千万就很多了
+		if i.Zsz < 3000000000 { // 市值30亿以内公司
 			d101 = "1280000"
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
@@ -176,7 +176,7 @@ func (this *QgqpStock) QgqpStockFx() {
 
 		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 1.58 && i.Lb < 10 && i.Hsl > 1.8 && d1.String() > d101 && (zgzdfv-i.Zdf) < 1.4 {
+		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.8 && i.Lb < 10 && i.Hsl > 1.28 && d1.String() > d101 && (zgzdfv-i.Zdf) < 2.8 {
 			// 判断是否以入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
