@@ -133,7 +133,7 @@ func (this *ZjlxStock) ZjlxStockSellFx() {
 			jlc = "5880000"
 		}
 
-		if (df.String() < jlc && np <= dk10) || (s1.F3.(float64) < -2.8 && s1.F10.(float64) > 0.8) {
+		if df.String() < jlc && np <= dk10 {
 			stocks_db.NewTransactionHistory().UpdateTranHist(v.StockCode, np, bfb*100)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议卖出：%v   |   股票代码：%v    卖出价：%v", v.StockName, v.StockCode, np))
 		}

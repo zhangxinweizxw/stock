@@ -186,7 +186,7 @@ func (this *StockDayk) GetXueqiu() {
 	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_5.8&netprofit.20210630=50000000_61150000000&fmc=2500000000_15000000000&npay.20210630=5_17594.51&oiy.20210630=5_151223.7&volume_ratio=1.8_10&tr=3_10&pct5=0_8&pct20=-5_12"
 	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_3.8&pettm=10_58&oiy.20210930=5_118173.56&npay.20210930=5_58997.1&follow7d=300_17574&tr=2.8_8&volume_ratio=1_9.48&pct5=-1.8_8&oiy.20210630=5_118173.56&npay.20210630=5_118173.56&oiy.20201231=5_118173.56&npay.20201231=5_118173.56"
 	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode&indcode&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.5_58&pct&pettm=5_58&pelyr=5_58&mc=2500000000_18000000000&oiy.20200630=5_2295.9&npay.20200630=5_142839.72&tr=1.28_8&volume_ratio=1.28_8&oiy.20200930=5_2295.9&npay.20200930=5_142839.72&pct5=-5_6"
-	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.8_58&pct=-0.8_2.8&volume_ratio=0.8_8&pettm=5_28&pct5=-3_5&oiy.20210930=5_118173.56&tr=1.28_8&pct20=-8_12&pct120=-38_-20&npay.20210930=5_58997.1&pct10=-5_8"
+	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode&indcode&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.8_58&pct=-0.8_2.8&volume_ratio=0.8_8&pettm=5_28&pct5=-3_5&oiy.20210930=5_118173.56&tr=1.28_8&pct20=-8_12&pct120=-38_-20&npay.20210930=5_58997.1&pct10=-5_8&oiy.20210630=5_118173.56&npay.20210630=5_58997.1"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("", err)
@@ -317,13 +317,13 @@ func (this *StockDayk) XQStockFx() {
 			d101 = "1880000"
 		}
 		if i.Zsz > 3000000000 && i.Zsz < 5000000000 { //
-			d101 = "3880000"
+			d101 = "2880000"
 		}
 		if i.Zsz > 5000000000 && i.Zsz < 15000000000 { //
-			d101 = "5880000"
+			d101 = "3880000"
 		}
 		if i.Zsz > 15000000000 { //
-			d101 = "8880000"
+			d101 = "5880000"
 		}
 
 		// 最高涨跌幅
@@ -331,7 +331,7 @@ func (this *StockDayk) XQStockFx() {
 
 		zgzdfv, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", zgzdf*100), 64)
 
-		if i.Zdf > 0.5 && i.Zdf < 3.8 && i.Lb > 0.8 && i.Lb < 8 && i.Hsl > 0.8 && i.Hsl < 10 && d1.String() > d101 && (zgzdfv-i.Zdf) < 1.8 {
+		if i.Zdf > -0.8 && i.Zdf < 3.8 && i.Lb > 0.5 && i.Lb < 8 && i.Hsl > 0.5 && i.Hsl < 10 && d1.String() > d101 && (zgzdfv-i.Zdf) < 2.8 {
 			// 判断是否以入库
 			sc := v.StockCode[2:]
 			if stocks_db.NewTransactionHistory().GetTranHist(sc) > 0 {
