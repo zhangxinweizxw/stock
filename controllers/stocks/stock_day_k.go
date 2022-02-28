@@ -185,7 +185,8 @@ func (this *StockDayk) GetXueqiu() {
 	// 为了简单手动改报告期
 	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_5.8&netprofit.20210630=50000000_61150000000&fmc=2500000000_15000000000&npay.20210630=5_17594.51&oiy.20210630=5_151223.7&volume_ratio=1.8_10&tr=3_10&pct5=0_8&pct20=-5_12"
 	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=&pct=1.28_3.8&pettm=10_58&oiy.20210930=5_118173.56&npay.20210930=5_58997.1&follow7d=300_17574&tr=2.8_8&volume_ratio=1_9.48&pct5=-1.8_8&oiy.20210630=5_118173.56&npay.20210630=5_118173.56&oiy.20201231=5_118173.56&npay.20201231=5_118173.56"
-	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode&indcode&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.5_58&pct&pettm=5_58&pelyr=5_58&mc=2500000000_18000000000&oiy.20200630=5_2295.9&npay.20200630=5_142839.72&tr=0.8_8&volume_ratio=0.8_8&oiy.20200930=5_2295.9&npay.20200930=5_142839.72&pct5=-5_10"
+	//url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode&indcode&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.5_58&pct&pettm=5_58&pelyr=5_58&mc=2500000000_18000000000&oiy.20200630=5_2295.9&npay.20200630=5_142839.72&tr=1.28_8&volume_ratio=1.28_8&oiy.20200930=5_2295.9&npay.20200930=5_142839.72&pct5=-5_6"
+	url := "https://xueqiu.com/service/screener/screen?category=CN&exchange=sh_sz&areacode=&indcode=&order_by=symbol&order=desc&page=1&size=30&only_count=0&current=1.8_58&pct=-0.8_2.8&volume_ratio=0.8_8&pettm=5_28&pct5=-3_5&oiy.20210930=5_118173.56&tr=1.28_8&pct20=-8_12&pct120=-38_-20&npay.20210930=5_58997.1&pct10=-5_8"
 	resp, err := http.Get(url)
 	if err != nil {
 		logging.Error("", err)
