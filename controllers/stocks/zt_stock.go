@@ -55,7 +55,7 @@ func (this *ZtStock) ZtStockFx() {
 			continue
 		}
 
-		if i.Zdf < 0.28 {
+		if i.Zdf < -0.8 {
 			continue
 		}
 
@@ -189,7 +189,7 @@ func (this *ZtStock) ZtStockFx() {
 		// 条件2 平开或者低开 然后资金流入 加速
 
 		if v.Dayk5 == 0 {
-			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.8 && i.Hsl > 1.8 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg && f6 < f1 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.58 && i.Hsl > 1.8 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg && f6 < f1 {
 				// 判断是否已入库
 				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 					continue
@@ -203,7 +203,7 @@ func (this *ZtStock) ZtStockFx() {
 
 			}
 		} else {
-			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.8 && i.Hsl > 1.8 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 < f1 {
+			if i.Zdf > 0.58 && f1 >= f101 && f2 >= f201 && f3 >= f301 && f4 >= f401 && i.Zdf < 3.8 && i.Lb > 1.58 && i.Hsl > 1.8 && (zgzdfv-i.Zdf) < 2.8 && i.Zxjg.(float64) > i.Zdjg && i.Zxjg.(float64) >= v.Dayk5 && i.Zdjg < v.Dayk5 && f6 < f1 {
 				// 判断是否已入库
 				if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 					continue
@@ -232,7 +232,8 @@ func (this *ZtStock) GetZTStock() {
 			logging.Error("Panic Error=======:%v======:%v", name, err)
 		}
 	}()
-	url := "http://73.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1280&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
+	//url := "http://73.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1280&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
+	url := "http://3.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1580&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -258,9 +259,9 @@ func (this *ZtStock) GetZTStock() {
 	for s := 0; s < l; s++ {
 		//if s >= 0 && s < l {
 		v := d[s]
-		//if v.F12.(string)[:3] == "688" || v.F12.(string)[:2] == "ST" || v.F12.(string)[:3] == "*ST" {
-		//	continue
-		//}
+		if v.F12.(string)[:3] == "688" || v.F12.(string)[:3] == "*ST" {
+			continue
+		}
 
 		//f62 := decimal.NewFromFloat(v.F62.(float64))
 		if reflect.TypeOf(v.F3).Name() == "string" {
@@ -298,11 +299,10 @@ func (this *ZtStock) GetZTStock() {
 		if reflect.TypeOf(v.F8).Name() == "string" {
 			continue
 		}
-
-		if reflect.TypeOf(v.F8).Name() == "string" {
+		if d.Day5Zdf > 8 || d.Day5Zdf < -2.8 || d.Day10Zdf < -3.8 || d.Day10Zdf > 12 || v.F8.(float64) < 1.58 || v.F10.(float64) < 1.28 {
 			continue
 		}
-		if d.Day5Zdf > 8 || d.Day5Zdf < -2.8 || d.Day10Zdf < -3.8 || d.Day10Zdf > 12 || v.F8.(float64) < 1.28 || v.F10.(float64) < 1.28 {
+		if d.DayK10 < d.DayK20 || v.F2.(float64) < d.DayK5 {
 			continue
 		}
 
@@ -341,7 +341,8 @@ func (this *ZtStock) GetZTStock01() {
 			logging.Error("Panic Error=======:%v======:%v", name, err)
 		}
 	}()
-	url := "http://73.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1280&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
+	//url := "http://73.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1280&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
+	url := "http://3.push2.eastmoney.com/api/qt/clist/get?pn=1&pz=1580&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:81+s:2048&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152"
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -381,7 +382,7 @@ func (this *ZtStock) GetZTStock01() {
 		//	continue
 		//}
 
-		if v.F3.(float64) < 0.8 || v.F3.(float64) > 2.8 || v.F62.(float64) < 3880000 || v.F7.(float64) > 5 {
+		if v.F3.(float64) < 1.28 || v.F3.(float64) > 2.8 || v.F62.(float64) < 3880000 || v.F7.(float64) > 6 {
 			continue
 		}
 		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -389,10 +390,11 @@ func (this *ZtStock) GetZTStock01() {
 			continue
 		}
 
-		if reflect.TypeOf(v.F8).Name() == "string" {
+		if d.Day5Zdf > 8 || d.Day5Zdf < -3 || d.Day20Zdf < -5.8 || d.Day20Zdf > 12 || v.F8.(float64) < 1.58 || v.F8.(float64) > 8 || v.F10.(float64) < 1.28 {
 			continue
 		}
-		if d.Day5Zdf > 8 || d.Day5Zdf < -5 || d.Day20Zdf < -6 || d.Day20Zdf > 12 || v.F8.(float64) < 1.8 || v.F8.(float64) > 8 || v.F10.(float64) < 1.8 {
+
+		if v.F2.(float64) < d.DayK10 {
 			continue
 		}
 
