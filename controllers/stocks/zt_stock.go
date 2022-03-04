@@ -382,7 +382,7 @@ func (this *ZtStock) GetZTStock01() {
 		//	continue
 		//}
 
-		if v.F3.(float64) < 1.28 || v.F3.(float64) > 2.8 || v.F62.(float64) < 3880000 || v.F7.(float64) > 6 {
+		if v.F3.(float64) < -0.8 || v.F3.(float64) > 3.6 || v.F62.(float64) < 5880000 || v.F7.(float64) > 5.8 {
 			continue
 		}
 		d := stocks_db.NewStock_Day_K().GetStockDayKJJ(v.F12.(string))
@@ -390,11 +390,18 @@ func (this *ZtStock) GetZTStock01() {
 			continue
 		}
 
-		if d.Day5Zdf > 8 || d.Day5Zdf < -3 || d.Day20Zdf < -5.8 || d.Day20Zdf > 12 || v.F8.(float64) < 1.58 || v.F8.(float64) > 8 || v.F10.(float64) < 1.28 {
+		if d.Day5Zdf > 3.8 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5.8 || d.Day20Zdf > 8 || v.F8.(float64) < 1.8 || v.F8.(float64) > 12 || v.F10.(float64) < 1.58 || v.F10.(float64) > 3.8 {
 			continue
 		}
 
-		if v.F2.(float64) < d.DayK10 {
+		if v.F2.(float64) < d.DayK10 || d.DayK10 < d.DayK20 {
+			continue
+		}
+		//15.58-14.98 /14.58     0.04
+
+		jz := v.F15.(float64) - v.F2.(float64)
+		fz := jz / v.F2.(float64)
+		if fz > 0.03 {
 			continue
 		}
 

@@ -291,7 +291,7 @@ func (this *Stock_Day_K) GetDaykJC(sc string) string {
 	bulid := this.Db.Select("f12").
 		From(this.TableName).
 		Where(fmt.Sprintf("f12='%v'", sc)).
-		Where(" f8 > 0.8 AND f10 > 0.8 AND f2 > dayK60 AND  f2 > dayK30 AND dayK30 > 0 AND dayK60 >0 ").
+		Where(" dayK30 > dayK60 AND dayK20 > dayK30 AND day5zdf < 8  AND f8 >0.8 AND f8< 8 AND f10 >0.5 AND f10 <8 AND f3 >0 AND f3 <3 AND f2 < 58 AND f9 <28 AND f9 >5 AND f62 >10000000 AND f2 >f17 AND dayK10 > dayK20 AND dayK5 < dayK10").
 		Where("create_time= (SELECT date FROM stock_info ORDER BY date DESC  LIMIT 1)")
 	_, err := this.SelectWhere(bulid, nil).LoadStructs(&f12)
 	if err != nil {

@@ -26,6 +26,7 @@ type QgqpStock struct {
 	TotalScore    interface{} `json:"TotalScore"`    // 评分
 	ZLCB          interface{} `json:"ZLCB"`          // 主力成本
 	ZLJLR         interface{} `json:"ZLJLR"`         // 主力净利润
+	JGCYDType     string      `json:"JGCYDType"`     // 控盘幅度
 }
 
 func NewQgqpStock() *QgqpStock {
@@ -71,7 +72,7 @@ func (this *QgqpStock) QgqpStockSave() {
 
 		f := (v.New.(float64) - v.ZLCB.(float64)) / v.ZLCB.(float64)
 
-		if f < 0.088 && f >= 0.0128 {
+		if f < 0.128 && f >= 0.008 {
 			d = append(d, v)
 		}
 
@@ -85,7 +86,10 @@ func (this *QgqpStock) QgqpStockSave() {
 			continue
 		}
 
-		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 0.28 || v.PERation > 58 || v.TurnoverRate.(float64) < 0.8 || v.TurnoverRate.(float64) > 8 || v.TotalScore.(float64) < 58 {
+		if v.New.(float64) > 58 || v.ChangePercent.(float64) > 3.8 || v.ChangePercent.(float64) < 0.28 || v.PERation > 58 || v.TurnoverRate.(float64) < 1.28 || v.TurnoverRate.(float64) > 12 || v.TotalScore.(float64) < 58 {
+			continue
+		}
+		if v.JGCYDType == "轻度控盘" || v.JGCYDType == "不控盘" {
 			continue
 		}
 
