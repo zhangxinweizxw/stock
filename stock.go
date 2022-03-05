@@ -68,8 +68,8 @@ func main() {
 					stocks.NewStockDayk(cfg).GetXueqiu()
 					//stocks.NewStockDayk(cfg).SaveXueqiuFx()
 
-					//stocks.NewZjlxStock().ZjlxStockSave()
-
+					//stocks.NewZjlxStock().ZjlxStockSave() 替换成stock7p
+					stocks.NewStockDayk(nil).GetStock7p()
 					stocks.NewQgqpStock().QgqpStockSave()
 
 					stocks.NewDxStock().SaveDxstock()
@@ -129,7 +129,7 @@ func main() {
 
 					//go stocks.NewXqFxStock().XqFxTs()
 					go stocks.NewStockDayk(nil).XQStockFx()
-					//go stocks.NewZjlxStock().ZjlxtockFx()
+					go stocks.NewZjlxStock().ZjlxtockFx()
 					go stocks.NewQgqpStock().QgqpStockFx()
 					go stocks.NewDxStock().DxStockFx()
 					go stocks.NewZjlxStock().PkydStockFx()

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"sort"
 	"stock/config"
 	"stock/controllers"
 	. "stock/models"
@@ -362,13 +363,7 @@ func (this *StockDayk) StockInfoSS(sc string) *Date {
 		return nil
 	}
 	code := ""
-	//if sc[:2] == "SH" {
-	//	code = strings.Replace(sc, "SH", "1.", 1)
-	//} else if sc[:2] == "SZ" {
-	//	code = strings.Replace(sc, "SZ", "0.", 1)
-	//} else {
-	//	return nil
-	//}
+
 	switch sc[:3] {
 	case "600", "601", "603", "605", "688", "689", "608":
 		code = fmt.Sprintf("1.%v", sc)
@@ -545,4 +540,50 @@ func (this *StockDayk) GetDayK(stockC string) [8]float64 {
 	dk[7] = f7
 	//logging.Error("==========", dk)
 	return dk
+}
+
+func (this *StockDayk) GetStock7p() {
+	s := stocks_db.NewStock_Day_K().Stock7p()
+	//st := []string{"2022-02-24", "2022-02-25", "2022-02-28", "2022-03-01", "2022-03-02", "2022-03-03", "2022-03-04"}
+	st := stocks_db.NewStock_Day_K().GetCreateTime()
+	//logging.Debug("========", st)
+	sort.Strings(st)
+	//logging.Debug("========", st)
+	//return
+	for _, v := range s {
+		zdj := v.F16 // 第一天的最低价
+		k := 0
+		if v.F12[:3] == "688" {
+			continue
+		}
+		for i := 0; i < 7; i++ {
+			//sv := stocks_db.NewStock_Day_K().Stock7ps(v.F12, v.CreateTime, zdj)
+			isis := false
+			if i == 6 {
+				isis = true
+			}
+			sv := stocks_db.NewStock_Day_K().Stock7ps(v.F12, st[i], zdj, isis)
+			if len(sv) <= 0 {
+				break
+			}
+			k = k + 1
+		}
+		if k != 7 {
+			continue
+		}
+		//logging.Debug("==========", v.F12)
+		// 股票信息写入stock_info表方便使用
+		i := stocks_db.NewZjlxStockDb()
+		p := map[string]interface{}{
+			"create_time": time.Now().Format("2006-01-02"),
+			"stock_code":  v.F12,
+			"stock_name":  v.F14,
+		}
+		_, err1 := i.Insert(p)
+		if err1 != nil {
+			logging.Error("Insert Table zjlx_stock | %v", err1)
+			continue
+		}
+	}
+	ZjlxStockDb = nil
 }

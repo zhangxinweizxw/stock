@@ -73,32 +73,33 @@ type Stock_Day_K struct {
 	F12   string `db:"f12"` // 代码
 	F13   string
 	F14   string `db:"f14"` // 名称
-	F15   string // 最高
-	F16   string // 最低
+	F15   string `db:"f15"` // 最高
+	F16   string `db:"f16"` // 最低
 	F17   string `db:"f17"` // 今开
 	F18   string `db:"f18"` // 昨收
 	//F19 float32 `json:"f19"`
-	F20      string // 总市值
-	F21      string // 流通市值
-	F22      string // 涨速
-	F23      string // 市净率
-	F24      string // 60日涨跌幅
-	F25      string // 年初至今涨跌幅
-	F62      string // 主力净流入
-	F115     string
-	F128     string // 领涨股
-	F140     string
-	F141     string
-	F136     string // 涨跌幅
-	F152     string
-	DayK5    float64 `db:"dayK5"`
-	DayK10   float64 `db:"dayK10"`
-	DayK20   float64 `db:"dayK20"`
-	DayK30   float64 `db:"dayK30"`
-	DayK60   float64 `db:"dayK60"`
-	Day5Zdf  float64 `db:"day5zdf"`
-	Day10Zdf float64 `db:"day10zdf"`
-	Day20Zdf float64 `db:"day20zdf"`
+	F20        string // 总市值
+	F21        string // 流通市值
+	F22        string // 涨速
+	F23        string // 市净率
+	F24        string // 60日涨跌幅
+	F25        string // 年初至今涨跌幅
+	F62        string // 主力净流入
+	F115       string
+	F128       string // 领涨股
+	F140       string
+	F141       string
+	F136       string // 涨跌幅
+	F152       string
+	DayK5      float64 `db:"dayK5"`
+	DayK10     float64 `db:"dayK10"`
+	DayK20     float64 `db:"dayK20"`
+	DayK30     float64 `db:"dayK30"`
+	DayK60     float64 `db:"dayK60"`
+	Day5Zdf    float64 `db:"day5zdf"`
+	Day10Zdf   float64 `db:"day10zdf"`
+	Day20Zdf   float64 `db:"day20zdf"`
+	CreateTime string  `db:"create_time"`
 }
 
 func NewStock_Day_K() *Stock_Day_K {
@@ -367,3 +368,62 @@ func (this *Stock_Day_K) GetDaykJC(sc string) string {
 //	}
 //	return cjje, d
 //}
+
+// 2022-03-05
+func (this *Stock_Day_K) Stock7p() []*Stock_Day_K {
+	var sdkl []*Stock_Day_K
+
+	sql := `SELECT * FROM stock_day_k
+			WHERE create_time=(SELECT create_time FROM stock_day_k 
+			GROUP BY create_time
+			ORDER BY create_time DESC
+			LIMIT 7,1 )
+			AND f3 >9.5`
+	_, err := this.Db.SelectBySql(sql).
+		LoadStructs(&sdkl)
+	if err != nil {
+		logging.Error("Select Stock_day_k -> stock7p Error：%v", err)
+		return nil
+	}
+
+	return sdkl
+}
+
+func (this *Stock_Day_K) GetCreateTime() []string {
+	var c []string
+
+	sql := `SELECT create_time FROM stock_day_k 
+			GROUP BY create_time
+			ORDER BY create_time DESC
+			LIMIT 7`
+	_, err := this.Db.SelectBySql(sql).
+		LoadStructs(&c)
+	if err != nil {
+		logging.Error("Select Stock_day_k -> create_time Error：%v", err)
+		return nil
+	}
+
+	return c
+}
+
+func (this *Stock_Day_K) Stock7ps(sc, ct, zdj string, is bool) string {
+
+	f12 := ""
+	whe := " f3 > -3.8 and f3 < 5.8 and f2 < 58 and f9 < 88"
+	if is {
+		whe += " and f3 > 0.8"
+	}
+	bulid := this.Db.Select("f12").
+		From(this.TableName).
+		Where(fmt.Sprintf("f12='%v'", sc)).
+		Where(fmt.Sprintf("create_time='%v'", ct)).
+		Where(fmt.Sprintf("f2 > '%v'", zdj)).
+		Where(fmt.Sprintf("f16 > '%v'", zdj)).
+		Where(whe)
+	_, err := this.SelectWhere(bulid, nil).LoadStructs(&f12)
+	if err != nil {
+		fmt.Println("Select Table 7日调整 create_time  |  Error   %v", err)
+		return ""
+	}
+	return f12
+}
