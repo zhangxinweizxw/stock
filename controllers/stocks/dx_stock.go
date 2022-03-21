@@ -39,47 +39,12 @@ func (this *DxStock) SaveDxstock() {
 	{
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
 		                      WHERE create_time='` + d[0]
-		sql += `' AND f2 > dayK30 AND f2 >dayK60 AND f2 > dayK10 
-				AND f3 >0.28 AND f3 <3.8  AND f8 >1.28 AND f10 >1.28
-				AND f62 >1000000 AND day5zdf < 8
-				AND f12 IN (
-				SELECT f12 FROM stock_day_k
-				WHERE create_time='` + d[1]
-		sql += `' AND f2 > dayK30 AND f2 > dayK60 
-				AND f3 > -0.8  AND f8 >1.28 AND f10 >1.28
-				AND f16 > dayK20
-				AND f12 IN (
-					SELECT f12 FROM stock_day_k
-					WHERE create_time='` + d[2]
-		sql += `' AND f2 > dayK60 AND dayK30 >0 AND dayK60 >0 and f3 > -1.8 AND f3 < 5.8 ) )`
-
-		//sql := fmt.Sprintf(`SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM stock_day_k
-		//		WHERE create_time='%v'
-		//		AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
-		//		AND f3 > 0 AND f3 < 3 AND f8 >1
-		//		AND f2 < 88 AND f12 NOT LIKE '688%v'
-		//		AND dayk5 < 8 AND dayk5 > -3
-		//		AND f12 IN(
-		//			SELECT f12 FROM stock_day_k
-		//			WHERE create_time='%v'
-		//			AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
-		//			AND f3 > -1 AND f3 < 3 AND f8 >1
-		//			AND f2 < 88 AND f12 NOT LIKE '688%v'
-		//			AND f12 IN(
-		//				SELECT f12 FROM stock_day_k
-		//				WHERE create_time='%v'
-		//				AND dayK20 > dayK30 AND dayK20 < dayK10 AND dayK20 < dayK5
-		//				AND f3 > -1 AND f3 < 3 AND f8 >1
-		//				AND f2 < 88 AND f12 NOT LIKE '688%v'
-		//			)
-		//		)`, d[0], "%", d[1], "%", d[2], "%")
-
-		//sql := fmt.Sprintf(`SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM stock_day_k
-		//		WHERE f16 < dayK5 AND f16 < dayK10 AND f16 < dayK20 AND f16 < dayK30
-		//		AND f2 > dayK5 AND f2 > dayK10 AND f2 > dayK20 AND f2 > dayK30
-		//		AND f62 >10000000 AND f8 >1.8 AND f10 >1.8
-		//		AND f3 <8 AND f3 >3 AND day5zdf < 8
-		//		AND create_time='%v'`, d[0])
+		sql += `' AND dayK30 > dayK60 AND dayK20 > dayK30
+				AND day5zdf < 8 
+				AND f8 >0.8 AND f8< 8 AND f10 >0.5 AND f10 <8
+				AND f3 >0 AND f3 <3 AND f2 < 58 AND f9 <28 AND f9 >5
+				AND f62 >5880000 AND f2 >f17 AND dayK10 > dayK20 
+				AND dayK5 < dayK10 `
 
 		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
 
@@ -162,14 +127,14 @@ func (this *DxStock) DxStockFx() {
 		}
 		zxjgf := i.Zxjg.(float64)
 		// 最新交易日判断 最低价最好是 回探 跌破五日 10日之上。然后 当前价 >= 5日的时候选出
-		if i.Zdjg <= v.DayK5 && i.Zdjg > v.DayK10 && zxjgf > v.DayK10 && zxjgf > i.Zdjg && d1.String() > "1888880" && i.Lb > 1.28 && i.Hsl > 1.58 {
+		if i.Zdjg <= v.DayK5 && i.Zdjg >= v.DayK10 && zxjgf > v.DayK10 && zxjgf > i.Zdjg && d1.String() > "1888880" && i.Lb > 0.8 && i.Hsl > 1.28 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)
 			go util.NewDdRobot().DdRobotPush(fmt.Sprintf("建议买入：%v   |   股票代码：%v    买入价：%v", i.Gpmc, i.Gpdm, i.Zxjg))
 		}
 		// 开盘 最低价格 >= 五日K线 涨跌幅 不大于 3.8 量比 > 0.5  主力净流入 >0
-		if i.Zdjg >= v.DayK5 && i.Zdf < 3.6 && i.Zdf > 0.58 && d1.String() > "3888880" && i.Lb > 1.28 && i.Hsl > 1.58 {
+		if i.Zdjg >= v.DayK5 && i.Zdf < 3.8 && i.Zdf > -0.8 && d1.String() > "1888880" && i.Lb > 1.28 && i.Hsl > 1.58 {
 			// 满足条件从 List 中 去掉    mysql transaction_history 表中添加数据 // 发送叮叮实时消息
 			go NewStockDayk(nil).SaveStock(i.Gpdm, i.Gpmc, zxjgf, 5)
 			DxStockDb = append(DxStockDb[:k], DxStockDb[k+1:]...)

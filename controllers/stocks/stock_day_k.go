@@ -543,6 +543,9 @@ func (this *StockDayk) GetDayK(stockC string) [8]float64 {
 }
 
 func (this *StockDayk) GetStock7p() {
+
+	stocks_db.NewZjlxStockDb().DelZjlxStock()
+
 	s := stocks_db.NewStock_Day_K().Stock7p()
 	//st := []string{"2022-02-24", "2022-02-25", "2022-02-28", "2022-03-01", "2022-03-02", "2022-03-03", "2022-03-04"}
 	st := stocks_db.NewStock_Day_K().GetCreateTime()

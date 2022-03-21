@@ -97,6 +97,7 @@ func (this *QgqpStock) QgqpStockSave() {
 		if controllers.NewUtilHttps(nil).GetXqPd(v.StockCode) <= 0 {
 			continue
 		}
+
 		if len(stocks_db.NewStock_Day_K().GetDaykJC(v.StockCode)) <= 0 {
 			continue //基础较差
 		}
