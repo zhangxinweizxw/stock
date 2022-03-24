@@ -390,7 +390,7 @@ func (this *ZtStock) GetZTStock01() {
 			continue
 		}
 
-		if d.Day5Zdf > 8.8 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5.8 || d.Day20Zdf > 12 || v.F8.(float64) < 2.8 || v.F8.(float64) > 12 || v.F10.(float64) < 1.8 || v.F10.(float64) > 5.8 {
+		if d.Day5Zdf > 8.8 || d.Day5Zdf < -2.8 || d.Day20Zdf < -5.8 || d.Day20Zdf > 12 || v.F8.(float64) < 2.8 || v.F8.(float64) > 18 || v.F10.(float64) < 1.8 || v.F10.(float64) > 8.8 {
 			continue
 		}
 
@@ -531,7 +531,7 @@ func (this *ZtStock) ZtStockFx01() {
 
 		}
 
-		if zgzdfv > 0.38 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && i.Zxjg.(float64) <= i.Zgjg && i.Zxjg.(float64) >= i.Zdjg && i.Lb > 1.28 && i.Hsl > 1.8 {
+		if zgzdfv > -0.38 && zgzdfv < 3.8 && i.Zxjg.(float64) > i.Kpj && dzljlr > dzljlr01 && i.Zxjg.(float64) <= i.Zgjg && i.Zxjg.(float64) >= i.Zdjg && i.Lb > 1.28 && i.Hsl > 1.58 {
 			// 判断是否已入库
 			if stocks_db.NewTransactionHistory().GetTranHist(v.StockCode) > 0 {
 				continue
