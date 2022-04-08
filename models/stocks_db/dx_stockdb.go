@@ -75,7 +75,7 @@ func (this *DxStockDb) DelDxStock() {
 	bulid1 := this.Db.Select("id,f3").From("stock_day_k s").
 		Join("dx_stock t", "s.f12=t.stock_code").
 		Where(fmt.Sprintf("s.create_time='%v'", d)).
-		Where(" ( f3 < 0.28 or f62 < 0 or f8 < 0.58 or f10 < 0.58 ) ")
+		Where(" (f3 < -2.8 OR f2 < s.dayK10 or ((f15 - f2)/f2) >0.05 or (f10 > 1.28 AND f62 < -5000000 AND f8 <2.8)) ")
 
 	_, err1 := this.SelectWhere(bulid1, nil).LoadStructs(&sd)
 	if err1 != nil {

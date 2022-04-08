@@ -36,29 +36,29 @@ func (this *DxStock) SaveDxstock() {
 	}
 	ntime := time.Now().Format("2006-01-02")
 
-	{
-		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
-		                      WHERE create_time='` + d[0]
-		sql += `' AND dayK30 > dayK60 AND dayK20 > dayK30
-				AND day5zdf < 8 
-				AND f8 >0.8 AND f8< 8 AND f10 >0.5 AND f10 <8
-				AND f3 >0 AND f3 <3 AND f2 < 58 AND f9 <28 AND f9 >5
-				AND f62 >5880000 AND f2 >f17 AND dayK10 > dayK20 
-				AND dayK5 < dayK10 `
-
-		sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
-
-		if len(sdkl) > 0 {
-			for _, v := range sdkl {
-				//logging.Error("=========", v.F12, v.F14)
-				//if NewStockDayk(nil).GetReturnIsBuy(v.F12) == false {
-				//	continue
-				//}
-
-				this.Save(v.F12, v.F14, ntime, v.DayK5, v.DayK10, v.DayK20, v.DayK30, 2)
-			}
-		}
-	}
+	//{
+	//	sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
+	//	                      WHERE create_time='` + d[0]
+	//	sql += `' AND dayK30 > dayK60 AND dayK20 > dayK30
+	//			AND day5zdf < 8
+	//			AND f8 >0.8 AND f8< 8 AND f10 >0.5 AND f10 <8
+	//			AND f3 >0 AND f3 <3 AND f2 < 58 AND f9 <28 AND f9 >5
+	//			AND f62 >5880000 AND f2 >f17 AND dayK10 > dayK20
+	//			AND dayK5 < dayK10 `
+	//
+	//	sdkl := stocks_db.NewStock_Day_K().GetDxStockDayKList(sql)
+	//
+	//	if len(sdkl) > 0 {
+	//		for _, v := range sdkl {
+	//			//logging.Error("=========", v.F12, v.F14)
+	//			//if NewStockDayk(nil).GetReturnIsBuy(v.F12) == false {
+	//			//	continue
+	//			//}
+	//
+	//			this.Save(v.F12, v.F14, ntime, v.DayK5, v.DayK10, v.DayK20, v.DayK30, 2)
+	//		}
+	//	}
+	//}
 
 	{
 		sql := `SELECT f12,f14,dayK5,dayK10,dayK20,dayK30 FROM  stock_day_k
